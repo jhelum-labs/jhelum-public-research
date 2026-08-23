@@ -232,6 +232,17 @@ async function main() {
 
   const resolved = await Promise.all(articles)
 
+  // The source DOCX files live on a local D: drive and are intentionally not
+  // part of the repository. In CI/deployment environments that drive does not
+  // exist. Never replace the committed research index with an empty array in
+  // that situation; keep the last successfully generated static content.
+  if (resolved.length === 0) {
+    console.warn(
+      `${now()} WARN: no source documents found; preserving existing public/research assets.`,
+    )
+    return
+  }
+
   for (const a of resolved) {
     await fs.writeFile(
       path.join(OUT_DIR, `${a.slug}.html`),
