@@ -6,6 +6,7 @@
    ========================================================================== */
 
 :root {
+  color-scheme: light;
   /* Brand palette — monochrome (black & white) */
   --brand-900: #000000;
   --brand-800: #111111;
@@ -18,7 +19,7 @@
 
   /* Typography */
   --font-display: 'Playfair Display', Georgia, 'Times New Roman', Cambria, serif;
-  --font-script: 'Pacifico', 'Brush Script MT', 'Segoe Script', cursive;
+  --font-script: 'Kaushan Script', 'Pacifico', 'Brush Script MT', 'Segoe Script', cursive;
   --font-body: 'Helvetica Neue', Helvetica, Arial, 'Segoe UI', sans-serif;
 
   /* Radius / shadows */
@@ -41,6 +42,7 @@
 }
 
 [data-theme='dark'] {
+  color-scheme: dark;
   --color-bg: #111111;
   --color-bg-alt: #181818;
   --color-surface: #1b1b1b;
