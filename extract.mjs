@@ -38,6 +38,44 @@ function slugify(fileName) {
     .toLowerCase()
 }
 
+// --------------------------------------------------------------------------
+// Branding
+// --------------------------------------------------------------------------
+// The source docs were written under the old "WAI" (Wasif AI Research) brand.
+// Every place that name appears in content that renders in the app is
+// rewritten to the project's brand: Jhelum Labs. The model name W-1.1 itself
+// is never touched.
+const BRAND_RULES = [
+  // Old company / lab names -> Jhelum Labs
+  [/Wasif AI Research/gi, 'Jhelum Labs'],
+  [/Wasif AI/gi, 'Jhelum Labs'],
+  [/Origin Laboratories/gi, 'Jhelum Labs'],
+  [/Origin Labs?/gi, 'Jhelum Labs'],
+
+  // Program line: "WAI / W-1.1 ..." -> "Jhelum Labs / W-1.1 ..."
+  [/WAI\s*\/\s*W-1\.1/gi, 'Jhelum Labs / W-1.1'],
+
+  // Branded model alias "WAI-125M" -> "Jhelum Labs 125M"
+  [/\bWAI-125M\b/gi, 'Jhelum Labs 125M'],
+
+  // File / artifact prefixes: "wai-125m-instruct-v1.safetensors"
+  //   -> "jhelum-labs-125m-instruct-v1.safetensors"
+  [/\bwai-(?=[a-z0-9])/gi, 'jhelum-labs-'],
+
+  // Any remaining standalone "WAI" token -> Jhelum Labs
+  [/\bWAI\b/g, 'Jhelum Labs'],
+]
+
+// Apply every branding rule to a text/HTML string, longest/most-specific first.
+function rebrand(text) {
+  if (!text) return text
+  let out = text
+  for (const [re, replacement] of BRAND_RULES) {
+    out = out.replace(re, replacement)
+  }
+  return out
+}
+
 // Clean a filename into a readable title, dropping the redundant W-1.1 prefix
 // (the site is already branded as W-1.1, so titles show just the paper name).
 function titleFromFileName(fileName) {
@@ -149,8 +187,10 @@ async function processFile(category, fileName) {
     { convertImage: mammoth.images.imgElement(convertImage) },
   )
 
-  const contentHtml = stripCoverBanner(decorateFigures(htmlResult.value))
-  const excerpt = makeExcerptFromHtml(contentHtml) || makeExcerpt(raw.value)
+  const contentHtml = rebrand(stripCoverBanner(decorateFigures(htmlResult.value)))
+  const excerpt = rebrand(
+    makeExcerptFromHtml(contentHtml) || makeExcerpt(rebrand(raw.value)),
+  )
 
   const sizeMB = (stats.size / (1024 * 1024)).toFixed(2) + ' MB'
   const date = stats.mtime.toISOString().slice(0, 10)

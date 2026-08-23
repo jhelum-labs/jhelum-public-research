@@ -5,7 +5,7 @@
     "category": "Production Document",
     "date": "2026-08-21",
     "sizeMB": "0.37 MB",
-    "excerpt": "Prepared 21 August 2026 WAI / W-1.1 research program Executive summary W-1.1 Project Instruct converted the pretrained W-1.1-125M causal language model into an instruction-following checkpoint using 300,000 question–answer and task examples. The run completed on an NVIDIA H100 80GB GPU in approximately 60 minutes and…"
+    "excerpt": "Prepared 21 August 2026 Jhelum Labs / W-1.1 research program Executive summary W-1.1 Project Instruct converted the pretrained W-1.1-125M causal language model into an instruction-following checkpoint using 300,000 question–answer and task examples. The run completed on an NVIDIA H100 80GB GPU in approximately 60…"
   },
   {
     "slug": "w-1.1-final",
@@ -13,7 +13,7 @@
     "category": "Production Document",
     "date": "2026-08-20",
     "sizeMB": "0.44 MB",
-    "excerpt": "Prepared for Wasif AI Research Finalized 20 August 2026 Document scope and evidence This report consolidates the recorded W-1.1 experiment lineage, final dataset preparation, custom architecture, H100 pretraining logs, saved artifacts, qualitative text-generation tests, failure recovery, and the remaining production…"
+    "excerpt": "Prepared for Jhelum Labs Finalized 20 August 2026 Document scope and evidence This report consolidates the recorded W-1.1 experiment lineage, final dataset preparation, custom architecture, H100 pretraining logs, saved artifacts, qualitative text-generation tests, failure recovery, and the remaining production…"
   },
   {
     "slug": "w-1.1-final-architecture",
