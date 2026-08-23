@@ -7,6 +7,7 @@ import './ResearchArticle.css'
 function ArticleBody({ article }) {
   const [html, setHtml] = useState(null)
   const [state, setState] = useState('loading') // loading | ready | error
+  const [zoomSrc, setZoomSrc] = useState(null)
 
   useEffect(() => {
     let active = true
@@ -27,6 +28,22 @@ function ArticleBody({ article }) {
     }
   }, [article.slug])
 
+  // Close the lightbox with Escape
+  useEffect(() => {
+    if (!zoomSrc) return
+    const onKey = (e) => {
+      if (e.key === 'Escape') setZoomSrc(null)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [zoomSrc])
+
+  const onContentClick = (e) => {
+    if (e.target.tagName === 'IMG') {
+      setZoomSrc(e.target.currentSrc || e.target.src)
+    }
+  }
+
   if (state === 'loading') return <p className="article__status">Loading article…</p>
   if (state === 'error')
     return (
@@ -36,12 +53,33 @@ function ArticleBody({ article }) {
     )
 
   return (
-    <div
-      className="article__content"
-      // The HTML is generated locally by our extraction script (mammoth),
-      // so it is trusted content we render as-is.
-      dangerouslySetInnerHTML={{ __html: html }}
-    />
+    <>
+      <div
+        className="article__content"
+        onClick={onContentClick}
+        // The HTML is generated locally by our extraction script (mammoth),
+        // so it is trusted content we render as-is.
+        dangerouslySetInnerHTML={{ __html: html }}
+      />
+      {zoomSrc && (
+        <div
+          className="lightbox"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Enlarged chart or figure"
+          onClick={() => setZoomSrc(null)}
+        >
+          <button
+            className="lightbox__close"
+            aria-label="Close zoom"
+            onClick={() => setZoomSrc(null)}
+          >
+            ×
+          </button>
+          <img src={zoomSrc} alt="" className="lightbox__img" />
+        </div>
+      )}
+    </>
   )
 }
 

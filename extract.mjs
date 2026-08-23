@@ -77,12 +77,21 @@ function makeExcerpt(rawText, max = 320) {
 }
 
 // Convert an embedded image to a base64 data URI (so it is self-contained).
+// NOTE: mammoth >= 1.x exposes `readAsBase64String()` on image elements.
+// Width/height are intentionally omitted so CSS can scale charts responsively.
 function convertImage(image) {
-  return image.toBuffer().then((buffer) => ({
-    src: `data:${image.contentType};base64,${buffer.toString('base64')}`,
-    width: `${image.width}px`,
-    height: `${image.height}px`,
+  return image.readAsBase64String().then((b64) => ({
+    src: `data:${image.contentType};base64,${b64}`,
   }))
+}
+
+// Wrap every embedded image in a <figure class="article-figure"> so charts
+// and diagrams get consistent, resizable presentation (plus click-to-enlarge).
+function decorateFigures(contentHtml) {
+  return contentHtml.replace(
+    /<img([^>]*)\/>/g,
+    '<figure class="article-figure"><img$1 /></figure>',
+  )
 }
 
 async function processFile(category, fileName) {
@@ -100,6 +109,8 @@ async function processFile(category, fileName) {
     { convertImage: mammoth.images.imgElement(convertImage) },
   )
 
+  const contentHtml = decorateFigures(htmlResult.value)
+
   const sizeMB = (stats.size / (1024 * 1024)).toFixed(2) + ' MB'
   const date = stats.mtime.toISOString().slice(0, 10)
 
@@ -110,7 +121,7 @@ async function processFile(category, fileName) {
     date,
     sizeMB,
     excerpt,
-    contentHtml: htmlResult.value,
+    contentHtml,
     warnings: htmlResult.messages.length,
   }
 }
