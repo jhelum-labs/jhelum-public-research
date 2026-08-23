@@ -1,4 +1,5 @@
-import { memo, useState } from 'react'
+import { memo } from 'react'
+import { Link } from 'react-router-dom'
 import ResearchCard from '../components/ResearchCard.jsx'
 import { useResearchIndex } from '../hooks/useResearch.js'
 import Logo from '../components/Logo.jsx'
@@ -36,15 +37,7 @@ const FolderIcon = () => (
   </svg>
 )
 
-const ChevronIcon = () => (
-  <svg className="folder__chevron-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-    <path d="M6 9l6 6 6-6" />
-  </svg>
-)
-
 function AllResearch({ articles, loading, error }) {
-  const [open, setOpen] = useState(true)
-
   return (
     <section className="all-research" id="all-research">
       <div className="container">
@@ -56,42 +49,27 @@ function AllResearch({ articles, loading, error }) {
           </span>
         </div>
 
-        <div className={`folder${open ? ' folder--open' : ''}`}>
-          <button
-            type="button"
-            className="folder__toggle"
-            onClick={() => setOpen((o) => !o)}
-            aria-expanded={open}
-          >
-            <span className="folder__icon">
-              <FolderIcon />
-            </span>
-            <span className="folder__name">w-1.1</span>
-            <span className="folder__hint">
-              {loading ? '…' : open ? 'Hide papers' : 'View papers'}
-            </span>
-            <span className="folder__chevron-wrap">
-              <ChevronIcon />
-            </span>
-          </button>
+        <Link to="/w-1.1" className="folder">
+          <span className="folder__icon">
+            <FolderIcon />
+          </span>
+          <span className="folder__name">w-1.1</span>
+          <span className="folder__hint">Open folder</span>
+          <span className="folder__arrow" aria-hidden="true">→</span>
+        </Link>
 
-          {open && (
-            <div className="folder__content">
-              {loading && <p className="loading">Loading publications…</p>}
-              {error && (
-                <p className="loading">
-                  Could not load research ({error}). Run <code>npm run extract</code>{' '}
-                  to generate the article content, then restart the dev server.
-                </p>
-              )}
-              {!loading && !error && (
-                <div className="research-list">
-                  {articles.map((article, i) => (
-                    <ResearchCard key={article.slug} article={article} index={i + 1} />
-                  ))}
-                </div>
-              )}
-            </div>
+        <div className="research-list">
+          {loading && <p className="loading">Loading publications…</p>}
+          {error && (
+            <p className="loading">
+              Could not load research ({error}). Run <code>npm run extract</code>{' '}
+              to generate the article content, then restart the dev server.
+            </p>
+          )}
+          {!loading && !error && (
+            articles.map((article, i) => (
+              <ResearchCard key={article.slug} article={article} index={i + 1} />
+            ))
           )}
         </div>
       </div>

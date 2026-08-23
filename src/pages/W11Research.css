@@ -1,0 +1,74 @@
+/* W-1.1 research collection page */
+.w11 {
+  padding: 64px 0 80px;
+}
+
+.w11__inner {
+  max-width: 880px;
+}
+
+.w11__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  color: var(--color-text-soft);
+  transition: color 0.15s ease;
+}
+
+.w11__back:hover {
+  color: var(--color-heading);
+  text-decoration: none;
+}
+
+.w11__head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+  padding: 40px 0 48px;
+}
+
+.w11__title {
+  font-family: var(--font-script);
+  font-size: clamp(3rem, 8vw, 5.4rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  color: var(--color-heading);
+  text-transform: lowercase;
+  margin: 0;
+}
+
+.w11__subtitle {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.3rem, 3vw, 1.8rem);
+  font-weight: 500;
+  color: var(--color-text-soft);
+  margin: 0;
+}
+
+.w11__count {
+  margin-top: 6px;
+  padding: 5px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  font-size: 0.85rem;
+  color: var(--color-muted);
+}
+
+.w11__list .loading {
+  text-align: center;
+  padding: 48px 0;
+}
+
+@media (max-width: 640px) {
+  .w11 {
+    padding: 40px 0 60px;
+  }
+  .w11__head {
+    padding: 24px 0 32px;
+  }
+}

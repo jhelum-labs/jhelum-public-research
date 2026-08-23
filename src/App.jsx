@@ -4,6 +4,7 @@ import { ThemeProvider } from './context/ThemeContext.jsx'
 import Header from './components/Header.jsx'
 import Footer from './components/Footer.jsx'
 import ResearchHome from './pages/ResearchHome.jsx'
+import W11Research from './pages/W11Research.jsx'
 import ResearchArticle from './pages/ResearchArticle.jsx'
 
 function ScrollToTop() {
@@ -30,6 +31,7 @@ export default function App() {
         <main>
           <Routes>
             <Route path="/" element={<ResearchHome />} />
+            <Route path="/w-1.1" element={<W11Research />} />
             <Route path="/research/:slug" element={<ResearchArticle />} />
             <Route path="*" element={<ResearchHome />} />
           </Routes>
