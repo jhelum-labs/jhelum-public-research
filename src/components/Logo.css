@@ -16,7 +16,7 @@
   color: var(--color-heading);
 }
 
-/* Broad cursive wordmark */
+/* Broad handwritten wordmark (Caveat — cursive, bold, black) */
 .logo--wordmark .logo__glyph {
   flex: 0 0 auto;
   color: currentColor;
@@ -24,15 +24,14 @@
 
 .logo--wordmark .logo__word {
   font-family: var(--font-script);
-  font-size: 1.85rem;
-  font-weight: 400;
+  font-size: 1.95rem;
+  font-weight: 700;
   line-height: 1;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.015em;
   color: currentColor;
   white-space: nowrap;
-  /* Slight negative tracking + scale for a broad, drawn look */
-  transform: scaleY(1.06);
   display: inline-block;
+  transform: scaleY(1.05);
 }
 
 .logo--wordmark .logo__sep {

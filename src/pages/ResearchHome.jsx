@@ -1,12 +1,12 @@
 import { memo } from 'react'
 import { Link } from 'react-router-dom'
 import { useResearchIndex } from '../hooks/useResearch.js'
-import Logo from '../components/Logo.jsx'
+import { LogoMark } from '../components/Logo.jsx'
 import './ResearchHome.css'
 
 const LogoMemo = memo(() => (
   <div className="hero__logo-wrap">
-    <Logo as="div" />
+    <LogoMark size={72} />
   </div>
 ))
 
