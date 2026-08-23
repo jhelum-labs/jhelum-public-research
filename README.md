@@ -3,6 +3,13 @@
 An OpenAI-research-style web portal for the **W-1.1 model program** publications.
 Built with **React + Vite** and **react-router-dom**.
 
+Design: **black & white / monochrome UI**, broad cursive wordmark (Pacifico +
+system script fallbacks), broad serif headings (Playfair Display), dark-mode toggle.
+
+> Brand fonts (Pacifico, Playfair Display) load from **Google Fonts**, so an
+> internet connection improves typography. Offline, the app falls back to
+> Windows system fonts (`Brush Script MT`, Georgia, etc.).
+
 ## Getting started
 
 ```bash
@@ -44,10 +51,15 @@ npm run preview     # preview the production build
 
 ## Using your real company logo
 
-The app ships with a placeholder lettermark/wordmark. To use your real logo:
+The app ships with a **broad cursive "Jhelum Labs" wordmark** (OpenAI-style) in
+black & white. To use your real logo image instead:
 
-1. Save it as `public/logo.png` (or edit `LOGO_SRC` in `src/components/Logo.jsx`).
+1. Save it as `public/logo.png` (or edit the `src` in `src/components/Logo.jsx`).
 2. Set `const USE_BRAND_LOGO = true` in `src/components/Logo.jsx`.
+
+The preferred branded font (Pacifico) is loaded from Google Fonts; if you'd
+rather self-host it, add the font files under `public/fonts/` and adjust the
+`@font-face` in `src/styles/index.css`.
 
 ## Customizing content
 
