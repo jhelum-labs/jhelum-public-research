@@ -1,7 +1,7 @@
 [
   {
     "slug": "w-1.1-project-instruct",
-    "title": "W-1.1 Project Instruct",
+    "title": "Project Instruct",
     "category": "Production Document",
     "date": "2026-08-21",
     "sizeMB": "0.37 MB",
@@ -9,7 +9,7 @@
   },
   {
     "slug": "w-1.1-final",
-    "title": "W-1.1 Final",
+    "title": "Final",
     "category": "Production Document",
     "date": "2026-08-20",
     "sizeMB": "0.44 MB",
@@ -17,7 +17,7 @@
   },
   {
     "slug": "w-1.1-final-architecture",
-    "title": "W-1.1 Final Architecture",
+    "title": "Final Architecture",
     "category": "Production Document",
     "date": "2026-08-18",
     "sizeMB": "0.24 MB",
@@ -25,7 +25,7 @@
   },
   {
     "slug": "w-1.1-project-spectrum",
-    "title": "W-1.1 Project Spectrum",
+    "title": "Project Spectrum",
     "category": "Research Paper",
     "date": "2026-08-17",
     "sizeMB": "0.19 MB",
@@ -33,7 +33,7 @@
   },
   {
     "slug": "w-1.1-project-insight",
-    "title": "W-1.1 Project Insight",
+    "title": "Project Insight",
     "category": "Research Paper",
     "date": "2026-08-17",
     "sizeMB": "0.51 MB",
@@ -41,7 +41,7 @@
   },
   {
     "slug": "w-1.1-projects",
-    "title": "W-1.1 Projects",
+    "title": "Projects",
     "category": "Research Paper",
     "date": "2026-08-14",
     "sizeMB": "0.04 MB",
@@ -49,7 +49,7 @@
   },
   {
     "slug": "w-1.1-spark",
-    "title": "W-1.1 Spark",
+    "title": "Spark",
     "category": "Research Paper",
     "date": "2026-08-14",
     "sizeMB": "0.04 MB",
@@ -57,7 +57,7 @@
   },
   {
     "slug": "w-1.1-project-tazi",
-    "title": "W-1.1 Project Tazi",
+    "title": "Project Tazi",
     "category": "Research Paper",
     "date": "2026-08-13",
     "sizeMB": "0.15 MB",
@@ -65,7 +65,7 @@
   },
   {
     "slug": "w-1.1-testing",
-    "title": "W-1.1 Testing",
+    "title": "Testing",
     "category": "Research Paper",
     "date": "2026-08-09",
     "sizeMB": "0.04 MB",
@@ -73,7 +73,7 @@
   },
   {
     "slug": "w-1.1-125m-architecture",
-    "title": "W-1.1 125M Architecture",
+    "title": "125M Architecture",
     "category": "Research Paper",
     "date": "2026-08-08",
     "sizeMB": "0.30 MB",

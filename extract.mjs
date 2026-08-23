@@ -38,28 +38,23 @@ function slugify(fileName) {
     .toLowerCase()
 }
 
-// Clean a filename into a readable title, keeping the W-1.1 prefix intact.
+// Clean a filename into a readable title, dropping the redundant W-1.1 prefix
+// (the site is already branded as W-1.1, so titles show just the paper name).
 function titleFromFileName(fileName) {
-  let base = fileName
+  const base = fileName
     .replace(/\.docx$/i, '')
     .replace(/\(\d+\)/g, '')
     .trim()
 
-  // Protect the W-1.1 model prefix from the word-splitting below.
+  // If a W-1.1 prefix exists, strip it and title-case the remainder.
   const prefixMatch = base.match(/^w-?1\.?1[\s-]+/i)
-  if (prefixMatch) {
-    const rest = base.slice(prefixMatch[0].length)
-    const titled = rest
-      .replace(/[-_]+/g, ' ')
-      .trim()
-      .split(/\s+/)
-      .map((w) => (w[0] ? w[0].toUpperCase() + w.slice(1) : w))
-      .join(' ')
-    return titled ? `W-1.1 ${titled}` : 'W-1.1'
-  }
+  const rest = prefixMatch ? base.slice(prefixMatch[0].length).trim() : base
 
-  return base
+  if (!rest) return 'W-1.1'
+
+  return rest
     .replace(/[-_]+/g, ' ')
+    .replace(/\s+/g, ' ')
     .trim()
     .split(/\s+/)
     .map((w) => (w[0] ? w[0].toUpperCase() + w.slice(1) : w))
