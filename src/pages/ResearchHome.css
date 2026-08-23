@@ -57,14 +57,28 @@
 
 .section-head {
   display: flex;
-  align-items: baseline;
+  align-items: flex-end;
   justify-content: space-between;
   gap: 16px;
   margin-bottom: 32px;
 }
 
+.section-head__text {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
 .section-title {
   font-size: clamp(1.8rem, 3.4vw, 2.4rem);
+}
+
+.section-subtitle {
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-muted);
 }
 
 .section-count {
