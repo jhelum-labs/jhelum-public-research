@@ -6,21 +6,19 @@ function CategoryBadge({ category }) {
   return <span className={cls}>{category}</span>
 }
 
-export default function ResearchCard({ article }) {
+export default function ResearchCard({ article, index = 1 }) {
   if (!article) return null
   return (
-    <article className="research-card">
-      <Link to={`/research/${article.slug}`} className="research-card__link">
-        <div className="research-card__meta">
-          <CategoryBadge category={article.category} />
-          <time className="research-card__date">{article.date}</time>
-        </div>
-        <h3 className="research-card__title">{article.title}</h3>
-        <p className="research-card__excerpt">{article.excerpt}</p>
-        <span className="research-card__cta">
-          Read article <span aria-hidden="true">→</span>
-        </span>
-      </Link>
-    </article>
+    <Link to={`/research/${article.slug}`} className="research-row">
+      <span className="research-row__index">{String(index).padStart(2, '0')}</span>
+      <span className="research-row__body">
+        <CategoryBadge category={article.category} />
+        <h3 className="research-row__title">{article.title}</h3>
+      </span>
+      <span className="research-row__meta">
+        <span className="research-row__date">{article.date}</span>
+        <span className="research-row__arrow" aria-hidden="true">→</span>
+      </span>
+    </Link>
   )
 }

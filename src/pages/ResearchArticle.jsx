@@ -91,7 +91,7 @@ export default function ResearchArticle() {
         <section className="related">
           <div className="container">
             <h2 className="related__title">More research</h2>
-            <div className="research-grid related__grid">
+            <div className="research-list related__list">
               {more.map((a) => (
                 <ResearchCard key={a.slug} article={a} />
               ))}
