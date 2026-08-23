@@ -5,7 +5,7 @@
     "category": "Production Document",
     "date": "2026-08-21",
     "sizeMB": "0.37 MB",
-    "excerpt": "MODEL RESEARCH REPORT W-1.1 Project Instruct Instruction tuning, evaluation, and production-readiness record 123.7M parameters • 300,000 instruction examples • H100 training Outcome Instruction tuning completed successfully. The model is demonstrably more instruction-following, but benchmark and qualitative evidence…"
+    "excerpt": "Prepared 21 August 2026 WAI / W-1.1 research program Executive summary W-1.1 Project Instruct converted the pretrained W-1.1-125M causal language model into an instruction-following checkpoint using 300,000 question–answer and task examples. The run completed on an NVIDIA H100 80GB GPU in approximately 60 minutes and…"
   },
   {
     "slug": "w-1.1-final",
@@ -13,7 +13,7 @@
     "category": "Production Document",
     "date": "2026-08-20",
     "sizeMB": "0.44 MB",
-    "excerpt": "FINAL TECHNICAL REPORT W-1.1 / WAI-125M From Tiny Prototypes to a 123.69M-Parameter Base Language Model Model Training corpus Compute Outcome WAI-125M base 2.825B train tokens 1× NVIDIA H100 Pretraining completed; best validation loss 3.3804 Prepared for Wasif AI Research Finalized 20 August 2026 Document scope and…"
+    "excerpt": "Prepared for Wasif AI Research Finalized 20 August 2026 Document scope and evidence This report consolidates the recorded W-1.1 experiment lineage, final dataset preparation, custom architecture, H100 pretraining logs, saved artifacts, qualitative text-generation tests, failure recovery, and the remaining production…"
   },
   {
     "slug": "w-1.1-final-architecture",
@@ -21,7 +21,7 @@
     "category": "Production Document",
     "date": "2026-08-18",
     "sizeMB": "0.24 MB",
-    "excerpt": "W-1.1 Final Architecture Production-Ready English Decoder-Only Language Model W-1.1-125M • PyTorch • NVIDIA A100 40 GB Specification field Frozen value Architecture Decoder-only causal Transformer Parameters 123,688,704 trainable parameters Language English only Vocabulary 32,000-token byte-level BPE Context length…"
+    "excerpt": "1. Executive Architecture Summary W-1.1-125M is an English-only, decoder-only autoregressive Transformer designed for pretraining from random initialization. It contains 123,688,704 trainable parameters and uses a 32,000-token byte-level BPE vocabulary, 768-dimensional hidden states, 14 Transformer blocks, 12…"
   },
   {
     "slug": "w-1.1-project-spectrum",
@@ -29,7 +29,7 @@
     "category": "Research Paper",
     "date": "2026-08-17",
     "sizeMB": "0.19 MB",
-    "excerpt": "W-1.1 Project Spectrum Phase 4 Training, Generation and Observation Report Prepared for Phase 5 — Experimental Observations and Evaluation Report field Value Project W-1.1-project-spectrum Experiment phase Phase 4 Training status Complete Training steps 20,000 optimizer steps Final train loss 3.69 Final validation…"
+    "excerpt": "1. Executive Summary W-1.1 Project Spectrum completed a 20,000-step pretraining experiment using a compact decoder-only Transformer and Spectrum’s own processed dataset and tokenizer. The reported loss began near 9.00 and finished at 3.69 for training and 3.71 for validation. The final train–validation gap is only…"
   },
   {
     "slug": "w-1.1-project-insight",
@@ -37,7 +37,7 @@
     "category": "Research Paper",
     "date": "2026-08-17",
     "sizeMB": "0.51 MB",
-    "excerpt": "W-1.1 Project Insight Phase 5 — Experimental Observations and Evaluation Tiny Prototype • Tazi • Spark • Spectrum Report field Value Programme W-1.1 language-model research Phase 5 — Project Insight Status Complete Experiments reviewed Four Exact raw log available Spectrum Prepared for Final-model planning Author…"
+    "excerpt": "1. Executive Summary Project Insight consolidates the evidence from four W-1.1 experiments: the Tiny Prototype, Project Tazi, Project Spark and Project Spectrum. It separates engineering success from language quality and uses only recorded measurements; unavailable values remain explicitly marked as not recorded.…"
   },
   {
     "slug": "w-1.1-projects",
@@ -45,7 +45,7 @@
     "category": "Research Paper",
     "date": "2026-08-14",
     "sizeMB": "0.04 MB",
-    "excerpt": "W-1.1-125M Projects and Development Phases Official roadmap from experimental prototypes to the production-ready 125M parameter language model Current position: Phase 3 — w-1.1-project-spark | 17M-parameter improvement model training on 500 MB TinyStories. Complete Phase Directory Phase Project name Main purpose…"
+    "excerpt": "Complete Phase Directory Project Progression Tiny Prototype → Tazi → Spark → Spectrum → Reason → Blueprint → Foundry → Forge → Align → Launch Important: The 17M model is an experimental research model. The final W-1.1-125M model will be newly initialized in Phase 8 and will use the architecture, tokenizer, dataset,…"
   },
   {
     "slug": "w-1.1-spark",
@@ -53,7 +53,7 @@
     "category": "Research Paper",
     "date": "2026-08-14",
     "sizeMB": "0.04 MB",
-    "excerpt": "W-1.1 SPARK Phase 3 Completion Report Training and Evaluating a 17.34M-Parameter TinyStories Language Model Report field Final record Project w-1.1-project-spark Phase Phase 3 - Complete Model SparkGPT decoder-only Transformer Unique trainable parameters Approximately 17.34 million Dataset Approximately 500 MB…"
+    "excerpt": "Executive Summary W-1.1 Spark was trained as a controlled Phase 3 experiment to measure how a compact decoder-only Transformer learns from a large, focused story corpus. The final model completed its full 20,000-step cosine-decay schedule on a Tesla T4. Its best recorded validation loss was 1.4872, and fixed-prompt…"
   },
   {
     "slug": "w-1.1-project-tazi",
@@ -61,7 +61,7 @@
     "category": "Research Paper",
     "date": "2026-08-13",
     "sizeMB": "0.15 MB",
-    "excerpt": "W-1.1 Phase 2 Training Report 500 MB OpenWebText Baseline • 17.37M Parameters Architecture, dataset preparation, training behaviour, evaluation, generation results, and conclusion Prepared by Wasif W-1.1 Project Tazi 1. Executive Summary Phase 2 established a reproducible baseline for W-1.1 by training a compact…"
+    "excerpt": "1. Executive Summary Phase 2 established a reproducible baseline for W-1.1 by training a compact decoder-only Transformer on a 500 MB subset of OpenWebText. The run demonstrated stable optimization, strong reduction in training and validation loss, and no clear overfitting. The model learned spelling, punctuation,…"
   },
   {
     "slug": "w-1.1-testing",
@@ -69,7 +69,7 @@
     "category": "Research Paper",
     "date": "2026-08-09",
     "sizeMB": "0.04 MB",
-    "excerpt": "PROTOTYPING GUIDE W-1.1 Tiny Prototype Testing the training pipeline before building W-1.1-125M MODEL • DATA • TRAINING • CHECKPOINTS • GENERATION Prepared for WasifVersion 1.0 • 9 August 2026 1. Purpose of this prototype The W-1.1 tiny prototype is a small GPT-2-style decoder-only Transformer created to verify the…"
+    "excerpt": "1. Purpose of this prototype The W-1.1 tiny prototype is a small GPT-2-style decoder-only Transformer created to verify the complete language-model pipeline before spending time and GPU money on the final 125-million-parameter model. It is a pipeline test, not a production language model. 2. Current prototype…"
   },
   {
     "slug": "w-1.1-125m-architecture",
@@ -77,6 +77,6 @@
     "category": "Research Paper",
     "date": "2026-08-08",
     "sizeMB": "0.30 MB",
-    "excerpt": "W-1.1-125M Production-Ready Decoder-Only Transformer — Final Architecture Specification Status: Architecture freeze / implementation baseline Model class: ~125M parameters Exact core parameter count: 123,688,704 trainable parameters Pretraining target: 5,000,000,000 tokens Primary framework: PyTorch 1. Executive…"
+    "excerpt": "1. Executive Design Summary W-1.1-125M is a modern, decoder-only autoregressive Transformer designed to be trained from scratch. It keeps the model small enough for an independent research project while using current architectural choices that make training and inference efficient: RoPE positional encoding, RMSNorm,…"
   }
 ]

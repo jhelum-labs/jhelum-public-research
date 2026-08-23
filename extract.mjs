@@ -71,6 +71,19 @@ function makeExcerpt(rawText, max = 320) {
   return (lastSpace > max * 0.6 ? cut.slice(0, lastSpace) : cut) + '…'
 }
 
+// Build a preview excerpt from the *cleaned* article body: metadata tables are
+// skipped and tags stripped, so the excerpt (used for cards + the article lede)
+// never repeats the cover-banner content.
+function makeExcerptFromHtml(contentHtml, max = 320) {
+  const withoutTables = contentHtml.replace(/<table[\s\S]*?<\/table>/gi, ' ')
+  const text = withoutTables.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
+  if (!text) return ''
+  if (text.length <= max) return text
+  const cut = text.slice(0, max)
+  const lastSpace = cut.lastIndexOf(' ')
+  return (lastSpace > max * 0.6 ? cut.slice(0, lastSpace) : cut) + '…'
+}
+
 // Convert an embedded image to a base64 data URI (so it is self-contained).
 // NOTE: mammoth >= 1.x exposes `readAsBase64String()` on image elements.
 // Width/height are intentionally omitted so CSS can scale charts responsively.
@@ -89,6 +102,39 @@ function decorateFigures(contentHtml) {
   )
 }
 
+/**
+ * Remove the document's own cover-title block from the top of each article.
+ * The docs begin with a bold banner that repeats the paper name (e.g.
+ * "<strong>W-1.1 SPARK</strong>", "FINAL TECHNICAL REPORT / W-1.1 / WAI-125M").
+ * The article page already shows the title, category and date above the body,
+ * so this duplicate banner is stripped — it is always a run of leading <p>
+ * blocks that precedes the first heading, table or list.
+ */
+function stripCoverBanner(contentHtml) {
+  let s = contentHtml
+  while (true) {
+    const m = /^<p(\s[^>]*)?>[\s\S]*?<\/p>/.exec(s)
+    if (!m) break
+
+    // Consume this paragraph plus any following whitespace, then look ahead.
+    const rest = s.slice(m[0].length)
+    const ws = (rest.match(/^\s*/) || [''])[0].length
+    const next = rest.slice(ws)
+
+    // Keep stripping only while the next block is another <p> (the cover banner
+    // is always a run of leading paragraphs). A heading, table, list, figure or
+    // any other element ends the banner.
+    if (/^<p(\s[^>]*)?>/i.test(next)) {
+      s = next
+      continue
+    }
+
+    // Banner complete — return the stripped remainder.
+    return next
+  }
+  return s
+}
+
 async function processFile(category, fileName) {
   const fullPath = path.join(SOURCES[category], fileName)
   const slug = slugify(fileName)
@@ -97,14 +143,14 @@ async function processFile(category, fileName) {
   const title = titleFromFileName(fileName)
 
   const raw = await mammoth.extractRawText({ path: fullPath })
-  const excerpt = makeExcerpt(raw.value)
 
   const htmlResult = await mammoth.convertToHtml(
     { path: fullPath },
     { convertImage: mammoth.images.imgElement(convertImage) },
   )
 
-  const contentHtml = decorateFigures(htmlResult.value)
+  const contentHtml = stripCoverBanner(decorateFigures(htmlResult.value))
+  const excerpt = makeExcerptFromHtml(contentHtml) || makeExcerpt(raw.value)
 
   const sizeMB = (stats.size / (1024 * 1024)).toFixed(2) + ' MB'
   const date = stats.mtime.toISOString().slice(0, 10)
