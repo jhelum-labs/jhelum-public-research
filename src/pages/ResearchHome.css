@@ -57,33 +57,127 @@
 
 .section-head {
   display: flex;
-  align-items: flex-end;
+  align-items: baseline;
   justify-content: space-between;
   gap: 16px;
   margin-bottom: 32px;
-}
-
-.section-head__text {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
 }
 
 .section-title {
   font-size: clamp(1.8rem, 3.4vw, 2.4rem);
 }
 
-.section-subtitle {
-  font-size: 0.95rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--color-muted);
-}
-
 .section-count {
   color: var(--color-muted);
   font-size: 0.92rem;
+}
+
+/* W-1.1 folder — dark, cursive, expandable to reveal all research */
+.folder {
+  border-radius: 18px;
+  overflow: hidden;
+  background: #0e0e0e;
+  border: 1px solid #262626;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
+}
+
+.folder__toggle {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  padding: 22px 26px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #f5f5f5;
+  text-align: left;
+  font-family: inherit;
+  transition: background-color 0.18s ease;
+}
+
+.folder__toggle:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.folder__icon {
+  display: flex;
+  align-items: center;
+  color: #f0f0f0;
+}
+
+.folder__name {
+  font-family: var(--font-script);
+  font-size: 2.2rem;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: #ffffff;
+  text-transform: lowercase;
+}
+
+.folder__hint {
+  margin-left: auto;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  color: #a1a1a1;
+  white-space: nowrap;
+}
+
+.folder__chevron-wrap {
+  display: flex;
+  align-items: center;
+  color: #c9c9c9;
+  transition: transform 0.22s ease;
+}
+
+.folder--open .folder__chevron-wrap {
+  transform: rotate(180deg);
+}
+
+.folder__content {
+  border-top: 1px solid #262626;
+  background: #0e0e0e;
+}
+
+.folder__content .loading {
+  color: #a1a1a1;
+  padding: 28px 26px;
+  margin: 0;
+}
+
+/* Research rows inherit a dark surface inside the folder */
+.folder__content .research-row {
+  color: #e8e8e8;
+  border-color: #262626;
+}
+
+.folder__content .research-row:first-child {
+  border-top-color: #262626;
+}
+
+.folder__content .research-row:hover {
+  opacity: 0.85;
+}
+
+.folder__content .research-row__index {
+  color: #7d7d7d;
+}
+
+.folder__content .research-row__date {
+  color: #9c9c9c;
+}
+
+.folder__content .badge--paper {
+  background: #1b1b1b;
+  color: #e8e8e8;
+  border-color: #3a3a3a;
+}
+
+.folder__content .badge--prod {
+  background: #141414;
+  color: #b9b9b9;
+  border-color: #333;
 }
 
 .research-list {
