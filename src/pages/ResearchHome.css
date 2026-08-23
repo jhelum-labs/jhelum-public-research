@@ -43,17 +43,6 @@
   color: var(--color-text-soft);
 }
 
-.hero__model {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(1.6rem, 3.6vw, 2.4rem);
-  letter-spacing: 0.04em;
-  margin: 20px 0 0;
-  padding: 8px 28px;
-  border: 1px solid var(--color-border);
-  border-radius: 999px;
-}
-
 .hero__lead {
   max-width: 640px;
   margin: 28px auto 0;
