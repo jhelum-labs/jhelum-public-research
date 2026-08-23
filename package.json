@@ -1,0 +1,24 @@
+{
+  "name": "jhelum-labs-research",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Jhelum Labs Research — an OpenAI-style research portal for the W-1.1 model documents",
+  "scripts": {
+    "extract": "node extract.mjs",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "postinstall": "npm run extract"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^7.18.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.1.0",
+    "mammoth": "^1.8.0",
+    "vite": "^8.2.2"
+  }
+}

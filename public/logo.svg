@@ -1,0 +1,11 @@
+<svg width="150" height="40" viewBox="0 0 300 80" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Jhelum Labs">
+  <rect width="80" height="80" rx="20" fill="url(#lpgrad)"/>
+  <path d="M50 24c-4.8 0-8.4 1.4-10.8 4.2-2.4 2.8-3.6 6.6-3.6 11.4v17h5.4V39.6c0-3.6.8-6.3 2.4-8 1.6-1.6 3.6-2.4 6.1-2.4h.5v5.4h6v-5.4h2.4c1.7 0 3.1.5 4.3 1.4 1.2 1 1.8 2.3 1.8 4v17h5.4V27.4c0-1.8-.6-3.3-1.9-4.7C63.4 21.3 61.7 20.6 59.5 20.6H50V24z" fill="#ffffff"/>
+  <text x="96" y="49" font-family="Georgia, 'Times New Roman', serif" font-size="34" font-weight="700" fill="#0f172a">Jhelum <tspan fill="#4F46E5">Labs</tspan></text>
+  <defs>
+    <linearGradient id="lpgrad" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#4F46E5"/>
+      <stop offset="1" stop-color="#0EA5E9"/>
+    </linearGradient>
+  </defs>
+</svg>

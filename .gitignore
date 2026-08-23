@@ -1,0 +1,14 @@
+# Dependencies
+node_modules
+
+# Build output
+dist
+dist-ssr
+
+# Vite / misc
+*.local
+.DS_Store
+*.log
+
+# Copied source docx files (keep the originals on the D: drive)
+d_drive_copy/
