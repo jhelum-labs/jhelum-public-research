@@ -79,10 +79,9 @@ export default function Logo({ to = '/', as = 'link' }) {
     return (
       <Link to={to} className="logo-link" aria-label="Jhelum Labs Research home">
         <img
-          src="/logo.png"
+          src={`${import.meta.env.BASE_URL}logo.png`}
           alt="Jhelum Labs"
           className="logo__img"
-          style={{ maxHeight: '44px' }}
         />
       </Link>
     )
