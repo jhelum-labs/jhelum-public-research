@@ -72,36 +72,31 @@
   font-size: 0.92rem;
 }
 
-/* W-1.1 folder — links to the dedicated W-1.1 research page.
-   White in light mode, dark in dark mode, cursive label. */
-.folder {
+/* W-1.1 entry — the single clickable row that opens the W-1.1 research page */
+.w11-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.w11-row {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 16px;
-  padding: 22px 26px;
-  border-radius: 18px;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  box-shadow: var(--shadow-card);
+  padding: 22px 8px;
+  border-bottom: 1px solid var(--color-border);
+  border-top: 1px solid var(--color-border);
   color: inherit;
-  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+  transition: opacity 0.18s ease, padding-left 0.18s ease;
 }
 
-.folder:hover {
+.w11-row:hover {
   text-decoration: none;
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-card-hover);
-  border-color: var(--color-text-soft);
+  opacity: 0.75;
+  padding-left: 14px;
 }
 
-.folder__icon,
-.folder__arrow {
-  display: flex;
-  align-items: center;
-  color: var(--color-text-soft);
-}
-
-.folder__name {
+.w11-row__name {
   font-family: var(--font-script);
   font-size: 2.2rem;
   font-weight: 400;
@@ -111,26 +106,26 @@
   text-transform: lowercase;
 }
 
-.folder__hint {
-  margin-left: auto;
-  font-size: 0.85rem;
-  letter-spacing: 0.05em;
+.w11-row__meta {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.w11-row__date {
+  font-size: 0.88rem;
   color: var(--color-muted);
   white-space: nowrap;
 }
 
-.folder__arrow {
+.w11-row__arrow {
   font-size: 1.35rem;
+  color: var(--color-text-soft);
   transition: transform 0.2s ease;
 }
 
-.folder:hover .folder__arrow {
+.w11-row:hover .w11-row__arrow {
   transform: translateX(4px);
-}
-
-.research-list {
-  display: flex;
-  flex-direction: column;
 }
 
 .loading {
