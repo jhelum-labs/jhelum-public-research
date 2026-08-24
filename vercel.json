@@ -7,8 +7,7 @@
     { "source": "/", "destination": "/research", "permanent": false }
   ],
   "rewrites": [
-    { "source": "/research/research/:path*", "destination": "/index.html" },
-    { "source": "/research/w-1.1", "destination": "/index.html" },
+    { "source": "/research/((?!assets|index\\.json|.*\\.html$|.*\\.js$|.*\\.css$).*)", "destination": "/index.html" },
     { "source": "/research", "destination": "/index.html" }
   ]
 }
