@@ -1,5 +1,15 @@
 [
   {
+    "slug": "w-1.2-architecture",
+    "title": "W-1.2 Architecture",
+    "category": "Research Paper",
+    "date": "2026-08-23",
+    "sizeMB": "0.18 MB",
+    "authors": ["Wasif Ali"],
+    "readingTime": "14 min read",
+    "excerpt": "W-1.2 is Jhelum Labs' planned second-generation experimental language model, scaling from 124M to 353M trainable parameters. It introduces grouped-query attention (16 query heads, 8 KV heads), a 50,000-token BPE vocabulary, 4,096-token context window, and targets 8 billion training tokens — while preserving the transparent decoder-only Transformer design of W-1.1."
+  },
+  {
     "slug": "w-1.1-project-instruct",
     "title": "Project Instruct",
     "category": "Production Document",

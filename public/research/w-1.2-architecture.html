@@ -1,0 +1,206 @@
+<h2 id="heading-0">Executive Summary</h2>
+<p>W-1.2 is Jhelum Labs' planned second-generation experimental language model. It scales the laboratory's W-1.1 work from approximately 124 million to <strong>353 million trainable parameters</strong> while preserving a transparent, decoder-only causal Transformer design. The model is intended for research, controlled public experimentation, and future instruction-tuning work — not for high-stakes autonomous decisions.</p>
+<table>
+<thead><tr><th>Design element</th><th>W-1.2 specification</th></tr></thead>
+<tbody>
+<tr><td>Architecture</td><td>Decoder-only causal Transformer</td></tr>
+<tr><td>Parameters</td><td>353,240,064 trainable parameters</td></tr>
+<tr><td>Vocabulary</td><td>50,000-token BPE vocabulary</td></tr>
+<tr><td>Context length</td><td>4,096 tokens</td></tr>
+<tr><td>Transformer blocks</td><td>24</td></tr>
+<tr><td>Model width</td><td>1,024</td></tr>
+<tr><td>Attention</td><td>16 query heads; 8 key/value heads (GQA)</td></tr>
+<tr><td>Head dimension</td><td>64</td></tr>
+<tr><td>Feed-forward width</td><td>3,072 with SwiGLU</td></tr>
+<tr><td>Position encoding</td><td>Rotary Position Embeddings (RoPE)</td></tr>
+<tr><td>Normalization</td><td>Pre-RMSNorm</td></tr>
+<tr><td>Precision target</td><td>BF16 training; FP16/BF16 inference</td></tr>
+<tr><td>Training target</td><td>8,000,000,000 tokens</td></tr>
+</tbody>
+</table>
+
+<h2 id="heading-1">Design Objectives</h2>
+<ul>
+<li>Improve language modeling quality over W-1.1 through greater depth, width and training data.</li>
+<li>Support a 4,096-token context window without changing the causal next-token objective.</li>
+<li>Keep inference practical through grouped-query attention and tied embeddings.</li>
+<li>Train on 8 billion tokens from a quality-controlled, predominantly human-written corpus.</li>
+<li>Preserve reproducibility through explicit configuration, checkpoints, manifests and evaluation artifacts.</li>
+</ul>
+
+<h2 id="heading-2">1. Model Architecture</h2>
+<p>W-1.2 maps discrete token identifiers into 1,024-dimensional vectors, processes those vectors through 24 identical causal decoder blocks, applies a final RMSNorm, and projects the hidden states back to the 50,000-token vocabulary. The language-model head shares its weights with the token embedding matrix.</p>
+
+<h3 id="heading-3">1.1 Top-level Computation</h3>
+<ul>
+<li>Input tokens → token embedding matrix.</li>
+<li>Twenty-four pre-normalized causal Transformer blocks.</li>
+<li>Final RMSNorm → tied vocabulary projection.</li>
+<li>Cross-entropy loss on the next token, with future tokens blocked by a causal mask.</li>
+</ul>
+
+<h3 id="heading-4">1.2 Decoder Block</h3>
+<p>Each block applies RMSNorm before the attention and MLP sublayers. Residual connections provide short gradient paths through the full network. All linear projections use no bias unless later experiments demonstrate a clear benefit.</p>
+
+<h3 id="heading-5">1.3 Parameter Accounting</h3>
+<table>
+<thead><tr><th>Component</th><th>Parameters</th></tr></thead>
+<tbody>
+<tr><td>Tied token embedding / LM head</td><td>51,200,000</td></tr>
+<tr><td>Attention projections across 24 blocks</td><td>75,497,472</td></tr>
+<tr><td>SwiGLU projections across 24 blocks</td><td>226,492,416</td></tr>
+<tr><td>Block and final RMSNorm scales</td><td>50,176</td></tr>
+<tr><td><strong>Total</strong></td><td><strong>353,240,064</strong></td></tr>
+</tbody>
+</table>
+
+<h2 id="heading-6">2. Causal Grouped-Query Attention</h2>
+<p>Attention lets each token combine information from relevant earlier positions. W-1.2 uses <strong>16 query heads but only 8 key/value heads</strong>. Two query heads therefore share each key/value head, reducing the key-value cache relative to full multi-head attention while retaining multiple query subspaces.</p>
+
+<h3 id="heading-7">2.1 Attention Equation</h3>
+<p><strong>Attention(Q, K, V) = softmax((QKᵀ / √dₕ) + M) V</strong></p>
+<p>Here, dₕ = 64 and M is the upper-triangular causal mask. Masked future positions receive negative infinity before softmax, giving them zero attention probability. A token can use its own current representation and all preceding tokens, but it cannot read any token that appears later in the sequence.</p>
+
+<h3 id="heading-8">2.2 Rotary Position Encoding</h3>
+<p>RoPE rotates pairs of query and key features by position-dependent angles. This introduces relative positional structure directly into the attention calculation without adding a separate learned position vector to the token embedding.</p>
+
+<h2 id="heading-9">3. Feed-Forward and Normalization Design</h2>
+
+<h3 id="heading-10">3.1 SwiGLU MLP</h3>
+<p><strong>SwiGLU(x) = W<sub>down</sub>[SiLU(W<sub>gate</sub> x) ⊙ (W<sub>up</sub> x)]</strong></p>
+<p>Each block expands the 1,024-dimensional residual stream to two 3,072-dimensional branches. One branch supplies a SiLU gate, the other supplies content, and their elementwise product is projected back to the model width.</p>
+
+<h3 id="heading-11">3.2 RMSNorm</h3>
+<p>RMSNorm rescales hidden states using their root-mean-square magnitude and a learned per-channel scale. Pre-normalization is selected to improve optimization stability across the 24-layer stack.</p>
+
+<h2 id="heading-12">4. Tokenization and Data Design</h2>
+<p>The W-1.2 tokenizer will be trained from the final cleaned corpus rather than inherited from W-1.1. A 50,000-entry BPE vocabulary is selected to improve coverage of natural language, scientific terminology and code while keeping the embedding table within the target parameter budget.</p>
+
+<h3 id="heading-13">4.1 Corpus Target</h3>
+<table>
+<thead><tr><th>Property</th><th>Value</th></tr></thead>
+<tbody>
+<tr><td>Final cleaned text</td><td>Approximately 40 GB</td></tr>
+<tr><td>Primary content</td><td>Predominantly human-written, licensed and traceable text</td></tr>
+<tr><td>Training tokens</td><td>8,000,000,000</td></tr>
+<tr><td>Validation tokens</td><td>25,000,000</td></tr>
+<tr><td>Test tokens</td><td>5,000,000</td></tr>
+<tr><td>Binary dtype</td><td>uint16 (valid for 50,000-token vocabulary)</td></tr>
+</tbody>
+</table>
+
+<h3 id="heading-14">4.2 Quality Controls</h3>
+<ul>
+<li>License and provenance record for every source.</li>
+<li>Exact and near-duplicate removal before split creation.</li>
+<li>Language, encoding, corruption, boilerplate and low-information filters.</li>
+<li>Removal or masking of exposed personal data and obvious secrets.</li>
+<li>Document-level split assignment to prevent train/validation leakage.</li>
+<li>Tokenizer fertility, unknown-token behavior and domain coverage tests.</li>
+</ul>
+
+<h2 id="heading-15">5. Training Configuration</h2>
+<p>Pretraining uses standard causal language modeling: for every sequence, input token t predicts token t+1. The preferred global token batch is 1,048,576 tokens per optimizer step. At that batch size, 8 billion training tokens correspond to approximately 7,630 optimizer steps.</p>
+<table>
+<thead><tr><th>Design element</th><th>W-1.2 specification</th></tr></thead>
+<tbody>
+<tr><td>Objective</td><td>Next-token cross-entropy</td></tr>
+<tr><td>Sequence length</td><td>4,096 tokens</td></tr>
+<tr><td>Global tokens per step</td><td>1,048,576</td></tr>
+<tr><td>Optimizer steps</td><td>Approximately 7,630</td></tr>
+<tr><td>Optimizer</td><td>AdamW</td></tr>
+<tr><td>Peak learning rate</td><td>3.0 × 10⁻⁴</td></tr>
+<tr><td>Schedule</td><td>Warmup followed by cosine decay</td></tr>
+<tr><td>Weight decay</td><td>0.1</td></tr>
+<tr><td>Gradient clipping</td><td>Global norm 1.0</td></tr>
+<tr><td>Training precision</td><td>BF16</td></tr>
+<tr><td>Checkpointing</td><td>Periodic full-state, resumable checkpoints</td></tr>
+</tbody>
+</table>
+
+<h3 id="heading-16">5.1 Suitable GPUs</h3>
+<ul>
+<li>NVIDIA B200</li>
+<li>NVIDIA H200</li>
+<li>NVIDIA H100 80GB</li>
+<li>NVIDIA A100 80GB</li>
+</ul>
+
+<h2 id="heading-17">6. Checkpoint and Recovery Standard</h2>
+<p>A recoverable checkpoint must contain enough state to continue the same optimization trajectory after interruption. Weight-only snapshots are useful for inference but are not sufficient for exact training resumption.</p>
+<ul>
+<li>Model weights and architecture configuration.</li>
+<li>Optimizer state and learning-rate scheduler state.</li>
+<li>Current optimizer step and total tokens processed.</li>
+<li>Gradient-scaler state when applicable.</li>
+<li>Random-number-generator states and data-stream position.</li>
+<li>Validation history, best-checkpoint pointer and integrity hashes.</li>
+</ul>
+
+<h2 id="heading-18">7. Evaluation Plan</h2>
+<table>
+<thead><tr><th>Category</th><th>Benchmarks / method</th></tr></thead>
+<tbody>
+<tr><td>Intrinsic</td><td>Validation/test loss, perplexity, token-level accuracy</td></tr>
+<tr><td>Knowledge &amp; science</td><td>ARC Easy, ARC Challenge, OpenBookQA, SciQ</td></tr>
+<tr><td>Commonsense</td><td>HellaSwag, PIQA, WinoGrande, BoolQ</td></tr>
+<tr><td>Language quality</td><td>Human review for coherence, repetition and factuality</td></tr>
+<tr><td>Code</td><td>Syntax-aware generation tests and curated code problems</td></tr>
+<tr><td>Safety</td><td>Prompt suites for harmful content, privacy and high-stakes advice</td></tr>
+<tr><td>Efficiency</td><td>Tokens/second, peak memory, latency and output stability</td></tr>
+</tbody>
+</table>
+
+<h2 id="heading-19">8. Post-Pretraining Phases</h2>
+<ul>
+<li>Supervised instruction tuning on audited, high-quality instruction/response examples.</li>
+<li>Preference optimization using carefully reviewed chosen/rejected response pairs.</li>
+<li>Safety tuning and refusal calibration without destroying general helpfulness.</li>
+<li>Regression evaluation against the frozen pretrained and instruction-tuned baselines.</li>
+</ul>
+
+<h2 id="heading-20">9. Risks and Design Controls</h2>
+<table>
+<thead><tr><th>Risk</th><th>Control</th></tr></thead>
+<tbody>
+<tr><td>Data contamination</td><td>Maintain source manifests; deduplicate before splitting; scan benchmark overlap.</td></tr>
+<tr><td>Overfitting</td><td>Track validation loss and domain slices; preserve best checkpoints.</td></tr>
+<tr><td>Instability</td><td>Use BF16, warmup, gradient clipping and full-state recovery.</td></tr>
+<tr><td>Hallucination</td><td>Document limits; evaluate factuality; do not represent generation as verified truth.</td></tr>
+<tr><td>Unsafe output</td><td>Run safety evaluation and provide explicit experimental-use warnings.</td></tr>
+<tr><td>License risk</td><td>Publish weights only after completing a source-by-source training-data audit.</td></tr>
+</tbody>
+</table>
+
+<h2 id="heading-21">10. Release Artifact Layout</h2>
+<pre><code>w-1.2/
+├── config.json
+├── tokenizer.json
+├── model_card.md
+├── src/
+├── evaluation/
+├── charts/
+└── weights/
+    ├── w-1.2.safetensors
+    └── SHA256SUMS</code></pre>
+
+<h2 id="heading-22">11. Acceptance Criteria</h2>
+<ul>
+<li>Parameter count matches the canonical configuration exactly.</li>
+<li>Tokenizer vocabulary, special-token IDs and model configuration agree.</li>
+<li>All 8B planned tokens are accounted for, or the release clearly states the actual count.</li>
+<li>No train/validation/test overlap is detected by the final audit.</li>
+<li>Final and best checkpoints load and generate deterministic smoke-test outputs.</li>
+<li>Evaluation results and limitations are published with reproducible settings.</li>
+<li>Weights, tokenizer, configuration and documentation pass SHA-256 verification.</li>
+</ul>
+
+<h2 id="heading-23">References</h2>
+<ul>
+<li>Vaswani, A. et al. (2017). Attention Is All You Need. arXiv:1706.03762.</li>
+<li>Shazeer, N. (2020). GLU Variants Improve Transformer. arXiv:2002.05202.</li>
+<li>Su, J. et al. (2021). RoFormer: Enhanced Transformer with Rotary Position Embedding. arXiv:2104.09864.</li>
+<li>Zhang, B. &amp; Sennrich, R. (2019). Root Mean Square Layer Normalization. arXiv:1910.07467.</li>
+<li>Ainslie, J. et al. (2023). GQA: Training Generalized Multi-Query Transformer Models from Multi-Head Checkpoints. arXiv:2305.13245.</li>
+<li>Hoffmann, J. et al. (2022). Training Compute-Optimal Large Language Models. arXiv:2203.15556.</li>
+</ul>

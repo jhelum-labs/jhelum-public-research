@@ -223,6 +223,39 @@ const DESIGNS = {
   },
 }
 
+  'w-1.2-architecture': {
+    bg: ['#0a0f1e', '#0d1f3c', '#0a1628'],
+    blobs: [
+      { cx: '20%', cy: '35%', r: '55%', color: '#6366f1', op: 0.65 },
+      { cx: '75%', cy: '50%', r: '50%', color: '#0ea5e9', op: 0.55 },
+      { cx: '50%', cy: '85%', r: '45%', color: '#8b5cf6', op: 0.4 },
+    ],
+    shapes: (w, h) => (
+      <>
+        {/* GQA head diagram — 16 query heads, 8 KV heads */}
+        {[...Array(16)].map((_, i) => (
+          <circle key={`q${i}`} cx={w * (0.1 + i * 0.053)} cy={h * 0.28} r={5}
+            fill="rgba(255,255,255,0.22)" />
+        ))}
+        {[...Array(8)].map((_, i) => (
+          <circle key={`kv${i}`} cx={w * (0.178 + i * 0.089)} cy={h * 0.62} r={7}
+            fill="rgba(255,255,255,0.3)" />
+        ))}
+        {/* Lines connecting query pairs to KV heads */}
+        {[...Array(8)].map((_, i) => (
+          <g key={`conn${i}`}>
+            <line x1={w*(0.1+i*0.106)} y1={h*0.29} x2={w*(0.178+i*0.089)} y2={h*0.61}
+              stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
+            <line x1={w*(0.153+i*0.106)} y1={h*0.29} x2={w*(0.178+i*0.089)} y2={h*0.61}
+              stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
+          </g>
+        ))}
+        <line x1={w*0.05} y1={h*0.45} x2={w*0.95} y2={h*0.45}
+          stroke="rgba(255,255,255,0.05)" strokeWidth="1" strokeDasharray="4 6" />
+      </>
+    ),
+  },
+
 const FALLBACK = {
   bg: ['#0f0c29', '#302b63', '#24243e'],
   blobs: [
