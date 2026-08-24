@@ -32,11 +32,7 @@ function StatsBar({ articles }) {
         <span className="stats-bar__num">{docs}</span>
         <span className="stats-bar__label">Production Docs</span>
       </div>
-      <div className="stats-bar__divider" />
-      <div className="stats-bar__item">
-        <span className="stats-bar__num">W-1.1</span>
-        <span className="stats-bar__label">Model Program</span>
-      </div>
+
     </div>
   )
 }
