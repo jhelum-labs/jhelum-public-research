@@ -5,7 +5,7 @@ import './Playground.css'
 // ---------------------------------------------------------------------------
 // Config
 // ---------------------------------------------------------------------------
-const API_URL = 'https://jhelum-labs-w-1-1-playground.hf.space/generate'
+const API_URL = 'https://wasifali1-jhelum-labs.hf.space/generate'
 
 const WEIGHTS_URL =
   'https://github.com/wasif-ali-ganie/origin-labs-w-1.1/releases/download/v1.0.0/w-1.1.safetensors'
