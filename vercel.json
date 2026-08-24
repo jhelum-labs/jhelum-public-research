@@ -5,6 +5,7 @@
   "outputDirectory": "dist",
   "routes": [
     { "handle": "filesystem" },
-    { "src": "/.*", "dest": "/index.html" }
+    { "src": "/research/(.*)", "dest": "/index.html" },
+    { "src": "/research", "dest": "/index.html" }
   ]
 }
