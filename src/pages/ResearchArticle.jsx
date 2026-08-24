@@ -203,6 +203,9 @@ export default function ResearchArticle() {
           )}
         </div>
         <h1 className="article__title">{article.title}</h1>
+        {article.authors?.length > 0 && (
+          <p className="article__authors">{article.authors.join(', ')}</p>
+        )}
         {article.excerpt && <p className="article__lede">{article.excerpt}</p>}
       </header>
 
