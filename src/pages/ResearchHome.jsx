@@ -98,11 +98,7 @@ export default function ResearchHome() {
           <p className="hero__eyebrow">JHELUM LABS · AI RESEARCH</p>
           <h1 className="hero__title">Jhelum-lab</h1>
           <p className="hero__subtitle">research</p>
-          <p className="hero__lead">
-            Every piece of research performed on the <strong>W-1.1</strong> model
-            program — architectures, evaluations, and production project lines —
-            published in full.
-          </p>
+
         </div>
       </section>
 
