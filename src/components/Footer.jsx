@@ -9,8 +9,7 @@ export default function Footer() {
         <div className="footer__brand">
           <Logo as="div" />
           <p className="footer__blurb">
-            Jhelum Labs is an independent AI research group open-sourcing its
-            work, beginning with the <strong>W-1.1</strong> model program.
+            Jhelum Labs is an independent AI research group publishing its work openly.
           </p>
         </div>
 
@@ -19,7 +18,7 @@ export default function Footer() {
           <ul className="footer__list">
             <li><a href="/">Home</a></li>
             <li><a href="/#all-research">All Research</a></li>
-            <li><a href="/#all-research">W-1.1</a></li>
+
           </ul>
         </div>
 
