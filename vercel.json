@@ -3,11 +3,20 @@
   "framework": "vite",
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "redirects": [
-    { "source": "/", "destination": "/research", "permanent": false }
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "headers": [
+    {
+      "source": "/research/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }]
+    }
   ],
   "rewrites": [
-    { "source": "/research/((?!assets|index\\.json|.*\\.html$|.*\\.js$|.*\\.css$).*)", "destination": "/index.html" },
-    { "source": "/research", "destination": "/index.html" }
+    { "source": "/research", "destination": "/index.html" },
+    { "source": "/research/w-1.1", "destination": "/index.html" },
+    { "source": "/research/research/:slug", "destination": "/index.html" }
+  ],
+  "redirects": [
+    { "source": "/", "destination": "/research", "permanent": false }
   ]
 }
