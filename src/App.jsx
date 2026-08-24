@@ -6,6 +6,7 @@ import Footer from './components/Footer.jsx'
 import ResearchHome from './pages/ResearchHome.jsx'
 import W11Research from './pages/W11Research.jsx'
 import ResearchArticle from './pages/ResearchArticle.jsx'
+import Playground from './pages/Playground.jsx'
 
 function ScrollToTop() {
   const { pathname, hash } = useLocation()
@@ -33,6 +34,7 @@ export default function App() {
             <Route path="/" element={<ResearchHome />} />
             <Route path="/w-1.1" element={<W11Research />} />
             <Route path="/research/:slug" element={<ResearchArticle />} />
+            <Route path="/playground" element={<Playground />} />
             <Route path="*" element={<ResearchHome />} />
           </Routes>
         </main>
