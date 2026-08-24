@@ -99,11 +99,11 @@
 .paper-card {
   display: flex;
   flex-direction: column;
-  padding: 28px 30px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   background: var(--color-surface);
   color: inherit;
+  overflow: hidden;
   transition: box-shadow 0.2s ease, transform 0.2s ease;
   min-height: 240px;
 }
@@ -114,12 +114,31 @@
   transform: translateY(-2px);
 }
 
+.paper-card__cover {
+  width: 100%;
+  line-height: 0;
+  overflow: hidden;
+}
+
+.paper-card__cover .cover-img {
+  width: 100%;
+  height: 140px;
+  display: block;
+}
+
+.paper-card__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 22px 24px 24px;
+}
+
 .paper-card__top {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 .paper-card__read {

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useResearchIndex, formatDate } from '../hooks/useResearch.js'
+import { CoverImage } from '../components/CoverImage.jsx'
 import './W11Research.css'
 
 const CATEGORIES = ['All', 'Research Paper', 'Production Document']
@@ -8,19 +9,24 @@ const CATEGORIES = ['All', 'Research Paper', 'Production Document']
 function PaperCard({ article }) {
   return (
     <Link to={`/research/${article.slug}`} className="paper-card">
-      <div className="paper-card__top">
-        <span className={`badge ${article.category === 'Production Document' ? 'badge--prod' : 'badge--paper'}`}>
-          {article.category}
-        </span>
-        {article.readingTime && (
-          <span className="paper-card__read">{article.readingTime}</span>
-        )}
+      <div className="paper-card__cover">
+        <CoverImage slug={article.slug} width={400} height={140} />
       </div>
-      <h3 className="paper-card__title">{article.title}</h3>
-      <p className="paper-card__excerpt">{article.excerpt}</p>
-      <div className="paper-card__footer">
-        <span className="paper-card__date">{formatDate(article.date)}</span>
-        <span className="paper-card__arrow" aria-hidden="true">→</span>
+      <div className="paper-card__body">
+        <div className="paper-card__top">
+          <span className={`badge ${article.category === 'Production Document' ? 'badge--prod' : 'badge--paper'}`}>
+            {article.category}
+          </span>
+          {article.readingTime && (
+            <span className="paper-card__read">{article.readingTime}</span>
+          )}
+        </div>
+        <h3 className="paper-card__title">{article.title}</h3>
+        <p className="paper-card__excerpt">{article.excerpt}</p>
+        <div className="paper-card__footer">
+          <span className="paper-card__date">{formatDate(article.date)}</span>
+          <span className="paper-card__arrow" aria-hidden="true">→</span>
+        </div>
       </div>
     </Link>
   )

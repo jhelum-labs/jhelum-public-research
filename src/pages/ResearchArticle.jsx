@@ -1,9 +1,10 @@
 import { useEffect, useState, useRef } from 'react'
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import { useResearchIndex, fetchArticleHtml, formatDate } from '../hooks/useResearch.js'
+import { CoverImage } from '../components/CoverImage.jsx'
 import './ResearchArticle.css'
 
-function ShareButton({ title }) {
+function ShareButton() {
   const [copied, setCopied] = useState(false)
   const copy = () => {
     navigator.clipboard.writeText(window.location.href).then(() => {
@@ -13,11 +14,7 @@ function ShareButton({ title }) {
   }
   return (
     <button className="share-btn" onClick={copy} title="Copy link">
-      {copied ? (
-        <><CheckIcon /> Copied</>
-      ) : (
-        <><LinkIcon /> Share</>
-      )}
+      {copied ? <><CheckIcon /> Copied</> : <><LinkIcon /> Share</>}
     </button>
   )
 }
@@ -76,10 +73,7 @@ function TableOfContents({ html }) {
       <ul className="toc__list">
         {headings.map(({ id, text, level }) => (
           <li key={id} className={`toc__item toc__item--${level.toLowerCase()}`}>
-            <a
-              href={`#${id}`}
-              className={`toc__link${active === id ? ' toc__link--active' : ''}`}
-            >
+            <a href={`#${id}`} className={`toc__link${active === id ? ' toc__link--active' : ''}`}>
               {text}
             </a>
           </li>
@@ -102,7 +96,6 @@ function ArticleBody({ article, onHtmlReady }) {
     fetchArticleHtml(article.slug)
       .then((h) => {
         if (!active) return
-        // Inject IDs onto headings for TOC anchoring
         const injected = h.replace(/<(h[23])(.*?)>/gi, (_, tag, attrs, offset) => {
           const idx = h.slice(0, offset).split(/<h[23]/i).length - 1
           return `<${tag}${attrs} id="heading-${idx}">`
@@ -139,20 +132,9 @@ function ArticleBody({ article, onHtmlReady }) {
 
   return (
     <>
-      <div
-        ref={contentRef}
-        className="article__content"
-        onClick={onContentClick}
-        dangerouslySetInnerHTML={{ __html: html }}
-      />
+      <div ref={contentRef} className="article__content" onClick={onContentClick} dangerouslySetInnerHTML={{ __html: html }} />
       {zoomSrc && (
-        <div
-          className="lightbox"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Enlarged figure"
-          onClick={() => setZoomSrc(null)}
-        >
+        <div className="lightbox" role="dialog" aria-modal="true" aria-label="Enlarged figure" onClick={() => setZoomSrc(null)}>
           <button className="lightbox__close" aria-label="Close zoom" onClick={() => setZoomSrc(null)}>×</button>
           <img src={zoomSrc} alt="" className="lightbox__img" />
         </div>
@@ -164,11 +146,16 @@ function ArticleBody({ article, onHtmlReady }) {
 function RelatedCard({ article }) {
   return (
     <Link to={`/research/${article.slug}`} className="related-card">
-      <span className={`badge ${article.category === 'Production Document' ? 'badge--prod' : 'badge--paper'}`}>
-        {article.category}
-      </span>
-      <h3 className="related-card__title">{article.title}</h3>
-      <p className="related-card__date">{formatDate(article.date)}</p>
+      <div className="related-card__cover">
+        <CoverImage slug={article.slug} width={400} height={120} />
+      </div>
+      <div className="related-card__body">
+        <span className={`badge ${article.category === 'Production Document' ? 'badge--prod' : 'badge--paper'}`}>
+          {article.category}
+        </span>
+        <h3 className="related-card__title">{article.title}</h3>
+        <p className="related-card__date">{formatDate(article.date)}</p>
+      </div>
     </Link>
   )
 }
@@ -198,7 +185,12 @@ export default function ResearchArticle() {
     <article className="article__page">
       <div className="container article__nav">
         <Link to="/" className="article__back">← All research</Link>
-        <ShareButton title={article.title} />
+        <ShareButton />
+      </div>
+
+      {/* Big colorful cover image */}
+      <div className="article__cover">
+        <CoverImage slug={article.slug} width={1200} height={360} />
       </div>
 
       <header className="article__header container">
@@ -209,13 +201,8 @@ export default function ResearchArticle() {
           {article.readingTime && (
             <><span aria-hidden="true">·</span><span>{article.readingTime}</span></>
           )}
-          <span aria-hidden="true">·</span>
-          <span>{article.sizeMB}</span>
         </div>
         <h1 className="article__title">{article.title}</h1>
-        {article.authors?.length > 0 && (
-          <p className="article__authors">{article.authors.join(', ')}</p>
-        )}
         {article.excerpt && <p className="article__lede">{article.excerpt}</p>}
       </header>
 

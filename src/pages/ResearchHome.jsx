@@ -2,6 +2,7 @@ import { memo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useResearchIndex, formatDate } from '../hooks/useResearch.js'
 import { LogoMark } from '../components/Logo.jsx'
+import { CoverImage } from '../components/CoverImage.jsx'
 import './ResearchHome.css'
 
 const CATEGORIES = ['All', 'Research Paper', 'Production Document']
@@ -32,7 +33,6 @@ function StatsBar({ articles }) {
         <span className="stats-bar__num">{docs}</span>
         <span className="stats-bar__label">Production Docs</span>
       </div>
-
     </div>
   )
 }
@@ -41,37 +41,44 @@ function FeaturedCard({ article }) {
   if (!article) return null
   return (
     <Link to={`/research/${article.slug}`} className="featured-card">
-      <div className="featured-card__eyebrow">
-        <span className="badge badge--latest">Latest</span>
-        <span className="featured-card__category">{article.category}</span>
+      <div className="featured-card__cover">
+        <CoverImage slug={article.slug} width={900} height={320} />
       </div>
-      <h2 className="featured-card__title">{article.title}</h2>
-      <p className="featured-card__excerpt">{article.excerpt}</p>
-      <div className="featured-card__footer">
-        <span className="featured-card__date">{formatDate(article.date)}</span>
-        {article.readingTime && <span className="featured-card__read">{article.readingTime}</span>}
-        <span className="featured-card__cta">Read paper →</span>
+      <div className="featured-card__body">
+        <div className="featured-card__eyebrow">
+          <span className="badge badge--latest">Latest</span>
+          <span className="featured-card__category">{article.category}</span>
+        </div>
+        <h2 className="featured-card__title">{article.title}</h2>
+        <p className="featured-card__excerpt">{article.excerpt}</p>
+        <div className="featured-card__footer">
+          <span className="featured-card__date">{formatDate(article.date)}</span>
+          {article.readingTime && <span className="featured-card__read">{article.readingTime}</span>}
+          <span className="featured-card__cta">Read paper →</span>
+        </div>
       </div>
     </Link>
   )
 }
 
-function ResearchRow({ article, index }) {
+function ResearchRow({ article }) {
   return (
     <Link to={`/research/${article.slug}`} className="research-row">
-      <span className="research-row__index">{String(index).padStart(2, '0')}</span>
+      <div className="research-row__thumb">
+        <CoverImage slug={article.slug} width={120} height={80} />
+      </div>
       <span className="research-row__body">
-        <span className={`badge ${article.category === 'Production Document' ? 'badge--prod' : 'badge--paper'}`}>
-          {article.category}
+        <span className="research-row__top">
+          <span className={`badge ${article.category === 'Production Document' ? 'badge--prod' : 'badge--paper'}`}>
+            {article.category}
+          </span>
+          <span className="research-row__date">{formatDate(article.date)}</span>
+          {article.readingTime && <span className="research-row__read">{article.readingTime}</span>}
         </span>
         <h3 className="research-row__title">{article.title}</h3>
         <p className="research-row__excerpt">{article.excerpt}</p>
       </span>
-      <span className="research-row__meta">
-        <span className="research-row__date">{formatDate(article.date)}</span>
-        {article.readingTime && <span className="research-row__read">{article.readingTime}</span>}
-        <span className="research-row__arrow" aria-hidden="true">→</span>
-      </span>
+      <span className="research-row__arrow" aria-hidden="true">→</span>
     </Link>
   )
 }
@@ -94,7 +101,6 @@ export default function ResearchHome() {
           <p className="hero__eyebrow">JHELUM LABS · AI RESEARCH</p>
           <h1 className="hero__title">Jhelum-lab</h1>
           <p className="hero__subtitle">research</p>
-
         </div>
       </section>
 
@@ -107,7 +113,6 @@ export default function ResearchHome() {
       {featured && (
         <section className="featured-section">
           <div className="container">
-            <h2 className="section-label">Latest research</h2>
             <FeaturedCard article={featured} />
           </div>
         </section>
@@ -138,8 +143,8 @@ export default function ResearchHome() {
 
           <div className="research-list">
             {loading && <p className="loading">Loading publications…</p>}
-            {!loading && filtered.map((article, i) => (
-              <ResearchRow key={article.slug} article={article} index={i + 1} />
+            {!loading && filtered.map((article) => (
+              <ResearchRow key={article.slug} article={article} />
             ))}
           </div>
         </div>
