@@ -1,55 +1,42 @@
 ---
-title: Jhelum Labs W-1.1 Playground
+title: Jhelum Labs W-1.1
 emoji: 🧪
 colorFrom: gray
 colorTo: black
-sdk: docker
+sdk: gradio
+sdk_version: "4.44.1"
+app_file: app.py
 pinned: false
-app_port: 7860
+license: apache-2.0
 ---
 
-# Jhelum Labs W-1.1 — Inference API
+# Jhelum Labs W-1.1 — Playground & API
 
-FastAPI backend for the W-1.1 playground at [research.jhelumlabs.com/playground](https://research.jhelumlabs.com/playground).
+123M-parameter experimental language model trained from scratch by Jhelum Labs.
 
-## Endpoints
+## REST API
 
-| Method | Path | Description |
-|--------|------|-------------|
-| GET | `/` | Service info |
-| GET | `/health` | Health check |
-| POST | `/generate` | Generate text |
+The `/generate` endpoint is called by the React research portal.
 
-## POST /generate
-
+**POST `/generate`**
 ```json
 {
-  "prompt": "What is machine learning?",
+  "prompt": "What is photosynthesis?",
   "max_new_tokens": 160,
   "temperature": 0.7,
-  "top_k": 40,
-  "seed": 42
+  "top_k": 40
 }
 ```
 
 **Response:**
 ```json
-{
-  "output": "Machine learning is...",
-  "model": "w-1.1-125m-instruct",
-  "tokens_generated": 94
-}
+{ "output": "...", "model": "w-1.1-125m-instruct" }
 ```
 
 **Error codes:**
-- `429` — Too many requests (rate limited or model busy)
-- `503` — Model loading / cold start
+- `429` — rate limited or model busy
+- `503` — cold start / model loading
 
-## Cold start
-
-On first request, the Space downloads the weights (~500 MB) from the GitHub Release.
-This takes ~60 s. Subsequent requests are fast.
-
-## Rate limiting
-
-Default: 10 requests per IP per minute. Configurable via `RATE_LIMIT_PER_MINUTE` env var.
+## Links
+- [GitHub repo](https://github.com/jhelum-labs/w-1.1)
+- [Research portal](https://github.com/jhelum-labs/jhelum-public-research)
