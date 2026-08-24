@@ -42,7 +42,7 @@ function FeaturedCard({ article }) {
   return (
     <Link to={`/research/${article.slug}`} className="featured-card">
       <div className="featured-card__cover">
-        <CoverImage slug={article.slug} width={900} height={320} />
+        <CoverImage slug={article.slug} title={article.title} width={900} height={320} />
       </div>
       <div className="featured-card__body">
         <div className="featured-card__eyebrow">
@@ -65,7 +65,7 @@ function ResearchRow({ article }) {
   return (
     <Link to={`/research/${article.slug}`} className="research-row">
       <div className="research-row__thumb">
-        <CoverImage slug={article.slug} width={120} height={80} />
+        <CoverImage slug={article.slug} title={article.title} width={120} height={80} />
       </div>
       <span className="research-row__body">
         <span className="research-row__top">

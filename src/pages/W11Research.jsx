@@ -10,7 +10,7 @@ function PaperCard({ article }) {
   return (
     <Link to={`/research/${article.slug}`} className="paper-card">
       <div className="paper-card__cover">
-        <CoverImage slug={article.slug} width={400} height={140} />
+        <CoverImage slug={article.slug} title={article.title} width={400} height={140} />
       </div>
       <div className="paper-card__body">
         <div className="paper-card__top">

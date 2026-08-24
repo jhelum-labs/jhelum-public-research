@@ -147,7 +147,7 @@ function RelatedCard({ article }) {
   return (
     <Link to={`/research/${article.slug}`} className="related-card">
       <div className="related-card__cover">
-        <CoverImage slug={article.slug} width={400} height={120} />
+        <CoverImage slug={article.slug} title={article.title} width={400} height={120} />
       </div>
       <div className="related-card__body">
         <span className={`badge ${article.category === 'Production Document' ? 'badge--prod' : 'badge--paper'}`}>
@@ -190,7 +190,7 @@ export default function ResearchArticle() {
 
       {/* Big colorful cover image */}
       <div className="article__cover">
-        <CoverImage slug={article.slug} width={1200} height={360} />
+        <CoverImage slug={article.slug} title={article.title} width={1200} height={360} />
       </div>
 
       <header className="article__header container">
