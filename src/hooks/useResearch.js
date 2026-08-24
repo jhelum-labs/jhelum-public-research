@@ -8,7 +8,7 @@ export function useResearchIndex() {
 
   useEffect(() => {
     let active = true
-    fetch(`${import.meta.env.BASE_URL}index.json`)
+    fetch(`${import.meta.env.BASE_URL}research/index.json`)
       .then((res) => {
         if (!res.ok) throw new Error(`Failed to load research index (${res.status})`)
         return res.json()
@@ -33,7 +33,7 @@ export function useResearchIndex() {
 
 /** Fetch the full article HTML body for a given slug. */
 export async function fetchArticleHtml(slug) {
-  const res = await fetch(`${import.meta.env.BASE_URL}${slug}.html`)
+  const res = await fetch(`${import.meta.env.BASE_URL}research/${slug}.html`)
   if (!res.ok) throw new Error(`Article not found (${res.status})`)
   return res.text()
 }
