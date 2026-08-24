@@ -1,10 +1,38 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import ResearchCard from '../components/ResearchCard.jsx'
-import { useResearchIndex } from '../hooks/useResearch.js'
+import { useResearchIndex, formatDate } from '../hooks/useResearch.js'
 import './W11Research.css'
+
+const CATEGORIES = ['All', 'Research Paper', 'Production Document']
+
+function PaperCard({ article }) {
+  return (
+    <Link to={`/research/${article.slug}`} className="paper-card">
+      <div className="paper-card__top">
+        <span className={`badge ${article.category === 'Production Document' ? 'badge--prod' : 'badge--paper'}`}>
+          {article.category}
+        </span>
+        {article.readingTime && (
+          <span className="paper-card__read">{article.readingTime}</span>
+        )}
+      </div>
+      <h3 className="paper-card__title">{article.title}</h3>
+      <p className="paper-card__excerpt">{article.excerpt}</p>
+      <div className="paper-card__footer">
+        <span className="paper-card__date">{formatDate(article.date)}</span>
+        <span className="paper-card__arrow" aria-hidden="true">→</span>
+      </div>
+    </Link>
+  )
+}
 
 export default function W11Research() {
   const { articles, loading, error } = useResearchIndex()
+  const [activeFilter, setActiveFilter] = useState('All')
+
+  const filtered = activeFilter === 'All'
+    ? (articles || [])
+    : (articles || []).filter((a) => a.category === activeFilter)
 
   return (
     <section className="w11">
@@ -22,20 +50,33 @@ export default function W11Research() {
           </span>
         </header>
 
-        <div className="research-list w11__list">
-          {loading && <p className="loading">Loading publications…</p>}
-          {error && (
-            <p className="loading">
-              Could not load research ({error}). Run <code>npm run extract</code>{' '}
-              to generate the article content, then restart the dev server.
-            </p>
-          )}
-          {!loading &&
-            !error &&
-            articles.map((article, i) => (
-              <ResearchCard key={article.slug} article={article} index={i + 1} />
-            ))}
+        <div className="filter-tabs" role="tablist">
+          {CATEGORIES.map((cat) => (
+            <button
+              key={cat}
+              role="tab"
+              aria-selected={activeFilter === cat}
+              className={`filter-tab${activeFilter === cat ? ' filter-tab--active' : ''}`}
+              onClick={() => setActiveFilter(cat)}
+            >
+              {cat}
+            </button>
+          ))}
         </div>
+
+        {loading && <p className="loading">Loading publications…</p>}
+        {error && (
+          <p className="loading">
+            Could not load research ({error}). Run <code>npm run extract</code> to generate article content.
+          </p>
+        )}
+        {!loading && !error && (
+          <div className="papers-grid">
+            {filtered.map((article) => (
+              <PaperCard key={article.slug} article={article} />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   )
