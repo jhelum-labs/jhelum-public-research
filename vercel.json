@@ -6,9 +6,8 @@
   "redirects": [
     { "source": "/", "destination": "/research", "permanent": false }
   ],
-  "routes": [
-    { "handle": "filesystem" },
-    { "src": "/research/(.*)", "dest": "/index.html" },
-    { "src": "/research", "dest": "/index.html" }
+  "rewrites": [
+    { "source": "/research/(.*)", "destination": "/index.html" },
+    { "source": "/research", "destination": "/index.html" }
   ]
 }
