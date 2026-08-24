@@ -221,8 +221,6 @@ const DESIGNS = {
       </>
     ),
   },
-}
-
   'w-1.2-architecture': {
     bg: ['#0a0f1e', '#0d1f3c', '#0a1628'],
     blobs: [
@@ -232,7 +230,6 @@ const DESIGNS = {
     ],
     shapes: (w, h) => (
       <>
-        {/* GQA head diagram — 16 query heads, 8 KV heads */}
         {[...Array(16)].map((_, i) => (
           <circle key={`q${i}`} cx={w * (0.1 + i * 0.053)} cy={h * 0.28} r={5}
             fill="rgba(255,255,255,0.22)" />
@@ -241,7 +238,6 @@ const DESIGNS = {
           <circle key={`kv${i}`} cx={w * (0.178 + i * 0.089)} cy={h * 0.62} r={7}
             fill="rgba(255,255,255,0.3)" />
         ))}
-        {/* Lines connecting query pairs to KV heads */}
         {[...Array(8)].map((_, i) => (
           <g key={`conn${i}`}>
             <line x1={w*(0.1+i*0.106)} y1={h*0.29} x2={w*(0.178+i*0.089)} y2={h*0.61}
@@ -255,6 +251,7 @@ const DESIGNS = {
       </>
     ),
   },
+}
 
 const FALLBACK = {
   bg: ['#0f0c29', '#302b63', '#24243e'],
