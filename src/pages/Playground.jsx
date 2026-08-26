@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import './Playground.css'
 
@@ -19,23 +19,10 @@ const MODEL_SPECS = [
 ]
 
 const STEPS = [
-  {
-    title: 'Clone the repository',
-    code: 'git clone https://github.com/jhelum-labs/w-1.1\ncd w-1.1',
-  },
-  {
-    title: 'Set up environment',
-    code: 'python -m venv .venv\n# Windows\n.venv\\Scripts\\activate\n# macOS / Linux\nsource .venv/bin/activate\n\npip install -r requirements.txt',
-  },
-  {
-    title: 'Download the weights',
-    desc: 'Download w-1.1.safetensors and place it inside the weights/ directory.',
-    download: true,
-  },
-  {
-    title: 'Run inference',
-    code: 'python generate.py --prompt "What is photosynthesis?" --device auto',
-  },
+  { title: 'Clone the repository', code: 'git clone https://github.com/jhelum-labs/w-1.1\ncd w-1.1' },
+  { title: 'Set up environment', code: 'python -m venv .venv\n# Windows\n.venv\\Scripts\\activate\n# macOS / Linux\nsource .venv/bin/activate\n\npip install -r requirements.txt' },
+  { title: 'Download the weights', desc: 'Download w-1.1.safetensors and place it inside the weights/ directory.', download: true },
+  { title: 'Run inference', code: 'python generate.py --prompt "What is photosynthesis?" --device auto' },
 ]
 
 const OPTIONS = [
@@ -44,6 +31,36 @@ const OPTIONS = [
   { flag: '--top-k', default: '40', desc: 'Limit sampling to top-k tokens. Set 0 to disable.' },
   { flag: '--device', default: 'auto', desc: 'Auto-detects CUDA. Falls back to CPU automatically.' },
 ]
+
+/* ── Scroll-reveal hook ── */
+function useReveal(threshold = 0.15) {
+  const ref = useRef(null)
+  const [visible, setVisible] = useState(false)
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const obs = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.disconnect() } },
+      { threshold }
+    )
+    obs.observe(el)
+    return () => obs.disconnect()
+  }, [threshold])
+  return [ref, visible]
+}
+
+function Reveal({ children, className = '', delay = 0 }) {
+  const [ref, visible] = useReveal()
+  return (
+    <div
+      ref={ref}
+      className={`reveal ${visible ? 'reveal--in' : ''} ${className}`}
+      style={{ transitionDelay: `${delay}ms` }}
+    >
+      {children}
+    </div>
+  )
+}
 
 function CopyButton({ text }) {
   const [copied, setCopied] = useState(false)
@@ -56,11 +73,7 @@ function CopyButton({ text }) {
         setTimeout(() => setCopied(false), 2000)
       }}
     >
-      {copied ? (
-        <><CheckIcon /> Copied</>
-      ) : (
-        <><CopyIcon /> Copy</>
-      )}
+      {copied ? <><CheckIcon /> Copied</> : <><CopyIcon /> Copy</>}
     </button>
   )
 }
@@ -90,7 +103,7 @@ export default function Playground() {
   return (
     <div className="pg">
 
-      {/* Sticky download bar */}
+      {/* Sticky bar */}
       <div className="pg__sticky-bar">
         <div className="container pg__sticky-inner">
           <span className="pg__sticky-label">W-1.1 · 123M params · Apache-2.0</span>
@@ -102,23 +115,24 @@ export default function Playground() {
 
       <div className="container pg__body">
 
-        <Link to="/" className="pg__back">← Research</Link>
+        <Link to="/" className="pg__back pg__back--anim">← Research</Link>
 
         {/* ── Hero ── */}
         <section className="pg__hero">
           <div className="pg__hero-glow" aria-hidden="true" />
+
           <div className="pg__hero-content">
-            <div className="pg__badge-row">
+            <div className="pg__badge-row pg__hero-anim" style={{ animationDelay: '0ms' }}>
               <span className="pg__badge pg__badge--open">Open Weights</span>
               <span className="pg__badge pg__badge--beta">Beta</span>
             </div>
-            <h1 className="pg__title">W-1.1</h1>
-            <p className="pg__subtitle">by Jhelum Labs</p>
-            <p className="pg__desc">
+            <h1 className="pg__title pg__hero-anim" style={{ animationDelay: '80ms' }}>W-1.1</h1>
+            <p className="pg__subtitle pg__hero-anim" style={{ animationDelay: '160ms' }}>by Jhelum Labs</p>
+            <p className="pg__desc pg__hero-anim" style={{ animationDelay: '240ms' }}>
               A 123M-parameter decoder-only language model trained from scratch.
               Fully open weights — download and run locally in minutes.
             </p>
-            <div className="pg__hero-actions">
+            <div className="pg__hero-actions pg__hero-anim" style={{ animationDelay: '320ms' }}>
               <a href={WEIGHTS_URL} className="pg__btn-primary" download>
                 <DownloadIcon /> Download weights · 493 MB
               </a>
@@ -126,17 +140,21 @@ export default function Playground() {
                 GitHub <ExternalIcon />
               </a>
             </div>
-            <p className="pg__warning">
+            <p className="pg__warning pg__hero-anim" style={{ animationDelay: '400ms' }}>
               ⚠ Experimental research model. Outputs may be inaccurate or repetitive. Not for production use.
             </p>
           </div>
 
           {/* Spec card */}
-          <div className="pg__spec-card">
+          <div className="pg__spec-card pg__spec-card--anim">
             <p className="pg__spec-eyebrow">Model specs</p>
             <ul className="pg__spec-list">
-              {MODEL_SPECS.map(({ label, value }) => (
-                <li key={label} className="pg__spec-item">
+              {MODEL_SPECS.map(({ label, value }, i) => (
+                <li
+                  key={label}
+                  className="pg__spec-item pg__spec-item--anim"
+                  style={{ animationDelay: `${300 + i * 60}ms` }}
+                >
                   <span className="pg__spec-label">{label}</span>
                   <span className="pg__spec-value">{value}</span>
                 </li>
@@ -151,82 +169,90 @@ export default function Playground() {
 
         {/* ── Quick start ── */}
         <section className="pg__section">
-          <h2 className="pg__section-title">Quick start</h2>
+          <Reveal><h2 className="pg__section-title">Quick start</h2></Reveal>
           <div className="pg__steps">
             {STEPS.map((step, i) => (
-              <div key={i} className="pg__step">
-                <div className="pg__step-left">
-                  <div className="pg__step-dot">{i + 1}</div>
-                  {i < STEPS.length - 1 && <div className="pg__step-line" />}
+              <Reveal key={i} delay={i * 80}>
+                <div className="pg__step">
+                  <div className="pg__step-left">
+                    <div className="pg__step-dot pg__step-dot--anim" style={{ animationDelay: `${i * 100}ms` }}>{i + 1}</div>
+                    {i < STEPS.length - 1 && <div className="pg__step-line" />}
+                  </div>
+                  <div className="pg__step-body">
+                    <h3 className="pg__step-title">{step.title}</h3>
+                    {step.desc && <p className="pg__step-desc">{step.desc}</p>}
+                    {step.download && (
+                      <a href={WEIGHTS_URL} className="pg__btn-primary pg__btn-sm" download>
+                        <DownloadIcon /> Download w-1.1.safetensors
+                      </a>
+                    )}
+                    {step.code && (
+                      <div className="pg__code-block">
+                        <pre className="pg__code"><code>{step.code}</code></pre>
+                        <CopyButton text={step.code} />
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <div className="pg__step-body">
-                  <h3 className="pg__step-title">{step.title}</h3>
-                  {step.desc && <p className="pg__step-desc">{step.desc}</p>}
-                  {step.download && (
-                    <a href={WEIGHTS_URL} className="pg__btn-primary pg__btn-sm" download>
-                      <DownloadIcon /> Download w-1.1.safetensors
-                    </a>
-                  )}
-                  {step.code && (
-                    <div className="pg__code-block">
-                      <pre className="pg__code"><code>{step.code}</code></pre>
-                      <CopyButton text={step.code} />
-                    </div>
-                  )}
-                </div>
-              </div>
+              </Reveal>
             ))}
           </div>
         </section>
 
         {/* ── Generation options ── */}
         <section className="pg__section">
-          <h2 className="pg__section-title">Generation options</h2>
-          <div className="pg__options-table">
-            <div className="pg__options-head">
-              <span>Flag</span><span>Default</span><span>Description</span>
-            </div>
-            {OPTIONS.map(({ flag, default: def, desc }) => (
-              <div key={flag} className="pg__options-row">
-                <code className="pg__opt-flag">{flag}</code>
-                <code className="pg__opt-default">{def}</code>
-                <span className="pg__opt-desc">{desc}</span>
+          <Reveal><h2 className="pg__section-title">Generation options</h2></Reveal>
+          <Reveal delay={60}>
+            <div className="pg__options-table">
+              <div className="pg__options-head">
+                <span>Flag</span><span>Default</span><span>Description</span>
               </div>
-            ))}
-          </div>
+              {OPTIONS.map(({ flag, default: def, desc }, i) => (
+                <div key={flag} className="pg__options-row pg__options-row--anim" style={{ animationDelay: `${i * 60}ms` }}>
+                  <code className="pg__opt-flag">{flag}</code>
+                  <code className="pg__opt-default">{def}</code>
+                  <span className="pg__opt-desc">{desc}</span>
+                </div>
+              ))}
+            </div>
+          </Reveal>
         </section>
 
         {/* ── Example commands ── */}
         <section className="pg__section">
-          <h2 className="pg__section-title">Example commands</h2>
+          <Reveal><h2 className="pg__section-title">Example commands</h2></Reveal>
           <div className="pg__example-list">
             {[
               'python generate.py --prompt "What is photosynthesis?"',
               'python generate.py --prompt "Write a short poem about the night sky." --temperature 0.9 --max-new-tokens 200',
               'python generate.py --prompt "Explain machine learning in simple terms." --top-k 50',
-            ].map((cmd) => (
-              <div key={cmd} className="pg__code-block">
-                <pre className="pg__code"><code>{cmd}</code></pre>
-                <CopyButton text={cmd} />
-              </div>
+            ].map((cmd, i) => (
+              <Reveal key={cmd} delay={i * 80}>
+                <div className="pg__code-block">
+                  <pre className="pg__code"><code>{cmd}</code></pre>
+                  <CopyButton text={cmd} />
+                </div>
+              </Reveal>
             ))}
           </div>
         </section>
 
         {/* ── About ── */}
         <section className="pg__about">
-          <h2 className="pg__section-title">About W-1.1</h2>
+          <Reveal><h2 className="pg__section-title">About W-1.1</h2></Reveal>
           <div className="pg__about-grid">
             {[
               { title: 'Architecture', body: 'Decoder-only causal Transformer with RoPE positional encoding, RMSNorm, SwiGLU activations and tied input/output embeddings. Built entirely from scratch in PyTorch.' },
               { title: 'Training', body: 'Pretrained on a large web-text corpus then instruction-tuned on 300K Q&A pairs (Project Instruct). Final run on an NVIDIA H100 80 GB GPU.' },
               { title: 'Open weights', body: 'Weights published as a GitHub Release asset under Apache-2.0. Download the safetensors file and run it locally with the provided generate.py.' },
               { title: 'Limitations', body: '123M parameters is a research scale. Expect grammatical output on familiar topics but factual errors, repetition and hallucinations are common.' },
-            ].map(({ title, body }) => (
-              <div key={title} className="pg__about-card">
-                <h3 className="pg__about-card-title">{title}</h3>
-                <p>{body}</p>
-              </div>
+            ].map(({ title, body }, i) => (
+              <Reveal key={title} delay={i * 80}>
+                <div className="pg__about-card">
+                  <h3 className="pg__about-card-title">{title}</h3>
+                  <p>{body}</p>
+                </div>
+              </Reveal>
             ))}
           </div>
         </section>

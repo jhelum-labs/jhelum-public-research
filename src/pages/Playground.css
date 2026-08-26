@@ -1,6 +1,44 @@
 /* ==========================================================================
-   Try W-1.1 — professional model download page
+   Try W-1.1 — professional model download page + animations
    ========================================================================== */
+
+/* ── Keyframes ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes slideRight {
+  from { opacity: 0; transform: translateX(-16px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes popIn {
+  0%   { opacity: 0; transform: scale(0.6); }
+  70%  { transform: scale(1.12); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50%       { opacity: 1;   transform: scale(1.08); }
+}
+@keyframes lineGrow {
+  from { transform: scaleY(0); transform-origin: top; }
+  to   { transform: scaleY(1); transform-origin: top; }
+}
+
+/* ── Scroll-reveal ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.55s ease, transform 0.55s ease;
+}
+.reveal--in {
+  opacity: 1;
+  transform: translateY(0);
+}
 
 /* ── Sticky bar ── */
 .pg__sticky-bar {
@@ -55,6 +93,9 @@
   transition: color 0.15s ease;
 }
 .pg__back:hover { color: var(--color-heading); text-decoration: none; }
+.pg__back--anim {
+  animation: slideRight 0.5s ease both;
+}
 
 /* ── Hero ── */
 .pg__hero {
@@ -69,14 +110,15 @@
   position: absolute;
   top: -60px;
   left: -80px;
-  width: 480px;
-  height: 380px;
-  background: radial-gradient(ellipse at center, rgba(0,0,0,0.04) 0%, transparent 70%);
+  width: 560px;
+  height: 440px;
+  background: radial-gradient(ellipse at center, rgba(0,0,0,0.06) 0%, transparent 70%);
   pointer-events: none;
   z-index: 0;
+  animation: glowPulse 6s ease-in-out infinite;
 }
 [data-theme='dark'] .pg__hero-glow {
-  background: radial-gradient(ellipse at center, rgba(255,255,255,0.05) 0%, transparent 70%);
+  background: radial-gradient(ellipse at center, rgba(255,255,255,0.07) 0%, transparent 70%);
 }
 .pg__hero-content { position: relative; z-index: 1; }
 
@@ -172,6 +214,12 @@
   margin: 0;
 }
 
+/* ── Hero entrance animations ── */
+.pg__hero-anim {
+  opacity: 0;
+  animation: fadeUp 0.6s ease forwards;
+}
+
 /* Spec card */
 .pg__spec-card {
   position: relative;
@@ -181,6 +229,15 @@
   background: var(--color-surface);
   padding: 28px;
   box-shadow: var(--shadow-card);
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+.pg__spec-card:hover {
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-3px);
+}
+.pg__spec-card--anim {
+  opacity: 0;
+  animation: fadeUp 0.7s ease 0.2s forwards;
 }
 .pg__spec-eyebrow {
   font-size: 0.68rem;
@@ -198,6 +255,11 @@
   padding: 8px 0;
   border-bottom: 1px solid var(--color-border);
   font-size: 0.84rem;
+  transition: background 0.15s ease;
+}
+.pg__spec-item--anim {
+  opacity: 0;
+  animation: slideRight 0.4s ease forwards;
 }
 .pg__spec-item:last-child { border-bottom: none; }
 .pg__spec-label { color: var(--color-muted); }
@@ -262,6 +324,15 @@
   font-size: 0.8rem;
   font-weight: 700;
   flex-shrink: 0;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.pg__step-dot--anim {
+  opacity: 0;
+  animation: popIn 0.5s ease forwards;
+}
+.pg__step:hover .pg__step-dot {
+  transform: scale(1.15);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-accent) 15%, transparent);
 }
 .pg__step-line {
   width: 1px;
@@ -269,6 +340,7 @@
   min-height: 32px;
   background: var(--color-border);
   margin-top: 8px;
+  animation: lineGrow 0.6s ease 0.3s both;
 }
 .pg__step-body {
   display: flex;
@@ -355,7 +427,11 @@
   border-bottom: 1px solid var(--color-border);
   align-items: center;
   font-size: 0.88rem;
-  transition: background 0.1s ease;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+.pg__options-row--anim {
+  opacity: 0;
+  animation: fadeUp 0.4s ease forwards;
 }
 .pg__options-row:last-child { border-bottom: none; }
 .pg__options-row:hover { background: var(--color-bg-alt); }
@@ -392,11 +468,12 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   background: var(--color-surface);
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  transition: box-shadow 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
 }
 .pg__about-card:hover {
   box-shadow: var(--shadow-card-hover);
-  transform: translateY(-2px);
+  transform: translateY(-4px);
+  border-color: var(--color-accent);
 }
 .pg__about-card-title {
   font-family: var(--font-display);
