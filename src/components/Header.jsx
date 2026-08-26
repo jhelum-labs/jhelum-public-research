@@ -1,4 +1,4 @@
-import { NavLink, Link, useLocation } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import Logo from './Logo.jsx'
 import { useTheme } from '../context/ThemeContext.jsx'
 import './Header.css'
@@ -34,9 +34,6 @@ const MoonIcon = () => (
 )
 
 export default function Header() {
-  const location = useLocation()
-  const isPlayground = location.pathname === '/playground'
-
   return (
     <header className="site-header">
       <div className="container header__inner">
@@ -45,18 +42,19 @@ export default function Header() {
           <NavLink to="/" className={({ isActive }) => 'nav-link' + (isActive ? ' nav-link--active' : '')} end>
             Research
           </NavLink>
-          <a href="mailto:research@jhelumlabs.com" className="nav-link">
+          <a href="#about" className="nav-link">About</a>
+          <a className="nav-link" href="mailto:research@jhelumlabs.com" onClick={(e) => e.preventDefault()} style={{ cursor: 'pointer' }}>
             Contact
           </a>
         </nav>
         <div className="header__actions">
+          <NavLink
+            to="/playground"
+            className={({ isActive }) => 'try-btn' + (isActive ? ' try-btn--active' : '')}
+          >
+            Try W-1.1
+          </NavLink>
           <ThemeToggle />
-          {!isPlayground && (
-            <Link to="/playground" className="try-btn" aria-label="Try W-1.1 model">
-              <span className="try-btn__dot" aria-hidden="true" />
-              Try W-1.1
-            </Link>
-          )}
         </div>
       </div>
     </header>

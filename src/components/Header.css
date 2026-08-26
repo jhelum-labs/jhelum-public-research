@@ -77,6 +77,30 @@
   border-color: var(--color-accent);
 }
 
+.try-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 16px;
+  height: 38px;
+  border-radius: 999px;
+  background: var(--color-accent);
+  color: var(--color-bg);
+  font-size: 0.86rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  transition: opacity 0.15s ease;
+  white-space: nowrap;
+}
+
+.try-btn:hover {
+  opacity: 0.85;
+  text-decoration: none;
+}
+
+.try-btn--active {
+  opacity: 0.75;
+}
+
 @media (max-width: 640px) {
   .header__nav {
     gap: 14px;
