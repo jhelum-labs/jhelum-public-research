@@ -36,9 +36,11 @@ export default function W11Research() {
   const { articles, loading, error } = useResearchIndex()
   const [activeFilter, setActiveFilter] = useState('All')
 
+  const w11Articles = (articles || []).filter((a) => a.slug.startsWith('w-1.1-'))
+
   const filtered = activeFilter === 'All'
-    ? (articles || [])
-    : (articles || []).filter((a) => a.category === activeFilter)
+    ? w11Articles
+    : w11Articles.filter((a) => a.category === activeFilter)
 
   return (
     <section className="w11">
@@ -51,8 +53,8 @@ export default function W11Research() {
           <h1 className="w11__title">w-1.1</h1>
           <p className="w11__subtitle">All W-1.1 research</p>
           <span className="w11__count">
-            {articles?.length ?? 0}{' '}
-            {articles?.length === 1 ? 'publication' : 'publications'}
+            {w11Articles.length}{' '}
+            {w11Articles.length === 1 ? 'publication' : 'publications'}
           </span>
         </header>
 

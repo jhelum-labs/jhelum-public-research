@@ -19,10 +19,20 @@ import mammoth from 'mammoth'
 // --------------------------------------------------------------------------
 // Configuration
 // --------------------------------------------------------------------------
-const SOURCES = {
-  'Research Paper': 'D:/W-1.1/W-1.1-Model/W-1-1_documents/Research-papers',
-  'Production Document': 'D:/W-1.1/W-1.1-Model/W-1-1_documents/production-documents',
-}
+const SOURCES = [
+  {
+    category: 'Research Paper',
+    dir: 'D:/W-1.1/W-1.1-Model/W-1-1_documents/Research-papers',
+  },
+  {
+    category: 'Production Document',
+    dir: 'D:/W-1.1/W-1.1-Model/W-1-1_documents/production-documents',
+  },
+  {
+    category: 'Research Paper',
+    dir: 'D:/W-1.2/W-1.2-documents',
+  },
+]
 
 const OUT_DIR = path.join(process.cwd(), 'public', 'research')
 const PAD = (l) => String(l).padStart(2, ' ')
@@ -85,7 +95,7 @@ function titleFromFileName(fileName) {
     .trim()
 
   // If a W-1.1 prefix exists, strip it and title-case the remainder.
-  const prefixMatch = base.match(/^w-?1\.?1[\s-]+/i)
+  const prefixMatch = base.match(/^w-?1\.[12][\s-]+/i)
   const rest = prefixMatch ? base.slice(prefixMatch[0].length).trim() : base
 
   if (!rest) return 'W-1.1'
@@ -213,7 +223,7 @@ async function main() {
   const articles = []
   let skipped = []
 
-  for (const [category, dir] of Object.entries(SOURCES)) {
+  for (const { category, dir } of SOURCES) {
     let files = []
     try {
       files = await fs.readdir(dir)

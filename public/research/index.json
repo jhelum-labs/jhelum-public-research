@@ -1,5 +1,15 @@
 [
   {
+    "slug": "w-1.2-architecture",
+    "title": "W-1.2 Architecture Specification",
+    "category": "Research Paper",
+    "date": "2026-08-23",
+    "sizeMB": "0.54 MB",
+    "authors": ["Wasif Ali", "Jhelum Labs"],
+    "readingTime": "10 min read",
+    "excerpt": "W-1.2 is Jhelum Labs' planned second-generation experimental language model, scaling the laboratory's W-1.1 work from approximately 124 million to 353 million trainable parameters while preserving a transparent, decoder-only causal Transformer design."
+  },
+  {
     "slug": "w-1.1-project-instruct",
     "title": "Project Instruct",
     "category": "Production Document",
