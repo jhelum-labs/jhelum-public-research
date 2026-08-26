@@ -62,19 +62,27 @@ function Reveal({ children, className = '', delay = 0 }) {
   )
 }
 
-function CopyButton({ text }) {
+function CodeBlock({ code, lang = 'bash' }) {
   const [copied, setCopied] = useState(false)
   return (
-    <button
-      className="pg-copy"
-      onClick={() => {
-        navigator.clipboard.writeText(text)
-        setCopied(true)
-        setTimeout(() => setCopied(false), 2000)
-      }}
-    >
-      {copied ? <><CheckIcon /> Copied</> : <><CopyIcon /> Copy</>}
-    </button>
+    <div className="pg__code-block">
+      <div className="pg__code-bar">
+        <span className="pg__code-lang">{lang}</span>
+        <button
+          className={`pg-copy ${copied ? 'pg-copy--done' : ''}`}
+          onClick={() => {
+            navigator.clipboard.writeText(code)
+            setCopied(true)
+            setTimeout(() => setCopied(false), 2000)
+          }}
+          aria-label={copied ? 'Copied' : 'Copy code'}
+          title={copied ? 'Copied!' : 'Copy'}
+        >
+          {copied ? <CheckIcon /> : <CopyIcon />}
+        </button>
+      </div>
+      <pre className="pg__code"><code>{code}</code></pre>
+    </div>
   )
 }
 
@@ -186,12 +194,7 @@ export default function Playground() {
                         <DownloadIcon /> Download w-1.1.safetensors
                       </a>
                     )}
-                    {step.code && (
-                      <div className="pg__code-block">
-                        <pre className="pg__code"><code>{step.code}</code></pre>
-                        <CopyButton text={step.code} />
-                      </div>
-                    )}
+                    {step.code && <CodeBlock code={step.code} />}
                   </div>
                 </div>
               </Reveal>
@@ -228,10 +231,7 @@ export default function Playground() {
               'python generate.py --prompt "Explain machine learning in simple terms." --top-k 50',
             ].map((cmd, i) => (
               <Reveal key={cmd} delay={i * 80}>
-                <div className="pg__code-block">
-                  <pre className="pg__code"><code>{cmd}</code></pre>
-                  <CopyButton text={cmd} />
-                </div>
+                <CodeBlock code={cmd} />
               </Reveal>
             ))}
           </div>
