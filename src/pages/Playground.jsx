@@ -67,7 +67,10 @@ function CodeBlock({ code, lang = 'bash' }) {
   return (
     <div className="pg__code-block">
       <div className="pg__code-bar">
-        <span className="pg__code-lang">{lang}</span>
+        <div className="pg__code-bar-left">
+          <TerminalIcon />
+          <span className="pg__code-lang">{lang}</span>
+        </div>
         <button
           className={`pg-copy ${copied ? 'pg-copy--done' : ''}`}
           onClick={() => {
@@ -76,9 +79,10 @@ function CodeBlock({ code, lang = 'bash' }) {
             setTimeout(() => setCopied(false), 2000)
           }}
           aria-label={copied ? 'Copied' : 'Copy code'}
-          title={copied ? 'Copied!' : 'Copy'}
+          title={copied ? 'Copied!' : 'Copy to clipboard'}
         >
           {copied ? <CheckIcon /> : <CopyIcon />}
+          <span className="pg-copy__label">{copied ? 'Copied' : 'Copy'}</span>
         </button>
       </div>
       <pre className="pg__code"><code>{code}</code></pre>
@@ -87,13 +91,18 @@ function CodeBlock({ code, lang = 'bash' }) {
 }
 
 const CopyIcon = () => (
-  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <rect x="9" y="9" width="13" height="13" rx="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
   </svg>
 )
 const CheckIcon = () => (
-  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
     <polyline points="20 6 9 17 4 12" />
+  </svg>
+)
+const TerminalIcon = () => (
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="4 17 10 11 4 5" /><line x1="12" y1="19" x2="20" y2="19" />
   </svg>
 )
 const DownloadIcon = () => (
