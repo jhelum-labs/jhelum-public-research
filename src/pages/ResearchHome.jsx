@@ -1,7 +1,6 @@
 import { memo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useResearchIndex, formatDate } from '../hooks/useResearch.js'
-import { LogoMark } from '../components/Logo.jsx'
 import { CoverImage } from '../components/CoverImage.jsx'
 import './ResearchHome.css'
 
@@ -9,7 +8,11 @@ const CATEGORIES = ['All', 'Research Paper', 'Production Document']
 
 const LogoMemo = memo(() => (
   <div className="hero__logo-wrap">
-    <LogoMark size={64} />
+    <img
+      src={`${import.meta.env.BASE_URL}logo.png`}
+      alt="Jhelum Labs"
+      className="hero__logo-img"
+    />
   </div>
 ))
 
