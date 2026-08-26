@@ -5,46 +5,44 @@ import './Playground.css'
 const WEIGHTS_URL =
   'https://github.com/wasif-ali-ganie/origin-labs-w-1.1/releases/download/v1.0.0/w-1.1.safetensors'
 const REPO_URL = 'https://github.com/jhelum-labs/w-1.1'
-const WEIGHTS_SHA256 = '8B00898BCBBC77F9B6045D3C605BAC5FFFB90F7E8A60192B9232F1C33B6511F2'
+const WEIGHTS_SHA256 = '8b00898bcbbc77f9b6045d3c605bac5fffb90f7e8a60192b9232f1c33b6511f2'
 
 const MODEL_SPECS = [
   { label: 'Parameters', value: '123.7M' },
   { label: 'Vocabulary', value: '32K BPE' },
-  { label: 'Context', value: '2,048 tokens' },
+  { label: 'Context window', value: '2,048 tokens' },
   { label: 'Layers', value: '14' },
-  { label: 'Heads', value: '12' },
+  { label: 'Attention heads', value: '12' },
   { label: 'Hidden dim', value: '768' },
   { label: 'Architecture', value: 'Decoder-only' },
-  { label: 'Format', value: 'safetensors' },
+  { label: 'License', value: 'Apache-2.0' },
 ]
 
 const STEPS = [
   {
-    num: '01',
     title: 'Clone the repository',
     code: 'git clone https://github.com/jhelum-labs/w-1.1\ncd w-1.1',
   },
   {
-    num: '02',
-    title: 'Create a virtual environment',
-    code: 'python -m venv .venv\n# Windows:\n.venv\\Scripts\\activate\n# Linux / macOS:\nsource .venv/bin/activate',
+    title: 'Set up environment',
+    code: 'python -m venv .venv\n# Windows\n.venv\\Scripts\\activate\n# macOS / Linux\nsource .venv/bin/activate\n\npip install -r requirements.txt',
   },
   {
-    num: '03',
-    title: 'Install dependencies',
-    code: 'pip install -r requirements.txt',
-  },
-  {
-    num: '04',
     title: 'Download the weights',
-    desc: 'Download w-1.1.safetensors and place it in the weights/ folder inside the repo.',
+    desc: 'Download w-1.1.safetensors and place it inside the weights/ directory.',
     download: true,
   },
   {
-    num: '05',
-    title: 'Run the model',
+    title: 'Run inference',
     code: 'python generate.py --prompt "What is photosynthesis?" --device auto',
   },
+]
+
+const OPTIONS = [
+  { flag: '--temperature', default: '0.7', desc: 'Randomness of output. Lower = focused, higher = creative.' },
+  { flag: '--max-new-tokens', default: '160', desc: 'Number of tokens to generate. Max recommended: 400.' },
+  { flag: '--top-k', default: '40', desc: 'Limit sampling to top-k tokens. Set 0 to disable.' },
+  { flag: '--device', default: 'auto', desc: 'Auto-detects CUDA. Falls back to CPU automatically.' },
 ]
 
 function CopyButton({ text }) {
@@ -57,63 +55,85 @@ function CopyButton({ text }) {
         setCopied(true)
         setTimeout(() => setCopied(false), 2000)
       }}
-      aria-label="Copy code"
     >
-      {copied ? '✓ Copied' : 'Copy'}
+      {copied ? (
+        <><CheckIcon /> Copied</>
+      ) : (
+        <><CopyIcon /> Copy</>
+      )}
     </button>
   )
 }
 
-const ExternalIcon = () => (
-  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-    strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-    <polyline points="15 3 21 3 21 9" />
-    <line x1="10" y1="14" x2="21" y2="3" />
+const CopyIcon = () => (
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="9" y="9" width="13" height="13" rx="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
   </svg>
 )
-
+const CheckIcon = () => (
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="20 6 9 17 4 12" />
+  </svg>
+)
 const DownloadIcon = () => (
-  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-    strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-    <polyline points="7 10 12 15 17 10" />
-    <line x1="12" y1="15" x2="12" y2="3" />
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" />
+  </svg>
+)
+const ExternalIcon = () => (
+  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" />
   </svg>
 )
 
 export default function Playground() {
   return (
     <div className="pg">
-      <div className="container pg__inner">
+
+      {/* Sticky download bar */}
+      <div className="pg__sticky-bar">
+        <div className="container pg__sticky-inner">
+          <span className="pg__sticky-label">W-1.1 · 123M params · Apache-2.0</span>
+          <a href={WEIGHTS_URL} className="pg__sticky-btn" download>
+            <DownloadIcon /> Download weights
+          </a>
+        </div>
+      </div>
+
+      <div className="container pg__body">
 
         <Link to="/" className="pg__back">← Research</Link>
 
-        {/* Hero */}
-        <header className="pg__hero">
-          <div className="pg__hero-left">
+        {/* ── Hero ── */}
+        <section className="pg__hero">
+          <div className="pg__hero-glow" aria-hidden="true" />
+          <div className="pg__hero-content">
             <div className="pg__badge-row">
-              <span className="pg__badge pg__badge--beta">Beta</span>
               <span className="pg__badge pg__badge--open">Open Weights</span>
+              <span className="pg__badge pg__badge--beta">Beta</span>
             </div>
-            <h1 className="pg__title">
-              Try <span className="pg__title-accent">W-1.1</span>
-            </h1>
+            <h1 className="pg__title">W-1.1</h1>
+            <p className="pg__subtitle">by Jhelum Labs</p>
             <p className="pg__desc">
-              W-1.1 is Jhelum Labs' first language model — 123M parameters, trained
-              from scratch. The weights are fully open. Download them and run the
-              model on your own machine in minutes.
+              A 123M-parameter decoder-only language model trained from scratch.
+              Fully open weights — download and run locally in minutes.
             </p>
+            <div className="pg__hero-actions">
+              <a href={WEIGHTS_URL} className="pg__btn-primary" download>
+                <DownloadIcon /> Download weights · 493 MB
+              </a>
+              <a href={REPO_URL} target="_blank" rel="noreferrer" className="pg__btn-ghost">
+                GitHub <ExternalIcon />
+              </a>
+            </div>
             <p className="pg__warning">
-              <span className="pg__warning-icon">⚠</span>
-              Experimental research model. Outputs may be inaccurate or repetitive.
-              Not for production use.
+              ⚠ Experimental research model. Outputs may be inaccurate or repetitive. Not for production use.
             </p>
           </div>
 
           {/* Spec card */}
           <div className="pg__spec-card">
-            <p className="pg__spec-title">W-1.1 · Model specs</p>
+            <p className="pg__spec-eyebrow">Model specs</p>
             <ul className="pg__spec-list">
               {MODEL_SPECS.map(({ label, value }) => (
                 <li key={label} className="pg__spec-item">
@@ -122,37 +142,28 @@ export default function Playground() {
                 </li>
               ))}
             </ul>
-            <a href={REPO_URL} target="_blank" rel="noreferrer" className="pg__spec-link">
-              GitHub repo <ExternalIcon />
-            </a>
+            <div className="pg__spec-sha">
+              <span className="pg__spec-sha-label">SHA-256</span>
+              <code className="pg__spec-sha-val">{WEIGHTS_SHA256.slice(0, 20)}…</code>
+            </div>
           </div>
-        </header>
+        </section>
 
-        {/* Download CTA */}
-        <div className="pg__download-banner">
-          <div className="pg__download-info">
-            <span className="pg__download-name">w-1.1.safetensors</span>
-            <span className="pg__download-meta">~493 MB · Apache-2.0</span>
-            <span className="pg__download-sha">SHA-256: {WEIGHTS_SHA256.toLowerCase().slice(0, 16)}…</span>
-          </div>
-          <a href={WEIGHTS_URL} className="pg__download-btn" download>
-            <DownloadIcon />
-            Download weights
-          </a>
-        </div>
-
-        {/* Steps */}
-        <section className="pg__steps">
-          <h2 className="pg__steps-title">Run locally in 5 steps</h2>
-          <div className="pg__steps-list">
-            {STEPS.map((step) => (
-              <div key={step.num} className="pg__step">
-                <div className="pg__step-num">{step.num}</div>
+        {/* ── Quick start ── */}
+        <section className="pg__section">
+          <h2 className="pg__section-title">Quick start</h2>
+          <div className="pg__steps">
+            {STEPS.map((step, i) => (
+              <div key={i} className="pg__step">
+                <div className="pg__step-left">
+                  <div className="pg__step-dot">{i + 1}</div>
+                  {i < STEPS.length - 1 && <div className="pg__step-line" />}
+                </div>
                 <div className="pg__step-body">
                   <h3 className="pg__step-title">{step.title}</h3>
                   {step.desc && <p className="pg__step-desc">{step.desc}</p>}
                   {step.download && (
-                    <a href={WEIGHTS_URL} className="pg__step-dl" download>
+                    <a href={WEIGHTS_URL} className="pg__btn-primary pg__btn-sm" download>
                       <DownloadIcon /> Download w-1.1.safetensors
                     </a>
                   )}
@@ -168,43 +179,33 @@ export default function Playground() {
           </div>
         </section>
 
-        {/* Options */}
-        <section className="pg__options">
-          <h2 className="pg__options-title">Generation options</h2>
-          <div className="pg__options-grid">
-            <div className="pg__option-card">
-              <h3>Temperature</h3>
-              <p>Controls randomness. Lower = more focused, higher = more creative. Default: <code>0.7</code></p>
-              <code className="pg__option-cmd">--temperature 0.7</code>
+        {/* ── Generation options ── */}
+        <section className="pg__section">
+          <h2 className="pg__section-title">Generation options</h2>
+          <div className="pg__options-table">
+            <div className="pg__options-head">
+              <span>Flag</span><span>Default</span><span>Description</span>
             </div>
-            <div className="pg__option-card">
-              <h3>Max tokens</h3>
-              <p>How many tokens to generate. Default: <code>160</code>, max recommended: <code>400</code></p>
-              <code className="pg__option-cmd">--max-new-tokens 200</code>
-            </div>
-            <div className="pg__option-card">
-              <h3>Top-k sampling</h3>
-              <p>Limits sampling to the top k most likely tokens. Default: <code>40</code>. Set to <code>0</code> to disable.</p>
-              <code className="pg__option-cmd">--top-k 40</code>
-            </div>
-            <div className="pg__option-card">
-              <h3>Device</h3>
-              <p>Auto-detects CUDA GPU. Falls back to CPU. Force CPU with <code>--device cpu</code></p>
-              <code className="pg__option-cmd">--device auto</code>
-            </div>
+            {OPTIONS.map(({ flag, default: def, desc }) => (
+              <div key={flag} className="pg__options-row">
+                <code className="pg__opt-flag">{flag}</code>
+                <code className="pg__opt-default">{def}</code>
+                <span className="pg__opt-desc">{desc}</span>
+              </div>
+            ))}
           </div>
         </section>
 
-        {/* Example outputs */}
-        <section className="pg__examples-section">
-          <h2 className="pg__options-title">Example prompts</h2>
+        {/* ── Example commands ── */}
+        <section className="pg__section">
+          <h2 className="pg__section-title">Example commands</h2>
           <div className="pg__example-list">
             {[
               'python generate.py --prompt "What is photosynthesis?"',
               'python generate.py --prompt "Write a short poem about the night sky." --temperature 0.9 --max-new-tokens 200',
               'python generate.py --prompt "Explain machine learning in simple terms." --top-k 50',
             ].map((cmd) => (
-              <div key={cmd} className="pg__code-block pg__code-block--example">
+              <div key={cmd} className="pg__code-block">
                 <pre className="pg__code"><code>{cmd}</code></pre>
                 <CopyButton text={cmd} />
               </div>
@@ -212,34 +213,21 @@ export default function Playground() {
           </div>
         </section>
 
-        {/* About */}
+        {/* ── About ── */}
         <section className="pg__about">
-          <h2 className="pg__about-title">About W-1.1</h2>
+          <h2 className="pg__section-title">About W-1.1</h2>
           <div className="pg__about-grid">
-            <div className="pg__about-card">
-              <h3 className="pg__about-card-title">Architecture</h3>
-              <p>Decoder-only causal Transformer with RoPE positional encoding,
-                RMSNorm, SwiGLU activations and tied input/output embeddings.
-                Built entirely from scratch in PyTorch.</p>
-            </div>
-            <div className="pg__about-card">
-              <h3 className="pg__about-card-title">Training</h3>
-              <p>Pretrained on a large web-text corpus then instruction-tuned
-                on 300K Q&amp;A pairs (Project Instruct). Final run on an
-                NVIDIA H100 80 GB GPU.</p>
-            </div>
-            <div className="pg__about-card">
-              <h3 className="pg__about-card-title">Open weights</h3>
-              <p>Weights are published as a GitHub Release asset under
-                Apache-2.0. Download the safetensors file and run it locally
-                with the provided <code>generate.py</code>.</p>
-            </div>
-            <div className="pg__about-card">
-              <h3 className="pg__about-card-title">Limitations</h3>
-              <p>125M parameters is a research scale. Expect grammatical output
-                on familiar topics but factual errors, repetition and
-                hallucinations are common.</p>
-            </div>
+            {[
+              { title: 'Architecture', body: 'Decoder-only causal Transformer with RoPE positional encoding, RMSNorm, SwiGLU activations and tied input/output embeddings. Built entirely from scratch in PyTorch.' },
+              { title: 'Training', body: 'Pretrained on a large web-text corpus then instruction-tuned on 300K Q&A pairs (Project Instruct). Final run on an NVIDIA H100 80 GB GPU.' },
+              { title: 'Open weights', body: 'Weights published as a GitHub Release asset under Apache-2.0. Download the safetensors file and run it locally with the provided generate.py.' },
+              { title: 'Limitations', body: '123M parameters is a research scale. Expect grammatical output on familiar topics but factual errors, repetition and hallucinations are common.' },
+            ].map(({ title, body }) => (
+              <div key={title} className="pg__about-card">
+                <h3 className="pg__about-card-title">{title}</h3>
+                <p>{body}</p>
+              </div>
+            ))}
           </div>
         </section>
 
