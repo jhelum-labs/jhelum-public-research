@@ -14,8 +14,7 @@ function ThemeToggle() {
       aria-label={`Switch to ${next} mode`}
       title={`Switch to ${next} mode`}
     >
-      <span className="theme-toggle__icon">{theme === 'dark' ? <SunIcon /> : <MoonIcon />}</span>
-      <span className="theme-toggle__label">{theme === 'dark' ? 'Light' : 'Dark'}</span>
+      {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
     </button>
   )
 }

@@ -48,34 +48,23 @@
 .theme-toggle {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  padding: 0 12px;
+  justify-content: center;
+  width: 38px;
   height: 38px;
-  border-radius: 999px;
+  border-radius: 50%;
   border: 1px solid var(--color-border);
   background: var(--color-surface);
   color: var(--color-text-soft);
   cursor: pointer;
-  font-size: 0.86rem;
-  font-weight: 500;
-  letter-spacing: 0.02em;
   transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
 }
-
-.theme-toggle__icon {
-  display: inline-flex;
-  align-items: center;
-}
-
-.theme-toggle__label {
-  line-height: 1;
-  white-space: nowrap;
-}
-
 .theme-toggle:hover {
   color: var(--color-accent);
   border-color: var(--color-accent);
 }
+
+.theme-toggle__icon,
+.theme-toggle__label { display: none; }
 
 .try-btn {
   display: inline-flex;
