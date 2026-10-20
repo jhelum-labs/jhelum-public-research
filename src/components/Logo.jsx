@@ -19,6 +19,24 @@ export function BrandMark({ className = '' }) {
   )
 }
 
+export function BrandWordmark({ className = '' }) {
+  return (
+    <svg
+      className={`brand-wordmark ${className}`.trim()}
+      viewBox="620 385 900 230"
+      role="img"
+      aria-label="Jhelum Labs — Research and Deployment"
+    >
+      <g fill="currentColor" fontFamily="Poppins, 'Segoe UI', Arial, sans-serif" fontWeight="700">
+        <text x="648" y="525" fontSize="140" textLength="518" lengthAdjust="spacingAndGlyphs">Jhelum</text>
+        <polygon points="1189,415 1210,415 1253,527 1232,527" />
+        <text x="1250" y="525" fontSize="140" textLength="246" lengthAdjust="spacingAndGlyphs">abs</text>
+        <text x="768" y="592" fontSize="48" fontWeight="500" textLength="586" lengthAdjust="spacingAndGlyphs">Research and Deployment</text>
+      </g>
+    </svg>
+  )
+}
+
 export default function Logo({ to = '/', as = 'link' }) {
   const content = <BrandMark />
 

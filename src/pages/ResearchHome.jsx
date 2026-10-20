@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useResearchIndex, formatDate } from '../hooks/useResearch.js'
 import { CoverImage } from '../components/CoverImage.jsx'
-import { BrandMark } from '../components/Logo.jsx'
+import { BrandMark, BrandWordmark } from '../components/Logo.jsx'
 import './ResearchHome.css'
 
 const CATEGORIES = ['All', 'Research Paper', 'Production Document']
@@ -94,11 +94,9 @@ export default function ResearchHome() {
         <div className="hero__chrome hero__chrome--right" aria-hidden="true" />
         <div className="container hero__inner">
           <BrandMark className="hero__mark" />
-          <h1 className="hero__title" aria-label="Jhelum Labs">
-            <span>Jhelum</span>
-            <span className="hero__labs"><span className="hero__labs-slash" aria-hidden="true">\</span>abs</span>
+          <h1 className="hero__title">
+            <BrandWordmark />
           </h1>
-          <p className="hero__subtitle">Research and Deployment</p>
           <p className="hero__intro">Open experimental AI research, systems, and publications.</p>
         </div>
       </section>
