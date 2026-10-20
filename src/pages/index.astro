@@ -1,0 +1,14 @@
+---
+import Page from '../components/Page.astro'
+import { SITE } from '../lib/site.js'
+import { allPublications, publicationStats } from '../lib/research.js'
+const stats = publicationStats()
+const featured = allPublications.slice(0, 3)
+const jsonLd = { '@context': 'https://schema.org', '@type': 'Organization', name: SITE.name, url: SITE.url, logo: `${SITE.url}/jhelum-labs-mark.svg`, email: SITE.contactEmail, sameAs: SITE.githubUrl ? [SITE.githubUrl] : [] }
+---
+<Page currentPath="/" title="Jhelum Labs — Research and Deployment" description="Jhelum Labs publishes research and deployment documentation for W-1.1." jsonLd={jsonLd}>
+  <section class="hero shell"><img class="hero-mark" src="/jhelum-labs-mark.svg" alt="Jhelum Labs logo" width="124" height="124" /><p class="eyebrow">AI Research</p><h1>Jhelum <b aria-hidden="true">\</b>abs</h1><p>{SITE.tagline}. We publish the research and engineering documentation behind W-1.1.</p></section>
+  <section class="shell"><div class="stats" aria-label="Publication statistics"><div class="stat"><strong>{stats.total}</strong><span>Publications</span></div><div class="stat"><strong>{stats.papers}</strong><span>Research papers</span></div><div class="stat"><strong>{stats.documents}</strong><span>Production docs</span></div></div></section>
+  <section class="section shell"><div class="section-head"><div><p>Latest publications</p><h2>Research</h2></div><a class="button" href="/research">More research</a></div><div class="card-grid">{featured.map((publication) => <a class="card" href={publication.articlePath}><div class="card-image" aria-hidden="true"><img src="/jhelum-labs-mark.svg" alt="" width="80" height="80" /></div><div class="card-body"><span class="type">{publication.type}</span><h3>{publication.title}</h3><p>{publication.abstract}</p></div></a>)}</div></section>
+  <section class="section w11" id="w-1-1"><div class="shell w11-inner"><div><span class="eyebrow">Published model program</span><h2>W-1.1</h2><p>W-1.1 is the only model program published by Jhelum Labs. Read its research record or visit the W-1.1 demo.</p></div><div><a class="button" href="/research?type=Research%20Paper">W-1.1 publications</a> <a class="button button-small" href={SITE.demo.url}>{SITE.demo.label}</a></div></div></section>
+</Page>

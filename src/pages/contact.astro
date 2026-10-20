@@ -1,0 +1,5 @@
+---
+import Page from '../components/Page.astro'
+import { SITE } from '../lib/site.js'
+---
+<Page currentPath="/contact" title="Contact — Jhelum Labs" description="Contact Jhelum Labs about its W-1.1 research and deployment documentation."><section class="page shell prose"><p class="eyebrow">Contact</p><h1 class="page-title">Get in touch.</h1><p>For research questions and correspondence, email <a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a>.</p></section></Page>

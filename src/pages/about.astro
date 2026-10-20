@@ -1,0 +1,5 @@
+---
+import Page from '../components/Page.astro'
+import { SITE } from '../lib/site.js'
+---
+<Page currentPath="/about" title="About — Jhelum Labs" description="Learn about Jhelum Labs, an AI research lab focused on research and deployment documentation for W-1.1."><section class="page shell prose"><p class="eyebrow">About Jhelum Labs</p><h1 class="page-title">Research with a record.</h1><h2>Mission</h2><p>Jhelum Labs is an independent AI research lab. We document research and deployment work clearly so that methods, decisions, and limitations can be understood in context.</p><h2>What we research</h2><p>Our current published work documents the W-1.1 language-model program, including architecture, experiments, evaluation, and production processes.</p><h2>Team</h2><div class="team"><article><h3>Research lead</h3><p>TODO: add name and biography.</p></article><article><h3>Engineering</h3><p>TODO: add name and biography.</p></article><article><h3>Research operations</h3><p>TODO: add name and biography.</p></article></div><h2>Contact</h2><p><a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a></p></section></Page>
