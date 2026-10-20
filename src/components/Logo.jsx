@@ -1,78 +1,32 @@
 import { Link } from 'react-router-dom'
 import './Logo.css'
 
-const USE_BRAND_LOGO = true
-
-export function LogoMark({ size = 34 }) {
+export function BrandLogo({ className = '' }) {
   return (
     <svg
-      className="logo__glyph"
-      viewBox="0 0 100 100"
-      width={size}
-      height={size}
+      className={`brand-logo ${className}`.trim()}
+      viewBox="0 170 1536 650"
       role="img"
-      aria-hidden="true"
+      aria-label="Jhelum Labs — Research and Deployment"
     >
-      {/* J — top flag + stem */}
-      <path d="M40 7 H69 V17 L40 13.5 Z" fill="currentColor" />
-      <path d="M55 7 H69 V37 H55 Z" fill="currentColor" />
-      {/* J — wave hook (three tapering strands) */}
-      <path
-        d="M62 35 V42 C62 60 45 72 30 72 C21 72 14.5 66 13 58.5"
-        stroke="currentColor"
-        strokeWidth="6.5"
-        fill="none"
-      />
-      <path
-        d="M62 35 V42 C62 56 46 65 34.5 65 C26.5 65 20.5 60.5 19 54.5"
-        stroke="currentColor"
-        strokeWidth="4.2"
-        fill="none"
-      />
-      <path
-        d="M62 35 V42 C62 52 49 58.5 40 58.5 C33.5 58.5 28.5 55 27.5 50.5"
-        stroke="currentColor"
-        strokeWidth="3"
-        fill="none"
-      />
-      {/* Molecule network */}
-      <g stroke="currentColor" strokeWidth="2.4">
-        <path d="M66 34 L72 18" />
-        <path d="M66 34 L81 29" />
-        <path d="M66 34 L78 47" />
-        <path d="M66 34 L66 49" />
+      <g fill="#2a6cf5">
+        <polygon points="152,310 306,310 335,344 176,344 49,611 82,611 196,372 358,372 394,413 228,413 124,628 0,628" />
+        <polygon points="396,185 627,472 553,598 497,606 576,473 388,240 370,266 537,477 458,611 402,620 482,485 326,289" />
+        <polygon points="203,513 295,651 570,614 633,720 236,780 146,640 168,592 258,729 589,683 572,655 275,697 183,559" />
       </g>
-      <circle cx="72" cy="17" r="4.2" fill="currentColor" />
-      <circle cx="81.5" cy="28.5" r="5.2" fill="currentColor" />
-      <circle cx="78.5" cy="47.5" r="6" fill="currentColor" />
-      <circle cx="66" cy="49.5" r="3.8" fill="currentColor" />
-      <circle cx="66" cy="34" r="7.2" fill="currentColor" />
+      <path d="M322 443H362V538C362 575 340 592 308 592C295 592 290 590 290 590L272 560H322Z" fill="currentColor" />
+      <g fill="currentColor" fontFamily="Poppins, 'Segoe UI', Arial, sans-serif" fontWeight="700">
+        <text x="648" y="525" fontSize="140" textLength="518" lengthAdjust="spacingAndGlyphs">Jhelum</text>
+        <polygon points="1189,415 1210,415 1253,527 1232,527" />
+        <text x="1250" y="525" fontSize="140" textLength="246" lengthAdjust="spacingAndGlyphs">abs</text>
+        <text x="768" y="592" fontSize="48" fontWeight="500" textLength="586" lengthAdjust="spacingAndGlyphs">Research and Deployment</text>
+      </g>
     </svg>
   )
 }
 
-function WordmarkLogo() {
-  return (
-    <span className="logo logo--wordmark" aria-label="Jhelum Labs">
-      <LogoMark size={34} />
-      <span className="logo__word">Jhelum Labs</span>
-    </span>
-  )
-}
-
 export default function Logo({ to = '/', as = 'link' }) {
-  if (USE_BRAND_LOGO) {
-    return (
-      <Link to={to} className="logo-link" aria-label="Jhelum Labs Research home">
-        <img
-          src={`${import.meta.env.BASE_URL}jhelum-labs-logo.svg`}
-          alt="Jhelum Labs — Research and Deployment"
-          className="logo__img"
-        />
-      </Link>
-    )
-  }
-  const content = <WordmarkLogo />
+  const content = <BrandLogo />
 
   if (as === 'link') {
     return (
@@ -81,5 +35,6 @@ export default function Logo({ to = '/', as = 'link' }) {
       </Link>
     )
   }
-  return <>{content}</>
+
+  return <div className="logo-link">{content}</div>
 }

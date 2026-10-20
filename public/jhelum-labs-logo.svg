@@ -1,7 +1,6 @@
 <svg viewBox="0 170 1536 650" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="logo-title logo-description">
   <title id="logo-title">Jhelum Labs</title>
   <desc id="logo-description">Jhelum Labs research and deployment logo</desc>
-  <rect width="1536" height="1024" fill="#fff" />
   <g fill="#2a6cf5">
     <polygon points="152,310 306,310 335,344 176,344 49,611 82,611 196,372 358,372 394,413 228,413 124,628 0,628" />
     <polygon points="396,185 627,472 553,598 497,606 576,473 388,240 370,266 537,477 458,611 402,620 482,485 326,289" />

@@ -3,23 +3,6 @@
   text-align: center;
 }
 
-.hero__logo-wrap {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: min(100%, 360px);
-  height: 150px;
-  margin: 0 auto;
-}
-
-.hero__logo-img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  display: block;
-}
-
-
 .hero__eyebrow {
   font-size: 0.75rem;
   font-weight: 600;
@@ -29,22 +12,23 @@
 }
 
 .hero__title {
-  font-family: var(--font-script);
-  font-size: clamp(3.6rem, 9.5vw, 6.8rem);
-  font-weight: 700;
-  letter-spacing: 0.01em;
-  line-height: 1.04;
-  margin-top: 10px;
+  font-family: var(--font-body);
+  font-size: clamp(2.6rem, 6vw, 4.8rem);
+  font-weight: 750;
+  letter-spacing: -0.045em;
+  line-height: 1.02;
+  margin-top: 12px;
   color: var(--color-heading);
 }
 
 .hero__subtitle {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: clamp(1.8rem, 4.5vw, 3rem);
-  font-weight: 500;
-  line-height: 1.05;
-  margin: 4px 0 0;
+  font-family: var(--font-body);
+  font-style: normal;
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-weight: 400;
+  line-height: 1.5;
+  max-width: 620px;
+  margin: 18px auto 0;
   color: var(--color-text-soft);
 }
 

@@ -1,4 +1,3 @@
-import Logo from './Logo.jsx'
 import './Footer.css'
 
 export default function Footer() {
@@ -7,9 +6,9 @@ export default function Footer() {
     <footer className="site-footer">
       <div className="container footer__grid">
         <div className="footer__brand">
-          <Logo as="div" />
+          <h3 className="footer__brand-name">Jhelum Labs</h3>
           <p className="footer__blurb">
-            Jhelum Labs is an independent AI research group publishing its work openly.
+            Research and deployment for open, experimental AI systems.
           </p>
         </div>
 

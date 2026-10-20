@@ -1,20 +1,10 @@
-import { memo, useState } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useResearchIndex, formatDate } from '../hooks/useResearch.js'
 import { CoverImage } from '../components/CoverImage.jsx'
 import './ResearchHome.css'
 
 const CATEGORIES = ['All', 'Research Paper', 'Production Document']
-
-const LogoMemo = memo(() => (
-  <div className="hero__logo-wrap">
-    <img
-      src={`${import.meta.env.BASE_URL}jhelum-labs-logo.svg`}
-      alt="Jhelum Labs — Research and Deployment"
-      className="hero__logo-img"
-    />
-  </div>
-))
 
 function StatsBar({ articles }) {
   const total = articles?.length ?? 0
@@ -100,10 +90,9 @@ export default function ResearchHome() {
     <>
       <section className="hero">
         <div className="container hero__inner">
-          <LogoMemo />
-          <p className="hero__eyebrow">JHELUM LABS · AI RESEARCH</p>
-          <h1 className="hero__title">Jhelum-lab</h1>
-          <p className="hero__subtitle">research</p>
+          <p className="hero__eyebrow">JHELUM LABS</p>
+          <h1 className="hero__title">Research and Deployment</h1>
+          <p className="hero__subtitle">Open experimental AI research, systems, and publications.</p>
         </div>
       </section>
 

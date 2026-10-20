@@ -12,8 +12,10 @@
   padding-bottom: 40px;
 }
 
-.footer__brand .logo {
-  margin-bottom: 14px;
+.footer__brand-name {
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  margin: 0 0 10px;
 }
 
 .footer__blurb {
