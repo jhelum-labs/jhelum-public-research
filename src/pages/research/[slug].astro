@@ -2,19 +2,187 @@
 import Page from '../../components/Page.astro'
 import { allPublications, bibtex, formatDate } from '../../lib/research.js'
 
-export function getStaticPaths() { return allPublications.map((publication) => ({ params: { slug: publication.slug }, props: { publication } })) }
-const { publication } = Astro.props
+export function getStaticPaths() {
+  return allPublications.map((publication, index) => ({
+    params: { slug: publication.slug },
+    props: {
+      publication,
+      prevPub: allPublications[index - 1] || null,
+      nextPub: allPublications[index + 1] || null,
+    },
+  }))
+}
+
+const { publication, prevPub, nextPub } = Astro.props
 const articleFiles = import.meta.glob('../../content/research/*.html', { eager: true, query: '?raw', import: 'default' })
 const rawArticleHtml = articleFiles[`../../content/research/${publication.slug}.html`]
 if (typeof rawArticleHtml !== 'string') throw new Error(`Missing research source for ${publication.slug}`)
+
 const articleHtml = rawArticleHtml
   .replace(/<h1\b/gi, '<h2')
   .replace(/<\/h1>/gi, '</h2>')
   .replace(/<img(?![^>]*\balt=)/gi, '<img alt=""')
+
 const citation = bibtex(publication)
 const articleUrl = `https://jhelumlabs.in/research/${publication.slug}`
-const jsonLd = { '@context': 'https://schema.org', '@type': 'ScholarlyArticle', headline: publication.title, author: publication.authors.map((name) => ({ '@type': 'Organization', name })), datePublished: publication.date, abstract: publication.abstract, url: articleUrl, publisher: { '@type': 'Organization', name: 'Jhelum Labs', url: 'https://jhelumlabs.in' } }
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ScholarlyArticle',
+  headline: publication.title,
+  author: publication.authors.map((name) => ({ '@type': 'Organization', name })),
+  datePublished: publication.date,
+  abstract: publication.abstract,
+  url: articleUrl,
+  publisher: { '@type': 'Organization', name: 'Jhelum Labs', url: 'https://jhelumlabs.in' },
+}
+
+const weightsUrl = 'https://github.com/wasif-ali-ganie/origin-labs-w-1.1/releases/download/v1.0.0/w-1.1.safetensors'
+const repositoryUrl = 'https://github.com/jhelum-labs/w-1.1'
 ---
-<Page currentPath="/research" title={`${publication.title} — Jhelum Labs`} description={publication.abstract} canonical={`/research/${publication.slug}`} jsonLd={jsonLd}>
-  <article class="article shell"><a href="/research">← All research</a><header class="article-header"><p class="eyebrow">{publication.type}</p><h1>{publication.title}</h1><div class="article-meta"><span>{publication.authors.join(', ')}</span><time datetime={publication.date}>{formatDate(publication.date)}</time><span class="status">{publication.status}</span></div><p class="abstract">{publication.abstract}</p></header><div class="article-grid"><div class="article-content"><h2>Abstract</h2><p class="abstract">{publication.abstract}</p><div set:html={articleHtml} /></div><aside><div class="aside-card"><h2>Publication details</h2><p><strong>Authors</strong><br />{publication.authors.join(', ')}</p><p><strong>Date</strong><br />{formatDate(publication.date)}</p><p><strong>Status</strong><br />{publication.status}</p>{publication.pdf ? <a class="button button-small" href={publication.pdf} download>Download PDF</a> : <p>PDF download: TODO — no verified PDF is in the repository.</p>}</div><div class="aside-card cite"><h2>Cite this</h2><pre>{citation}</pre><button class="copy" type="button" data-copy={citation}>Copy BibTeX</button></div></aside></div></article>
+<Page currentPath="/research" title={`${publication.title} — Jhelum Labs Research`} description={publication.abstract} canonical={`/research/${publication.slug}`} jsonLd={jsonLd}>
+  <div class="shell article-page">
+    <a href="/research" class="article-breadcrumb">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      <span>Back to Research Index</span>
+    </a>
+
+    <header class="article-header">
+      <div class="article-meta-row">
+        <span class={`tag-badge ${publication.status === 'Published' ? 'published' : 'draft'}`}>
+          {publication.status}
+        </span>
+        <span class="tag-badge">
+          {publication.type}
+        </span>
+        <span style="font-size: 0.8rem; color: var(--muted); font-family: var(--font-mono);">
+          {publication.date}
+        </span>
+        <span style="font-size: 0.8rem; color: var(--muted);">
+          {publication.readingTime || '10 min read'}
+        </span>
+      </div>
+
+      <h1 class="article-title">{publication.title}</h1>
+
+      <div class="article-info-bar">
+        <span>By <strong>{publication.authors.join(', ')}</strong></span>
+        <span class="dot-sep">·</span>
+        <span>Jhelum Labs Model Program</span>
+        {publication.sizeMB && (
+          <>
+            <span class="dot-sep">·</span>
+            <span style="font-family: var(--font-mono); font-size: 0.82rem;">{publication.sizeMB}</span>
+          </>
+        )}
+      </div>
+
+      <div style="display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap;">
+        <a class="btn-openai-pill" href={weightsUrl} download>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <span>Download Safetensors</span>
+        </a>
+        <a class="btn-openai-secondary" href={repositoryUrl} target="_blank" rel="noreferrer">
+          <span>GitHub Code</span>
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+        </a>
+        <button class="btn-openai-secondary" type="button" data-copy={citation}>
+          Copy Citation
+        </button>
+      </div>
+
+      <!-- Abstract Panel -->
+      <div class="article-abstract-panel">
+        <p class="abstract-title">Abstract</p>
+        <p class="abstract-body">{publication.abstract}</p>
+      </div>
+    </header>
+
+    <div class="article-grid">
+      <!-- Main Content -->
+      <main class="article-body">
+        <div class="article-html-wrap" set:html={articleHtml} />
+
+        <!-- Next / Prev Paper Navigation -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 60px; padding-top: 36px; border-top: 1px solid var(--line);">
+          {prevPub && (
+            <a class="card" href={prevPub.articlePath} style="padding: 18px;">
+              <span style="font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em;">← Previous Publication</span>
+              <span style="font-size: 0.95rem; font-weight: 600; color: var(--text); margin-top: 4px;">{prevPub.title}</span>
+            </a>
+          )}
+          {nextPub && (
+            <a class="card" href={nextPub.articlePath} style="padding: 18px; text-align: right;">
+              <span style="font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em;">Next Publication →</span>
+              <span style="font-size: 0.95rem; font-weight: 600; color: var(--text); margin-top: 4px;">{nextPub.title}</span>
+            </a>
+          )}
+        </div>
+      </main>
+
+      <!-- Sidebar -->
+      <aside class="article-aside">
+        <div class="aside-panel">
+          <h3>Publication Metadata</h3>
+          <div class="aside-meta-list">
+            <div>
+              <div class="aside-meta-label">Authors</div>
+              <div class="aside-meta-val">{publication.authors.join(', ')}</div>
+            </div>
+            <div>
+              <div class="aside-meta-label">Release Date</div>
+              <div class="aside-meta-val">{formatDate(publication.date)}</div>
+            </div>
+            <div>
+              <div class="aside-meta-label">Category</div>
+              <div class="aside-meta-val">{publication.type}</div>
+            </div>
+            <div>
+              <div class="aside-meta-label">Status</div>
+              <div class="aside-meta-val">
+                <span class={`tag-badge ${publication.status === 'Published' ? 'published' : 'draft'}`}>
+                  {publication.status}
+                </span>
+              </div>
+            </div>
+            <div>
+              <div class="aside-meta-label">Model Weights</div>
+              <div class="aside-meta-val">
+                <a href={weightsUrl} download style="color: var(--brand); font-weight: 600; font-size: 0.82rem;">
+                  w-1.1.safetensors (493 MB) ↓
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Citation Panel -->
+        <div class="aside-panel">
+          <h3>Cite this work</h3>
+          <pre class="cite-pre"><code>{citation}</code></pre>
+          <button class="copy-btn-block" type="button" data-copy={citation}>
+            Copy BibTeX
+          </button>
+        </div>
+
+        <!-- Verified Links Panel -->
+        <div class="aside-panel">
+          <h3>Project Links</h3>
+          <div style="display: flex; flex-direction: column; gap: 10px; font-size: 0.85rem;">
+            <a href="/#models" style="color: var(--text); font-weight: 500; display: flex; align-items: center; justify-content: space-between;">
+              <span>Model Programs Index</span>
+              <span>→</span>
+            </a>
+            <a href="https://github.com/jhelum-labs/w-1.1" target="_blank" rel="noreferrer" style="color: var(--text-soft); display: flex; align-items: center; justify-content: space-between;">
+              <span>Official GitHub</span>
+              <span>↗</span>
+            </a>
+            <a href="/research" style="color: var(--text-soft); display: flex; align-items: center; justify-content: space-between;">
+              <span>All 11 Research Papers</span>
+              <span>→</span>
+            </a>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
 </Page>

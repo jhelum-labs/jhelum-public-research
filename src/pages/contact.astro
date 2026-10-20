@@ -2,4 +2,55 @@
 import Page from '../components/Page.astro'
 import { SITE } from '../lib/site.js'
 ---
-<Page currentPath="/contact" title="Contact — Jhelum Labs" description="Contact Jhelum Labs about its W-1.1 research and deployment documentation."><section class="page shell prose"><p class="eyebrow">Contact</p><h1 class="page-title">Get in touch.</h1><p>For research questions and correspondence, email <a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a>.</p></section></Page>
+<Page currentPath="/contact" title="Contact & Inquiries — Jhelum Labs" description="Get in touch with Jhelum Labs regarding W-1.1 research, models, and collaboration.">
+  <div class="shell prose-page">
+    <header class="prose-header">
+      <p class="section-eyebrow">Connect</p>
+      <h1 class="page-title">Get in touch.</h1>
+      <p class="page-abstract">
+        We collaborate with researchers, academic institutions, and independent developers working on foundational language models and open AI systems.
+      </p>
+    </header>
+
+    <div class="prose-content">
+      <div class="inquiry-grid">
+        <a class="inquiry-card" href={`mailto:${SITE.contactEmail}?subject=Research%20Inquiry`}>
+          <span style="font-size: 0.72rem; color: var(--brand); font-weight: 700; text-transform: uppercase;">Direct Line</span>
+          <h3>Research & Academic Inquiries</h3>
+          <p>For research questions, paper citations, collaboration requests, and evaluation benchmarks.</p>
+          <span>{SITE.contactEmail} ↗</span>
+        </a>
+
+        <a class="inquiry-card" href={SITE.githubUrl} target="_blank" rel="noreferrer">
+          <span style="font-size: 0.72rem; color: var(--brand); font-weight: 700; text-transform: uppercase;">Open Source</span>
+          <h3>Code & Model Weights</h3>
+          <p>Report issues, submit pull requests, or inspect training scripts in our public GitHub organization.</p>
+          <span>github.com/jhelum-labs ↗</span>
+        </a>
+
+        <a class="inquiry-card" href="/#models">
+          <span style="font-size: 0.72rem; color: var(--brand); font-weight: 700; text-transform: uppercase;">Architecture</span>
+          <h3>Model Programs & Weights</h3>
+          <p>Inspect specifications, layer dimensions, parameter counts, and download verified SafeTensors files.</p>
+          <span>View Models →</span>
+        </a>
+
+        <a class="inquiry-card" href={`mailto:${SITE.contactEmail}?subject=Security%20Disclosure`}>
+          <span style="font-size: 0.72rem; color: var(--brand); font-weight: 700; text-transform: uppercase;">Safety</span>
+          <h3>Security & Disclosures</h3>
+          <p>Report potential security vulnerabilities, adversarial model behavior, or safety observations.</p>
+          <span>security@jhelumlabs.in ↗</span>
+        </a>
+      </div>
+
+      <div style="margin-top: 48px; padding: 24px; background: var(--surface-card); border: 1px solid var(--line); border-radius: 14px;">
+        <h3 style="margin-top: 0; font-size: 1.1rem; color: var(--text);">Mailing Address & Laboratory Info</h3>
+        <p style="margin: 0; color: var(--text-soft); font-size: 0.92rem; line-height: 1.6;">
+          Jhelum Labs Research Group<br />
+          Open Foundational AI Research · Kashmir & Global<br />
+          Web: <a href="https://jhelumlabs.in" style="color: var(--brand);">jhelumlabs.in</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</Page>

@@ -4,11 +4,12 @@ export const SITE = {
   tagline: 'Research and Deployment',
   contactEmail: 'research@jhelumlabs.in',
   githubUrl: 'https://github.com/jhelum-labs',
-  demo: {
-    label: 'Try W-1.1',
-    url: '/playground',
+  cta: {
+    label: 'View Research',
+    url: '/research',
   },
+  weightsUrl: 'https://github.com/wasif-ali-ganie/origin-labs-w-1.1/releases/download/v1.0.0/w-1.1.safetensors',
   license: 'Apache-2.0',
 }
 
-export const pageDescription = 'Jhelum Labs publishes research and deployment documentation for W-1.1.'
+export const pageDescription = 'Jhelum Labs publishes open foundational AI research, architecture specifications, and verified model weights for the W-1.1 program.'

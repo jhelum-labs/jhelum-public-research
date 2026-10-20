@@ -4,9 +4,51 @@ const year = new Date().getFullYear()
 ---
 <footer class="site-footer">
   <div class="shell footer-grid">
-    <div><a class="footer-brand" href="/"><img src="/jhelum-labs-mark.svg" alt="" width="42" height="42" /> Jhelum <b aria-hidden="true">\</b>abs</a><p>{SITE.tagline} for AI systems.</p></div>
-    <div><h2>Research</h2><a href="/research">Publications</a><a href="/research#w-1-1">W-1.1</a></div>
-    <div><h2>Company</h2><a href="/about">About</a><a href="/contact">Contact</a>{SITE.githubUrl && <a href={SITE.githubUrl} rel="noreferrer">GitHub</a>}</div>
+    <div class="footer-brand-col">
+      <a class="footer-brand" href="/" aria-label="Jhelum Labs home">
+        <svg viewBox="0 170 650 630" role="img" aria-label="Jhelum Labs logo" width="34" height="34" class="brand-logo-svg"><g fill="#2a6cf5"><polygon points="152,310 306,310 335,344 176,344 49,611 82,611 196,372 358,372 394,413 228,413 124,628 0,628"/><polygon points="396,185 627,472 553,598 497,606 576,473 388,240 370,266 537,477 458,611 402,620 482,485 326,289"/><polygon points="203,513 295,651 570,614 633,720 236,780 146,640 168,592 258,729 589,683 572,655 275,697 183,559"/></g><path d="M322 443H362V538C362 575 340 592 308 592C295 592 290 590 290 590L272 560H322Z" fill="var(--mark-j)"/></svg>
+        <span class="brand-text">Jhelum <b aria-hidden="true">\</b>abs</span>
+      </a>
+      <p class="footer-tagline">{SITE.tagline} for foundational AI systems.</p>
+      <div class="footer-status-pill">
+        <span class="status-dot"></span>
+        <span>Weights verified · Apache-2.0</span>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h3>Research</h3>
+      <a href="/research">All Publications</a>
+      <a href="/research/w-1.1-final-architecture">W-1.1 Architecture</a>
+      <a href="/research/w-1.1-project-instruct">Project Instruct</a>
+      <a href="/research/w-1.2-architecture">W-1.2 Roadmap</a>
+      <a href="/#lineage">Model Lineage</a>
+    </div>
+    <div class="footer-col">
+      <h3>Models & Weights</h3>
+      <a href="/#models">Model Program Index</a>
+      <a href={SITE.weightsUrl} download>Download Safetensors (493 MB)</a>
+      <a href={SITE.githubUrl} target="_blank" rel="noreferrer">GitHub Organization ↗</a>
+      <a href="/research/w-1.1-final">Final Release Report</a>
+    </div>
+    <div class="footer-col">
+      <h3>Company & Safety</h3>
+      <a href="/about">About Jhelum Labs</a>
+      <a href="/about#safety">Safety & Alignment</a>
+      <a href="/contact">Contact Research Team</a>
+      <a href="/privacy">Privacy Policy</a>
+      <a href="/terms">Terms of Service</a>
+    </div>
   </div>
-  <div class="shell footer-bottom"><span>© {year} {SITE.name}. All rights reserved.</span><span>{SITE.license} · <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a></span></div>
+  <div class="shell footer-bottom">
+    <div class="footer-copy">
+      © {year} {SITE.name}. Open research and model documentation.
+    </div>
+    <div class="footer-legal">
+      <span>{SITE.license} Open Source License</span>
+      <span class="dot-sep">·</span>
+      <a href="/privacy">Privacy</a>
+      <span class="dot-sep">·</span>
+      <a href="/terms">Terms</a>
+    </div>
+  </div>
 </footer>

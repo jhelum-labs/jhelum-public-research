@@ -1,4 +1,16 @@
 ---
 import Page from '../components/Page.astro'
 ---
-<Page currentPath="" title="Page not found — Jhelum Labs" description="The requested Jhelum Labs page was not found."><section class="page shell prose"><p class="eyebrow">404</p><h1 class="page-title">Page not found.</h1><p>The page you requested does not exist.</p><a class="button" href="/">Return home</a></section></Page>
+<Page currentPath="" title="404 — Page Not Found — Jhelum Labs" description="The requested research document or page was not found.">
+  <div class="shell prose-page" style="text-align: center; padding: 120px 20px;">
+    <p class="section-eyebrow" style="color: var(--brand);">Error 404</p>
+    <h1 class="page-title" style="margin-bottom: 16px;">Document not found</h1>
+    <p class="page-abstract" style="margin: 0 auto 32px; max-width: 500px;">
+      The requested research publication, page, or asset could not be located in the archive.
+    </p>
+    <div style="display: flex; gap: 12px; justify-content: center;">
+      <a class="btn-openai-pill" href="/">Return to Home</a>
+      <a class="btn-openai-secondary" href="/research">Browse Research Index</a>
+    </div>
+  </div>
+</Page>

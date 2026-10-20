@@ -2,4 +2,72 @@
 import Page from '../components/Page.astro'
 import { SITE } from '../lib/site.js'
 ---
-<Page currentPath="/about" title="About — Jhelum Labs" description="Learn about Jhelum Labs, an AI research lab focused on research and deployment documentation for W-1.1."><section class="page shell prose"><p class="eyebrow">About Jhelum Labs</p><h1 class="page-title">Research with a record.</h1><h2>Mission</h2><p>Jhelum Labs is an independent AI research lab. We document research and deployment work clearly so that methods, decisions, and limitations can be understood in context.</p><h2>What we research</h2><p>Our current published work documents the W-1.1 language-model program, including architecture, experiments, evaluation, and production processes.</p><h2>Team</h2><div class="team"><article><h3>Research lead</h3><p>TODO: add name and biography.</p></article><article><h3>Engineering</h3><p>TODO: add name and biography.</p></article><article><h3>Research operations</h3><p>TODO: add name and biography.</p></article></div><h2>Contact</h2><p><a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a></p></section></Page>
+<Page currentPath="/about" title="About — Jhelum Labs Research" description="Learn about Jhelum Labs' mission to advance transparent, documented foundational AI architectures.">
+  <div class="shell prose-page">
+    <header class="prose-header">
+      <p class="section-eyebrow">Organization</p>
+      <h1 class="page-title">Pioneering transparent foundation models.</h1>
+      <p class="page-abstract">
+        Jhelum Labs is an independent AI research organization dedicated to developing open-weights language models and publishing rigorous empirical documentation of their training lineage.
+      </p>
+    </header>
+
+    <div class="prose-content">
+      <h2>Mission</h2>
+      <p>
+        The development of foundational artificial intelligence should be grounded in reproducible science. Our goal is to build, evaluate, and open-source generative Transformer architectures while publishing unfiltered technical documentation, hyperparameter logs, and loss trajectories.
+      </p>
+
+      <!-- Three Pillars Grid -->
+      <div class="pillars-grid">
+        <div class="pillar-card">
+          <h3>Empirical Rigor</h3>
+          <p>We document every pretraining phase with verified GPU logs, loss progression curves, and explicit failure recovery procedures.</p>
+        </div>
+        <div class="pillar-card">
+          <h3>Radical Openness</h3>
+          <p>Weights, tokenizer files, token schedules, and architectural specifications are freely released under the Apache-2.0 license.</p>
+        </div>
+        <div class="pillar-card">
+          <h3>Controlled Lineage</h3>
+          <p>From initial 17M prototypes to 123.7M instruction models and the 353M W-1.2 roadmap, every step is archived in the public record.</p>
+        </div>
+      </div>
+
+      <h2>Model Programs</h2>
+      <p>
+        Our primary active research initiative is the <strong>W-1.1 Model Program</strong>: an English-only, decoder-only causal Transformer featuring 123,688,704 trainable parameters, 14 Transformer blocks, 768 hidden dimensions, 12 attention heads, and a 32,000-token byte-level BPE vocabulary.
+      </p>
+      <p>
+        Research is also underway on <strong>W-1.2</strong>, a planned 353M parameter architecture designed to study compute-optimal scaling, improved rotary embeddings, and expanded context windows.
+      </p>
+
+      <h2>Research Team & Areas</h2>
+      <div class="pillars-grid" style="margin-top: 24px;">
+        <div class="pillar-card">
+          <span style="font-size: 0.72rem; color: var(--brand); font-weight: 700; text-transform: uppercase;">Focus Area 01</span>
+          <h3 style="margin-top: 6px;">Architecture & Scaling</h3>
+          <p>Transformer blocks, attention mechanisms, rotary position encodings, and scaling law validation.</p>
+        </div>
+        <div class="pillar-card">
+          <span style="font-size: 0.72rem; color: var(--brand); font-weight: 700; text-transform: uppercase;">Focus Area 02</span>
+          <h3 style="margin-top: 6px;">Pretraining Infrastructure</h3>
+          <p>H100/A100 GPU cluster orchestration, mixed precision stability, gradient accumulation, and optimizer tuning.</p>
+        </div>
+        <div class="pillar-card">
+          <span style="font-size: 0.72rem; color: var(--brand); font-weight: 700; text-transform: uppercase;">Focus Area 03</span>
+          <h3 style="margin-top: 6px;">Instruction Alignment</h3>
+          <p>Supervised fine-tuning (SFT), task prompt engineering, and qualitative evaluation methodologies.</p>
+        </div>
+      </div>
+
+      <h2>Get in Touch</h2>
+      <p>
+        We welcome correspondence from academic researchers, engineers, and institutions interested in foundational model architectures.
+      </p>
+      <p>
+        <a class="btn-openai-pill" href="/contact">Contact Research Team →</a>
+      </p>
+    </div>
+  </div>
+</Page>
