@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import { useResearchIndex, formatDate } from '../hooks/useResearch.js'
 import { CoverImage } from '../components/CoverImage.jsx'
 import { BrandMark, BrandWordmark } from '../components/Logo.jsx'
+import LiquidChrome from '../components/LiquidChrome.jsx'
+import { useTheme } from '../context/ThemeContext.jsx'
 import './ResearchHome.css'
 
 const CATEGORIES = ['All', 'Research Paper', 'Production Document']
@@ -80,6 +82,7 @@ function ResearchRow({ article }) {
 export default function ResearchHome() {
   const { articles, loading } = useResearchIndex()
   const [activeFilter, setActiveFilter] = useState('All')
+  const { theme } = useTheme()
 
   const filtered = activeFilter === 'All'
     ? (articles || [])
@@ -90,6 +93,13 @@ export default function ResearchHome() {
   return (
     <>
       <section className="hero">
+        <LiquidChrome
+          className="hero__liquid-chrome"
+          baseColor={theme === 'dark' ? [0.04, 0.08, 0.2] : [0.5, 0.68, 1]}
+          speed={0.52}
+          amplitude={0.6}
+          interactive
+        />
         <div className="container hero__inner">
           <BrandMark className="hero__mark" />
           <h1 className="hero__title">

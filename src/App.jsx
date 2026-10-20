@@ -26,16 +26,19 @@ function ScrollToTop() {
 
 function AppContent() {
   const { theme } = useTheme()
+  const { pathname } = useLocation()
 
   return (
     <>
-      <LiquidChrome
-        className="site__liquid-chrome"
-        baseColor={theme === 'dark' ? [0.04, 0.08, 0.2] : [0.5, 0.68, 1]}
-        speed={0.18}
-        amplitude={0.34}
-        interactive={false}
-      />
+      {pathname !== '/' && (
+        <LiquidChrome
+          className="site__liquid-chrome"
+          baseColor={theme === 'dark' ? [0.04, 0.08, 0.2] : [0.5, 0.68, 1]}
+          speed={0.26}
+          amplitude={0.42}
+          interactive={false}
+        />
+      )}
       <ScrollToTop />
       <div className="app">
         <Header />
