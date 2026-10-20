@@ -1,11 +1,13 @@
 ---
-import { readFileSync } from 'node:fs'
 import Page from '../../components/Page.astro'
 import { allPublications, bibtex, formatDate } from '../../lib/research.js'
 
 export function getStaticPaths() { return allPublications.map((publication) => ({ params: { slug: publication.slug }, props: { publication } })) }
 const { publication } = Astro.props
-const articleHtml = readFileSync(new URL(`../../content/research/${publication.slug}.html`, import.meta.url), 'utf8')
+const articleFiles = import.meta.glob('../../content/research/*.html', { eager: true, query: '?raw', import: 'default' })
+const rawArticleHtml = articleFiles[`../../content/research/${publication.slug}.html`]
+if (typeof rawArticleHtml !== 'string') throw new Error(`Missing research source for ${publication.slug}`)
+const articleHtml = rawArticleHtml
   .replace(/<h1\b/gi, '<h2')
   .replace(/<\/h1>/gi, '</h2>')
   .replace(/<img(?![^>]*\balt=)/gi, '<img alt=""')
