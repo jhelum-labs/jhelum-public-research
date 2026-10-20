@@ -13,3 +13,5 @@ dist-ssr
 # Copied source docx files (keep the originals on the D: drive)
 d_drive_copy/
 .vercel
+.astro
+reports

@@ -1,0 +1,24 @@
+---
+import { SITE } from '../lib/site.js'
+const { currentPath = '/' } = Astro.props
+const links = [
+  { href: '/', label: 'Home' },
+  { href: '/research', label: 'Research' },
+  { href: '/about', label: 'About' },
+  { href: '/contact', label: 'Contact' },
+]
+---
+<header class="site-header">
+  <div class="shell header-inner">
+    <a class="brand" href="/" aria-label="Jhelum Labs home">
+      <img src="/jhelum-labs-mark.svg" alt="" width="44" height="44" />
+      <span class="brand-text"><strong>Jhelum <b aria-hidden="true">\</b>abs</strong><small>{SITE.tagline}</small></span>
+    </a>
+    <button class="menu-button" data-menu-button aria-label="Toggle menu" aria-expanded="false">Menu</button>
+    <nav aria-label="Primary navigation">
+      {links.map((link) => <a href={link.href} aria-current={currentPath === link.href ? 'page' : undefined}>{link.label}</a>)}
+      <a class="button button-small" href={SITE.demo.url}>{SITE.demo.label}</a>
+      <button class="theme-button" data-theme-toggle type="button" aria-label="Toggle colour theme">◐</button>
+    </nav>
+  </div>
+</header>

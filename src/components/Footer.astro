@@ -1,0 +1,12 @@
+---
+import { SITE } from '../lib/site.js'
+const year = new Date().getFullYear()
+---
+<footer class="site-footer">
+  <div class="shell footer-grid">
+    <div><a class="footer-brand" href="/"><img src="/jhelum-labs-mark.svg" alt="" width="42" height="42" /> Jhelum <b aria-hidden="true">\</b>abs</a><p>{SITE.tagline} for AI systems.</p></div>
+    <div><h2>Research</h2><a href="/research">Publications</a><a href="/research#w-1-1">W-1.1</a></div>
+    <div><h2>Company</h2><a href="/about">About</a><a href="/contact">Contact</a>{SITE.githubUrl && <a href={SITE.githubUrl} rel="noreferrer">GitHub</a>}</div>
+  </div>
+  <div class="shell footer-bottom"><span>© {year} {SITE.name}. All rights reserved.</span><span>{SITE.license} · <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a></span></div>
+</footer>
