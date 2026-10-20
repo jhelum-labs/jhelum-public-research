@@ -1840,10 +1840,10 @@ html { scroll-behavior: auto; }
 *, *::before, *::after { animation: none !important; transition: none !important; }
 .home-liquid, .announcement-pill, .hero-logo, .text-repel, .metrics-section { display: none !important; }
 .home-page { overflow: visible; }
-.hero { min-height: auto; padding: clamp(88px, 14vw, 180px) 0 clamp(72px, 11vw, 140px); border: 0; background: transparent; text-align: center; }
-.hero-content { max-width: 920px; }
-.hero-wordmark { display: block; width: min(100%, 820px); margin: 0 auto; }
-.hero-actions { display: flex; justify-content: center; gap: 12px; margin-top: 36px; }
+.hero { min-height: auto; padding: clamp(76px, 10vw, 132px) 0 clamp(68px, 9vw, 108px); border: 0; background: transparent; text-align: center; }
+.hero-content { max-width: 760px; }
+.hero-wordmark { display: block; width: min(100%, 620px); margin: 0 auto; }
+.hero-actions { display: flex; justify-content: center; gap: 12px; margin-top: 28px; }
 .button { border-radius: 999px; background: var(--text); color: var(--bg) !important; border: 1px solid var(--text); }
 .button-quiet { background: transparent; color: var(--text) !important; }
 .home-research { padding: 40px 0 clamp(80px, 11vw, 150px); }
