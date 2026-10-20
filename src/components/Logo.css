@@ -9,15 +9,15 @@
   text-decoration: none;
 }
 
-.brand-logo {
+.brand-mark {
   display: block;
-  width: 210px;
-  height: auto;
-  color: var(--color-heading);
+  width: 62px;
+  height: 62px;
 }
 
 @media (max-width: 640px) {
-  .brand-logo {
-    width: 168px;
+  .brand-mark {
+    width: 52px;
+    height: 52px;
   }
 }

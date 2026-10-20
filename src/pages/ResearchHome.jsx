@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useResearchIndex, formatDate } from '../hooks/useResearch.js'
 import { CoverImage } from '../components/CoverImage.jsx'
+import { BrandMark } from '../components/Logo.jsx'
 import './ResearchHome.css'
 
 const CATEGORIES = ['All', 'Research Paper', 'Production Document']
@@ -89,12 +90,21 @@ export default function ResearchHome() {
   return (
     <>
       <section className="hero">
+        <div className="hero__chrome hero__chrome--left" aria-hidden="true" />
+        <div className="hero__chrome hero__chrome--right" aria-hidden="true" />
         <div className="container hero__inner">
-          <p className="hero__eyebrow">JHELUM LABS</p>
-          <h1 className="hero__title">Research and Deployment</h1>
-          <p className="hero__subtitle">Open experimental AI research, systems, and publications.</p>
+          <BrandMark className="hero__mark" />
+          <h1 className="hero__title">Jhelum Labs</h1>
+          <p className="hero__subtitle">Research and Deployment</p>
+          <p className="hero__intro">Open experimental AI research, systems, and publications.</p>
         </div>
       </section>
+
+      <div className="research-ticker" aria-label="Jhelum Labs focus areas">
+        <div className="research-ticker__track">
+          <span>Research</span><i>✦</i><span>Deployment</span><i>✦</i><span>Open Models</span><i>✦</i><span>Applied AI</span><i>✦</i><span>Research</span><i>✦</i><span>Deployment</span><i>✦</i><span>Open Models</span><i>✦</i><span>Applied AI</span><i>✦</i>
+        </div>
+      </div>
 
       <section className="stats-section">
         <div className="container">

@@ -1,13 +1,13 @@
 import { Link } from 'react-router-dom'
 import './Logo.css'
 
-export function BrandLogo({ className = '' }) {
+export function BrandMark({ className = '' }) {
   return (
     <svg
-      className={`brand-logo ${className}`.trim()}
-      viewBox="0 170 1536 650"
+      className={`brand-mark ${className}`.trim()}
+      viewBox="0 170 650 630"
       role="img"
-      aria-label="Jhelum Labs — Research and Deployment"
+      aria-label="Jhelum Labs"
     >
       <g fill="#2a6cf5">
         <polygon points="152,310 306,310 335,344 176,344 49,611 82,611 196,372 358,372 394,413 228,413 124,628 0,628" />
@@ -15,18 +15,12 @@ export function BrandLogo({ className = '' }) {
         <polygon points="203,513 295,651 570,614 633,720 236,780 146,640 168,592 258,729 589,683 572,655 275,697 183,559" />
       </g>
       <path d="M322 443H362V538C362 575 340 592 308 592C295 592 290 590 290 590L272 560H322Z" fill="currentColor" />
-      <g fill="currentColor" fontFamily="Poppins, 'Segoe UI', Arial, sans-serif" fontWeight="700">
-        <text x="648" y="525" fontSize="140" textLength="518" lengthAdjust="spacingAndGlyphs">Jhelum</text>
-        <polygon points="1189,415 1210,415 1253,527 1232,527" />
-        <text x="1250" y="525" fontSize="140" textLength="246" lengthAdjust="spacingAndGlyphs">abs</text>
-        <text x="768" y="592" fontSize="48" fontWeight="500" textLength="586" lengthAdjust="spacingAndGlyphs">Research and Deployment</text>
-      </g>
     </svg>
   )
 }
 
 export default function Logo({ to = '/', as = 'link' }) {
-  const content = <BrandLogo />
+  const content = <BrandMark />
 
   if (as === 'link') {
     return (
