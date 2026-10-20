@@ -4,7 +4,7 @@ import { SITE } from '../lib/site.js'
 import { allPublications, publicationStats } from '../lib/research.js'
 
 const stats = publicationStats()
-const featured = allPublications.slice(0, 3)
+const featured = allPublications.slice(0, 3).map((publication, index) => ({ ...publication, cover: ['/research-covers/architecture.svg', '/research-covers/instruct.svg', '/research-covers/final-report.svg'][index] }))
 const jsonLd = { '@context': 'https://schema.org', '@type': 'Organization', name: SITE.name, url: SITE.url, logo: `${SITE.url}/jhelum-labs-mark.svg`, email: SITE.contactEmail, sameAs: SITE.githubUrl ? [SITE.githubUrl] : [] }
 ---
 <Page currentPath="/" title="Jhelum Labs — Research and Deployment" description="Jhelum Labs publishes research and deployment documentation for W-1.1." jsonLd={jsonLd}>
@@ -39,7 +39,7 @@ const jsonLd = { '@context': 'https://schema.org', '@type': 'Organization', name
       </div>
       <div class="card-grid">
         {featured.map((publication) => <a class="card" href={publication.articlePath}>
-          <div class="card-image" aria-hidden="true"><img src="/jhelum-labs-mark.svg" alt="" width="80" height="80" /></div>
+          <div class="card-image"><img src={publication.cover} alt={`Abstract cover for ${publication.title}`} width="1200" height="800" loading="lazy" /></div>
           <div class="card-body"><span class="type">{publication.type}</span><h3>{publication.title}</h3><p>{publication.abstract}</p></div>
         </a>)}
       </div>

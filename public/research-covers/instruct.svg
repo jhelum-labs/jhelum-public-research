@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-label="Abstract colourful instruction research illustration">
+  <rect width="1200" height="800" fill="#141b2d"/>
+  <path d="M0 106c211-98 380-75 539 84 144 144 338 168 661 13v597H0Z" fill="#f36f6f"/>
+  <path d="M0 297c203-110 401-60 532 73 151 153 369 203 668 55v375H0Z" fill="#ffc957"/>
+  <path d="M0 526c179-118 374-94 523 20 176 135 368 123 677-12v266H0Z" fill="#2a6cf5"/>
+  <g fill="#141b2d"><rect x="218" y="174" width="262" height="102" rx="51"/><rect x="570" y="333" width="375" height="102" rx="51"/><rect x="236" y="547" width="303" height="102" rx="51"/></g>
+  <g fill="#fff"><circle cx="269" cy="225" r="16"/><rect x="305" y="209" width="123" height="32" rx="16"/><circle cx="621" cy="384" r="16"/><rect x="657" y="368" width="235" height="32" rx="16"/><circle cx="287" cy="598" r="16"/><rect x="323" y="582" width="164" height="32" rx="16"/></g>
+</svg>

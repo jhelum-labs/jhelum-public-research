@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-label="Abstract spectrum research illustration">
+  <rect width="1200" height="800" fill="#141b2d"/>
+  <circle cx="600" cy="400" r="286" fill="none" stroke="#2a6cf5" stroke-width="88"/>
+  <circle cx="600" cy="400" r="188" fill="none" stroke="#ad7cff" stroke-width="74" stroke-dasharray="390 190" transform="rotate(-34 600 400)"/>
+  <circle cx="600" cy="400" r="101" fill="#ffd05b"/>
+  <path d="M122 139 1078 661M1078 139 122 661" stroke="#ff7e62" stroke-width="28" opacity=".95"/>
+  <g fill="#fff"><circle cx="600" cy="400" r="30"/><circle cx="122" cy="139" r="22"/><circle cx="1078" cy="661" r="22"/><circle cx="1078" cy="139" r="22"/><circle cx="122" cy="661" r="22"/></g>
+</svg>
