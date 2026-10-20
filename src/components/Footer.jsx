@@ -24,8 +24,8 @@ export default function Footer() {
         <div className="footer__col">
           <h4 className="footer__heading">Company</h4>
           <ul className="footer__list">
-            <li><a href="mailto:research@jhelumlabs.com">Contact</a></li>
-            <li><a href="mailto:team@jhelumlabs.com">Careers</a></li>
+            <li><a href="mailto:research@jhelumlabs.in">Contact</a></li>
+            <li><a href="mailto:team@jhelumlabs.in">Careers</a></li>
             <li><a href="http://github.com" rel="noreferrer" target="_blank">GitHub</a></li>
           </ul>
         </div>

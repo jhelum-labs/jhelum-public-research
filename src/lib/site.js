@@ -2,7 +2,7 @@ export const SITE = {
   name: 'Jhelum Labs',
   url: 'https://jhelumlabs.in',
   tagline: 'Research and Deployment',
-  contactEmail: 'research@jhelumlabs.com',
+  contactEmail: 'research@jhelumlabs.in',
   githubUrl: 'https://github.com/jhelum-labs',
   demo: {
     label: 'Try W-1.1',

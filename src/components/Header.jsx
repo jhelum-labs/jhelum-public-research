@@ -42,7 +42,7 @@ export default function Header() {
             Research
           </NavLink>
           <a href="#about" className="nav-link">About</a>
-          <a className="nav-link" href="mailto:research@jhelumlabs.com" onClick={(e) => e.preventDefault()} style={{ cursor: 'pointer' }}>
+          <a className="nav-link" href="mailto:research@jhelumlabs.in" onClick={(e) => e.preventDefault()} style={{ cursor: 'pointer' }}>
             Contact
           </a>
         </nav>

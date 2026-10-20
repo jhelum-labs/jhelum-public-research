@@ -7,24 +7,26 @@ const featured = allPublications.slice(0, 3)
 const jsonLd = { '@context': 'https://schema.org', '@type': 'Organization', name: SITE.name, url: SITE.url, logo: `${SITE.url}/jhelum-labs-mark.svg`, email: SITE.contactEmail, sameAs: SITE.githubUrl ? [SITE.githubUrl] : [] }
 ---
 <Page currentPath="/" title="Jhelum Labs — Research and Deployment" description="Jhelum Labs publishes research and deployment documentation for W-1.1." jsonLd={jsonLd}>
-  <section class="hero">
-    <canvas class="hero-liquid" aria-hidden="true"></canvas>
+  <div class="home-page">
+    <canvas class="home-liquid" aria-hidden="true"></canvas>
+    <section class="hero">
     <div class="hero-content shell">
       <p class="eyebrow">AI Research</p>
       <h1 class="hero-wordmark" aria-label="Jhelum Labs">
         <svg viewBox="0 170 1536 650" role="img" aria-label="Jhelum Labs — Research and Deployment">
           <g fill="#2a6cf5"><polygon points="152,310 306,310 335,344 176,344 49,611 82,611 196,372 358,372 394,413 228,413 124,628 0,628"/><polygon points="396,185 627,472 553,598 497,606 576,473 388,240 370,266 537,477 458,611 402,620 482,485 326,289"/><polygon points="203,513 295,651 570,614 633,720 236,780 146,640 168,592 258,729 589,683 572,655 275,697 183,559"/></g>
-          <path d="M322 443H362V538C362 575 340 592 308 592C295 592 290 590 290 590L272 560H322Z" fill="#2a6cf5"/>
+          <path d="M322 443H362V538C362 575 340 592 308 592C295 592 290 590 290 590L272 560H322Z" fill="var(--mark-j)"/>
           <g fill="currentColor" font-family="Inter, Arial, sans-serif" font-weight="700"><text x="648" y="525" font-size="140" textLength="518" lengthAdjust="spacingAndGlyphs">Jhelum</text><polygon points="1189,415 1210,415 1253,527 1232,527"/><text x="1250" y="525" font-size="140" textLength="246" lengthAdjust="spacingAndGlyphs">abs</text></g>
         </svg>
       </h1>
       <p class="hero-tagline text-repel" data-text-repel>Research and Deployment</p>
       <p>{SITE.tagline}. We publish the research and engineering documentation behind W-1.1.</p>
     </div>
-  </section>
-  <section class="shell"><div class="stats" aria-label="Publication statistics"><div class="stat"><strong>{stats.total}</strong><span>Publications</span></div><div class="stat"><strong>{stats.papers}</strong><span>Research papers</span></div><div class="stat"><strong>{stats.documents}</strong><span>Production docs</span></div></div></section>
-  <section class="section shell"><div class="section-head"><div><p>Latest publications</p><h2>Research</h2></div><a class="button" href="/research">More research</a></div><div class="card-grid">{featured.map((publication) => <a class="card" href={publication.articlePath}><div class="card-image" aria-hidden="true"><img src="/jhelum-labs-mark.svg" alt="" width="80" height="80" /></div><div class="card-body"><span class="type">{publication.type}</span><h3>{publication.title}</h3><p>{publication.abstract}</p></div></a>)}</div></section>
-  <section class="section w11" id="w-1-1"><div class="shell w11-inner"><div><span class="eyebrow">Published model program</span><h2>W-1.1</h2><p>W-1.1 is the only model program published by Jhelum Labs. Read its research record or visit the W-1.1 demo.</p></div><div><a class="button" href="/research?type=Research%20Paper">W-1.1 publications</a> <a class="button button-small" href={SITE.demo.url}>{SITE.demo.label}</a></div></div></section>
+    </section>
+    <section class="shell"><div class="stats" aria-label="Publication statistics"><div class="stat"><strong>{stats.total}</strong><span>Publications</span></div><div class="stat"><strong>{stats.papers}</strong><span>Research papers</span></div><div class="stat"><strong>{stats.documents}</strong><span>Production docs</span></div></div></section>
+    <section class="section shell"><div class="section-head"><div><p>Latest publications</p><h2>Research</h2></div><a class="button" href="/research">More research</a></div><div class="card-grid">{featured.map((publication) => <a class="card" href={publication.articlePath}><div class="card-image" aria-hidden="true"><img src="/jhelum-labs-mark.svg" alt="" width="80" height="80" /></div><div class="card-body"><span class="type">{publication.type}</span><h3>{publication.title}</h3><p>{publication.abstract}</p></div></a>)}</div></section>
+    <section class="section w11" id="w-1-1"><div class="shell w11-inner"><div><span class="eyebrow">Published model program</span><h2>W-1.1</h2><p>W-1.1 is the only model program published by Jhelum Labs. Read its research record or visit the W-1.1 demo.</p></div><div><a class="button" href="/research?type=Research%20Paper">W-1.1 publications</a> <a class="button button-small" href={SITE.demo.url}>{SITE.demo.label}</a></div></div></section>
+  </div>
 </Page>
 
 <script>
@@ -43,7 +45,7 @@ const jsonLd = { '@context': 'https://schema.org', '@type': 'Organization', name
     repel.addEventListener('pointerleave', () => repel.querySelectorAll('span').forEach((letter) => { letter.style.transform = '' }))
   }
 
-  const canvas = document.querySelector('.hero-liquid')
+  const canvas = document.querySelector('.home-liquid')
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches
   const gl = canvas?.getContext('webgl', { alpha: true })
   if (gl) {
@@ -56,6 +58,6 @@ const jsonLd = { '@context': 'https://schema.org', '@type': 'Organization', name
     const resolution = gl.getUniformLocation(program, 'r'), mouse = gl.getUniformLocation(program, 'm'), time = gl.getUniformLocation(program, 't'); let pointer = [.5,.5]
     const resize = () => { const rect = canvas.getBoundingClientRect(), scale = Math.min(devicePixelRatio, 2); canvas.width = rect.width * scale; canvas.height = rect.height * scale; gl.viewport(0, 0, canvas.width, canvas.height); gl.uniform2f(resolution, canvas.width, canvas.height) }
     const draw = (now) => { gl.uniform2f(mouse, ...pointer); gl.uniform1f(time, reducedMotion ? 0 : now / 1000); gl.drawArrays(gl.TRIANGLES, 0, 6); if (!reducedMotion) requestAnimationFrame(draw) }
-    new ResizeObserver(resize).observe(canvas); canvas.closest('.hero')?.addEventListener('pointermove', (event) => { const rect = canvas.getBoundingClientRect(); pointer = [(event.clientX - rect.left) / rect.width, 1 - (event.clientY - rect.top) / rect.height] }); resize(); requestAnimationFrame(draw)
+    new ResizeObserver(resize).observe(canvas); canvas.closest('.home-page')?.addEventListener('pointermove', (event) => { const rect = canvas.getBoundingClientRect(); pointer = [(event.clientX - rect.left) / rect.width, 1 - (event.clientY - rect.top) / rect.height] }); resize(); requestAnimationFrame(draw)
   }
 </script>
