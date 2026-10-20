@@ -1,0 +1,4 @@
+.text-repel { display: inline-flex; align-items: baseline; cursor: default; user-select: none; }
+.text-repel__letter { display: inline-block; will-change: transform; transition: transform 280ms cubic-bezier(.2, .8, .2, 1); }
+.text-repel__letter--space { width: .26em; }
+@media (prefers-reduced-motion: reduce) { .text-repel__letter { transition: none; } }

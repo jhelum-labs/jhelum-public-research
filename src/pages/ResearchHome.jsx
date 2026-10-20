@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom'
 import { useResearchIndex, formatDate } from '../hooks/useResearch.js'
 import { CoverImage } from '../components/CoverImage.jsx'
-import { BrandMark, BrandWordmark } from '../components/Logo.jsx'
+import { BrandMark } from '../components/Logo.jsx'
 import ScrollVelocity from '../components/ScrollVelocity.jsx'
+import TextRepel from '../components/TextRepel.jsx'
 import './ResearchHome.css'
 
 function StatsBar({ articles }) {
@@ -64,8 +65,9 @@ export default function ResearchHome() {
         <div className="container hero__inner">
           <BrandMark className="hero__mark" />
           <h1 className="hero__title">
-            <BrandWordmark />
+            <TextRepel text={'Jhelum \\abs'} />
           </h1>
+          <p className="hero__tagline">Research and Deployment</p>
           <p className="hero__intro">Open experimental AI research, systems, and publications.</p>
         </div>
       </section>
