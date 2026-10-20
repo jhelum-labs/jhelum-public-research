@@ -7,8 +7,55 @@ const featured = allPublications.slice(0, 3)
 const jsonLd = { '@context': 'https://schema.org', '@type': 'Organization', name: SITE.name, url: SITE.url, logo: `${SITE.url}/jhelum-labs-mark.svg`, email: SITE.contactEmail, sameAs: SITE.githubUrl ? [SITE.githubUrl] : [] }
 ---
 <Page currentPath="/" title="Jhelum Labs — Research and Deployment" description="Jhelum Labs publishes research and deployment documentation for W-1.1." jsonLd={jsonLd}>
-  <section class="hero shell"><img class="hero-mark" src="/jhelum-labs-mark.svg" alt="Jhelum Labs logo" width="124" height="124" /><p class="eyebrow">AI Research</p><h1>Jhelum <b aria-hidden="true">\</b>abs</h1><p>{SITE.tagline}. We publish the research and engineering documentation behind W-1.1.</p></section>
+  <section class="hero">
+    <canvas class="hero-liquid" aria-hidden="true"></canvas>
+    <div class="hero-content shell">
+      <p class="eyebrow">AI Research</p>
+      <h1 class="hero-wordmark" aria-label="Jhelum Labs">
+        <svg viewBox="0 170 1536 650" role="img" aria-label="Jhelum Labs — Research and Deployment">
+          <g fill="#2a6cf5"><polygon points="152,310 306,310 335,344 176,344 49,611 82,611 196,372 358,372 394,413 228,413 124,628 0,628"/><polygon points="396,185 627,472 553,598 497,606 576,473 388,240 370,266 537,477 458,611 402,620 482,485 326,289"/><polygon points="203,513 295,651 570,614 633,720 236,780 146,640 168,592 258,729 589,683 572,655 275,697 183,559"/></g>
+          <path d="M322 443H362V538C362 575 340 592 308 592C295 592 290 590 290 590L272 560H322Z" fill="#2a6cf5"/>
+          <g fill="currentColor" font-family="Inter, Arial, sans-serif" font-weight="700"><text x="648" y="525" font-size="140" textLength="518" lengthAdjust="spacingAndGlyphs">Jhelum</text><polygon points="1189,415 1210,415 1253,527 1232,527"/><text x="1250" y="525" font-size="140" textLength="246" lengthAdjust="spacingAndGlyphs">abs</text></g>
+        </svg>
+      </h1>
+      <p class="hero-tagline text-repel" data-text-repel>Research and Deployment</p>
+      <p>{SITE.tagline}. We publish the research and engineering documentation behind W-1.1.</p>
+    </div>
+  </section>
   <section class="shell"><div class="stats" aria-label="Publication statistics"><div class="stat"><strong>{stats.total}</strong><span>Publications</span></div><div class="stat"><strong>{stats.papers}</strong><span>Research papers</span></div><div class="stat"><strong>{stats.documents}</strong><span>Production docs</span></div></div></section>
   <section class="section shell"><div class="section-head"><div><p>Latest publications</p><h2>Research</h2></div><a class="button" href="/research">More research</a></div><div class="card-grid">{featured.map((publication) => <a class="card" href={publication.articlePath}><div class="card-image" aria-hidden="true"><img src="/jhelum-labs-mark.svg" alt="" width="80" height="80" /></div><div class="card-body"><span class="type">{publication.type}</span><h3>{publication.title}</h3><p>{publication.abstract}</p></div></a>)}</div></section>
   <section class="section w11" id="w-1-1"><div class="shell w11-inner"><div><span class="eyebrow">Published model program</span><h2>W-1.1</h2><p>W-1.1 is the only model program published by Jhelum Labs. Read its research record or visit the W-1.1 demo.</p></div><div><a class="button" href="/research?type=Research%20Paper">W-1.1 publications</a> <a class="button button-small" href={SITE.demo.url}>{SITE.demo.label}</a></div></div></section>
 </Page>
+
+<script>
+  const repel = document.querySelector('[data-text-repel]')
+  if (repel && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const text = repel.textContent?.trim() || ''
+    repel.innerHTML = [...text].map((letter) => `<span aria-hidden="true">${letter === ' ' ? '&nbsp;' : letter}</span>`).join('')
+    repel.addEventListener('pointermove', (event) => {
+      const container = repel.getBoundingClientRect()
+      repel.querySelectorAll('span').forEach((letter) => {
+        const box = letter.getBoundingClientRect(); const dx = box.left + box.width / 2 - event.clientX; const dy = box.top + box.height / 2 - event.clientY; const distance = Math.hypot(dx, dy)
+        const force = distance < 130 && distance > 0 ? ((1 - distance / 130) ** 2) * 24 : 0
+        letter.style.transform = force ? `translate3d(${dx / distance * force}px, ${dy / distance * force}px, 0) rotate(${dx / distance * force * .2}deg)` : ''
+      })
+    })
+    repel.addEventListener('pointerleave', () => repel.querySelectorAll('span').forEach((letter) => { letter.style.transform = '' }))
+  }
+
+  const canvas = document.querySelector('.hero-liquid')
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches
+  const gl = canvas?.getContext('webgl', { alpha: true })
+  if (gl) {
+    const vertex = 'attribute vec2 p; void main(){gl_Position=vec4(p,0.,1.);}'
+    const fragment = 'precision highp float;uniform vec2 r,m;uniform float t;float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h(i),h(i+vec2(1.,0.)),f.x),mix(h(i+vec2(0.,1.)),h(i+vec2(1.,1.)),f.x),f.y);}float f(vec2 p){float v=0.;v+=.5*n(p);p=mat2(.8,.6,-.6,.8)*p*2.02;v+=.25*n(p);p=mat2(.8,.6,-.6,.8)*p*2.03;v+=.125*n(p);p=mat2(.8,.6,-.6,.8)*p*2.01;v+=.0625*n(p);return v/.9375;}void main(){vec2 u=gl_FragCoord.xy/r;vec2 q=-1.+2.*u;q.x*=r.x/r.y;vec2 d=q-(m-.5)*vec2(2.*r.x/r.y,2.);q+=normalize(d)*exp(-length(d)*3.)*.1;float z=f(q+vec2(f(q+t*.06),f(q+5.2+t*.08))*3.);vec3 c=mix(vec3(.03,.08,.19),vec3(.65,.78,1.),smoothstep(.25,.78,z));c=mix(c,vec3(1.),smoothstep(.66,.91,z));gl_FragColor=vec4(c,.86);}'
+    const compile = (type, source) => { const shader = gl.createShader(type); gl.shaderSource(shader, source); gl.compileShader(shader); return shader }
+    const program = gl.createProgram(); gl.attachShader(program, compile(gl.VERTEX_SHADER, vertex)); gl.attachShader(program, compile(gl.FRAGMENT_SHADER, fragment)); gl.linkProgram(program); gl.useProgram(program)
+    const buffer = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buffer); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]), gl.STATIC_DRAW)
+    const position = gl.getAttribLocation(program, 'p'); gl.enableVertexAttribArray(position); gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0)
+    const resolution = gl.getUniformLocation(program, 'r'), mouse = gl.getUniformLocation(program, 'm'), time = gl.getUniformLocation(program, 't'); let pointer = [.5,.5]
+    const resize = () => { const rect = canvas.getBoundingClientRect(), scale = Math.min(devicePixelRatio, 2); canvas.width = rect.width * scale; canvas.height = rect.height * scale; gl.viewport(0, 0, canvas.width, canvas.height); gl.uniform2f(resolution, canvas.width, canvas.height) }
+    const draw = (now) => { gl.uniform2f(mouse, ...pointer); gl.uniform1f(time, reducedMotion ? 0 : now / 1000); gl.drawArrays(gl.TRIANGLES, 0, 6); if (!reducedMotion) requestAnimationFrame(draw) }
+    new ResizeObserver(resize).observe(canvas); canvas.closest('.hero')?.addEventListener('pointermove', (event) => { const rect = canvas.getBoundingClientRect(); pointer = [(event.clientX - rect.left) / rect.width, 1 - (event.clientY - rect.top) / rect.height] }); resize(); requestAnimationFrame(draw)
+  }
+</script>
