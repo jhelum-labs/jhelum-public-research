@@ -9,8 +9,8 @@ const CATEGORIES = ['All', 'Research Paper', 'Production Document']
 const LogoMemo = memo(() => (
   <div className="hero__logo-wrap">
     <img
-      src={`${import.meta.env.BASE_URL}logo.png`}
-      alt="Jhelum Labs"
+      src={`${import.meta.env.BASE_URL}jhelum-labs-logo.svg`}
+      alt="Jhelum Labs — Research and Deployment"
       className="hero__logo-img"
     />
   </div>

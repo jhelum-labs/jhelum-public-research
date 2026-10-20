@@ -1,19 +1,6 @@
 import { Link } from 'react-router-dom'
 import './Logo.css'
 
-/**
- * Brand logo — the Jhelum Labs mark: a bold "J" with a wave-swept hook and a
- * neural-network molecule. Drawn with currentColor so it renders black in
- * light mode and white in dark mode, crisp at any size.
- *
- * To use your own brand logo image instead:
- *   1. Save it as `public/logo.png` (or edit the `src` in `src/components/Logo.jsx`).
- *   2. Set `const USE_BRAND_LOGO = true` below.
- *
- * The preferred branded font (Pacifico) is loaded from Google Fonts; if you'd
- * rather self-host it, add the font files under `public/fonts/` and adjust the
- * `@font-face` in `src/styles/index.css`.
- */
 const USE_BRAND_LOGO = true
 
 export function LogoMark({ size = 34 }) {
@@ -75,12 +62,11 @@ function WordmarkLogo() {
 
 export default function Logo({ to = '/', as = 'link' }) {
   if (USE_BRAND_LOGO) {
-    // Use a real image logo dropped into public/logo.png
     return (
       <Link to={to} className="logo-link" aria-label="Jhelum Labs Research home">
         <img
-          src={`${import.meta.env.BASE_URL}logo.png`}
-          alt="Jhelum Labs"
+          src={`${import.meta.env.BASE_URL}jhelum-labs-logo.svg`}
+          alt="Jhelum Labs — Research and Deployment"
           className="logo__img"
         />
       </Link>
