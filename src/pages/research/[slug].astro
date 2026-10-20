@@ -5,7 +5,7 @@ import { allPublications, bibtex, formatDate } from '../../lib/research.js'
 
 export function getStaticPaths() { return allPublications.map((publication) => ({ params: { slug: publication.slug }, props: { publication } })) }
 const { publication } = Astro.props
-const articleHtml = readFileSync(new URL(`../../../public/research/${publication.slug}.html`, import.meta.url), 'utf8')
+const articleHtml = readFileSync(new URL(`../../content/research/${publication.slug}.html`, import.meta.url), 'utf8')
   .replace(/<h1\b/gi, '<h2')
   .replace(/<\/h1>/gi, '</h2>')
   .replace(/<img(?![^>]*\balt=)/gi, '<img alt=""')
