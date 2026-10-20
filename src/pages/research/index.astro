@@ -1,8 +1,7 @@
 ---
 import Page from '../../components/Page.astro'
-import { allPublications, formatDate, publicationStats, publicationTypes } from '../../lib/research.js'
+import { allPublications, formatDate, publicationTypes } from '../../lib/research.js'
 
-const stats = publicationStats()
 const requestedType = Astro.url.searchParams.get('type')
 const type = publicationTypes.includes(requestedType) ? requestedType : 'All'
 const publications = type === 'All' ? allPublications : allPublications.filter((publication) => publication.type === type)
@@ -14,7 +13,6 @@ const publications = type === 'All' ? allPublications : allPublications.filter((
       <h1>Research</h1>
       <p>A record of research papers and production documentation from the W-1.1 model program.</p>
     </header>
-    <div class="research-summary" aria-label="Publication statistics"><span>{stats.total} publications</span><span>{stats.papers} research papers</span><span>{stats.documents} production docs</span></div>
     <nav class="filters" aria-label="Filter publications by type">
       {publicationTypes.map((item) => <a class={type === item ? 'active' : ''} href={item === 'All' ? '/research' : `/research?type=${encodeURIComponent(item)}`}>{item === 'All' ? 'All' : item.replace(' Document', ' docs')}</a>)}
     </nav>

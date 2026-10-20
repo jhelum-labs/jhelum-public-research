@@ -1,9 +1,8 @@
 ---
 import Page from '../components/Page.astro'
 import { SITE } from '../lib/site.js'
-import { allPublications, publicationStats } from '../lib/research.js'
+import { allPublications } from '../lib/research.js'
 
-const stats = publicationStats()
 const featured = allPublications.slice(0, 3).map((publication, index) => ({ ...publication, cover: ['/research-covers/architecture.svg', '/research-covers/instruct.svg', '/research-covers/final-report.svg'][index] }))
 const jsonLd = { '@context': 'https://schema.org', '@type': 'Organization', name: SITE.name, url: SITE.url, logo: `${SITE.url}/jhelum-labs-mark.svg`, email: SITE.contactEmail, sameAs: SITE.githubUrl ? [SITE.githubUrl] : [] }
 ---
@@ -43,12 +42,6 @@ const jsonLd = { '@context': 'https://schema.org', '@type': 'Organization', name
           <div class="card-body"><span class="type">{publication.type}</span><h3>{publication.title}</h3><p>{publication.abstract}</p></div>
         </a>)}
       </div>
-    </section>
-
-    <section class="home-stats shell" aria-label="Publication statistics">
-      <div><strong>{stats.total}</strong><span>Publications</span></div>
-      <div><strong>{stats.papers}</strong><span>Research papers</span></div>
-      <div><strong>{stats.documents}</strong><span>Production docs</span></div>
     </section>
 
     <section class="w11 home-w11" id="w-1-1"><div class="shell w11-inner"><div><p class="section-eyebrow">W-1.1</p><h2>The published model program</h2><p>Read the research record for the W-1.1 model program.</p></div><a class="text-link" href={SITE.cta.url}>{SITE.cta.label} <span aria-hidden="true">↗</span></a></div></section>
