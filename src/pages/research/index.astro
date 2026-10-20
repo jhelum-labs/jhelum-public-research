@@ -1,27 +1,304 @@
 ---
 import Page from '../../components/Page.astro'
-import { allPublications, formatDate, publicationTypes } from '../../lib/research.js'
+import { allPublications, formatDate, publicationTypes, publicationStats } from '../../lib/research.js'
 
 const requestedType = Astro.url.searchParams.get('type')
 const type = publicationTypes.includes(requestedType) ? requestedType : 'All'
-const publications = type === 'All' ? allPublications : allPublications.filter((publication) => publication.type === type)
+const publications = type === 'All' ? allPublications : allPublications.filter((p) => p.type === type)
+const stats = publicationStats()
 ---
-<Page currentPath="/research" title="Research — Jhelum Labs" description="Research papers and production documentation from Jhelum Labs, including the W-1.1 model program.">
-  <section class="research-page shell">
-    <header class="research-intro">
-      <p class="section-eyebrow">Jhelum Labs</p>
-      <h1>Research</h1>
-      <p>A record of research papers and production documentation from the W-1.1 model program.</p>
+<Page currentPath="/research" title="Research — Jhelum Labs" description="Research papers and production documentation from Jhelum Labs, including the W-1.1 and W-1.2 model programs.">
+  <div class="rp-page shell">
+
+    <!-- ── Hero header ── -->
+    <header class="rp-header">
+      <p class="rp-eyebrow">Jhelum Labs · AI Research</p>
+      <h1 class="rp-title">Research</h1>
+      <p class="rp-desc">
+        Our research teams document the safety, architecture, and training of
+        open experimental language models — so that AI development remains
+        transparent and reproducible.
+      </p>
+      <div class="rp-stats">
+        <div class="rp-stat">
+          <span class="rp-stat-num">{stats.total}</span>
+          <span class="rp-stat-label">Publications</span>
+        </div>
+        <div class="rp-stat-sep"></div>
+        <div class="rp-stat">
+          <span class="rp-stat-num">{stats.papers}</span>
+          <span class="rp-stat-label">Research papers</span>
+        </div>
+        <div class="rp-stat-sep"></div>
+        <div class="rp-stat">
+          <span class="rp-stat-num">{stats.documents}</span>
+          <span class="rp-stat-label">Production docs</span>
+        </div>
+      </div>
     </header>
-    <nav class="filters" aria-label="Filter publications by type">
-      {publicationTypes.map((item) => <a class={type === item ? 'active' : ''} href={item === 'All' ? '/research' : `/research?type=${encodeURIComponent(item)}`}>{item === 'All' ? 'All' : item.replace(' Document', ' docs')}</a>)}
+
+    <!-- ── Filter pills ── -->
+    <nav class="rp-filters" aria-label="Filter publications by type">
+      {publicationTypes.map((item) => (
+        <a
+          class={type === item ? 'rp-filter rp-filter--active' : 'rp-filter'}
+          href={item === 'All' ? '/research' : `/research?type=${encodeURIComponent(item)}`}
+        >
+          {item === 'All' ? 'All' : item === 'Research Paper' ? 'Research papers' : 'Production docs'}
+        </a>
+      ))}
     </nav>
-    <div class="publication-list">
-      {publications.map((publication) => <a class="publication-row" href={publication.articlePath}>
-        <div class="publication-meta"><strong>{publication.type}</strong><time datetime={publication.date}>{formatDate(publication.date)}</time></div>
-        <div><h2>{publication.title}</h2><p>{publication.abstract}</p><p class="publication-authors">{publication.authors.join(', ')}</p></div>
-        <span class="publication-arrow" aria-hidden="true">↗</span>
-      </a>)}
+
+    <!-- ── Publication list ── -->
+    <div class="rp-list">
+      {publications.map((pub) => (
+        <a class="rp-row" href={pub.articlePath}>
+          <div class="rp-row-left">
+            <span class={`rp-type ${pub.type === 'Research Paper' ? 'rp-type--paper' : 'rp-type--doc'}`}>
+              {pub.type === 'Research Paper' ? 'Research' : 'Production'}
+            </span>
+            <time class="rp-date" datetime={pub.date}>{formatDate(pub.date)}</time>
+          </div>
+          <div class="rp-row-center">
+            <h2 class="rp-row-title">{pub.title}</h2>
+            <p class="rp-row-abstract">{pub.abstract}</p>
+          </div>
+          <span class="rp-row-arrow" aria-hidden="true">↗</span>
+        </a>
+      ))}
     </div>
-  </section>
+
+  </div>
 </Page>
+
+<style>
+/* ── Page shell ── */
+.rp-page {
+  padding: clamp(64px, 9vw, 108px) 0 100px;
+}
+
+/* ── Header ── */
+.rp-header {
+  max-width: 760px;
+  margin-bottom: 52px;
+}
+
+.rp-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 14px;
+}
+
+.rp-title {
+  font-size: clamp(3rem, 7vw, 5.5rem);
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 1.0;
+  color: var(--text);
+  margin: 0 0 20px;
+}
+
+.rp-desc {
+  font-size: clamp(1rem, 1.8vw, 1.15rem);
+  color: var(--text-soft);
+  line-height: 1.65;
+  max-width: 620px;
+  margin: 0 0 32px;
+}
+
+/* Stats row */
+.rp-stats {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.rp-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-right: 28px;
+}
+
+.rp-stat-sep {
+  width: 1px;
+  height: 32px;
+  background: var(--line);
+  margin-right: 28px;
+  flex-shrink: 0;
+}
+
+.rp-stat-num {
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: var(--text);
+  line-height: 1;
+}
+
+.rp-stat-label {
+  font-size: 0.73rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ── Filters ── */
+.rp-filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--line);
+}
+
+.rp-filter {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 18px;
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  color: var(--text-soft);
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.rp-filter:hover {
+  background: var(--surface-3);
+  color: var(--text);
+  border-color: var(--line-hover);
+}
+
+.rp-filter--active {
+  background: var(--text);
+  color: var(--bg) !important;
+  border-color: var(--text);
+  font-weight: 600;
+}
+
+/* ── Publication rows — Anthropic style ── */
+.rp-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.rp-row {
+  display: grid;
+  grid-template-columns: 200px 1fr 32px;
+  gap: 28px;
+  align-items: start;
+  padding: 28px 0;
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+
+.rp-row:first-child {
+  border-top: 1px solid var(--line);
+}
+
+.rp-row:hover {
+  background: transparent;
+}
+
+.rp-row:hover .rp-row-title {
+  color: var(--brand);
+}
+
+.rp-row:hover .rp-row-arrow {
+  transform: translate(3px, -3px);
+  color: var(--text);
+}
+
+/* Left column */
+.rp-row-left {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 3px;
+}
+
+.rp-type {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  width: fit-content;
+}
+
+.rp-type--paper {
+  color: var(--brand);
+  border-color: rgba(42, 108, 245, 0.3);
+  background: rgba(42, 108, 245, 0.08);
+}
+
+.rp-type--doc {
+  color: var(--text-soft);
+  background: var(--surface-2);
+}
+
+.rp-date {
+  font-size: 0.8rem;
+  color: var(--muted);
+  font-family: var(--font-mono);
+}
+
+/* Center column */
+.rp-row-title {
+  font-size: clamp(1.1rem, 2vw, 1.35rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+  color: var(--text);
+  margin: 0 0 8px;
+  transition: color 0.15s ease;
+}
+
+.rp-row-abstract {
+  font-size: 0.9rem;
+  color: var(--text-soft);
+  line-height: 1.6;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Arrow */
+.rp-row-arrow {
+  color: var(--muted);
+  font-size: 1.1rem;
+  padding-top: 3px;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+/* ── Responsive ── */
+@media (max-width: 720px) {
+  .rp-row {
+    grid-template-columns: 1fr 28px;
+    gap: 16px;
+  }
+  .rp-row-left {
+    display: none;
+  }
+  .rp-row-title { font-size: 1.05rem; }
+  .rp-stats { flex-wrap: wrap; gap: 16px; }
+  .rp-stat-sep { display: none; }
+}
+
+@media (max-width: 480px) {
+  .rp-row-abstract { display: none; }
+}
+</style>

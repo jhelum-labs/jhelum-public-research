@@ -1,47 +1,532 @@
 ---
 import Page from '../components/Page.astro'
 import { SITE } from '../lib/site.js'
-import { allPublications } from '../lib/research.js'
+import { allPublications, formatDate, publicationStats } from '../lib/research.js'
 
-const featured = allPublications.slice(0, 3).map((publication, index) => ({ ...publication, cover: ['/research-covers/architecture.svg', '/research-covers/instruct.svg', '/research-covers/final-report.svg'][index] }))
-const jsonLd = { '@context': 'https://schema.org', '@type': 'Organization', name: SITE.name, url: SITE.url, logo: `${SITE.url}/jhelum-labs-mark.svg`, email: SITE.contactEmail, sameAs: SITE.githubUrl ? [SITE.githubUrl] : [] }
+const recent = allPublications.slice(0, 6)
+const stats = publicationStats()
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: SITE.name,
+  url: SITE.url,
+  logo: `${SITE.url}/logo.png`,
+  email: SITE.contactEmail,
+  sameAs: SITE.githubUrl ? [SITE.githubUrl] : [],
+}
 ---
-<Page currentPath="/" title="Jhelum Labs — Research and Deployment" description="Jhelum Labs publishes research and deployment documentation for W-1.1." jsonLd={jsonLd}>
-  <div class="home-page">
-    <section class="hero">
-      <div class="hero-content shell">
-        <h1 class="sr-only">Jhelum Labs</h1>
-        <svg class="hero-wordmark" viewBox="0 160 1536 660" role="img" aria-label="Jhelum Labs, Research and Deployment">
-          <g fill="#2a6cf5">
-            <polygon points="152,310 306,310 335,344 176,344 49,611 82,611 196,372 358,372 394,413 228,413 124,628 0,628"/>
-            <polygon points="396,185 627,472 553,598 497,606 576,473 388,240 370,266 537,477 458,611 402,620 482,485 326,289"/>
-            <polygon points="203,513 295,651 570,614 633,720 236,780 146,640 168,592 258,729 589,683 572,655 275,697 183,559"/>
-          </g>
-          <path d="M322 443H362V538C362 575 340 592 308 592C295 592 290 590 290 590L272 560H322Z" fill="var(--mark-j)"/>
-          <g fill="var(--text)" font-family="Poppins, 'Segoe UI', Arial, sans-serif" font-weight="700">
-            <text x="648" y="525" font-size="140" textLength="518" lengthAdjust="spacingAndGlyphs">Jhelum</text>
-            <polygon points="1189,415 1210,415 1253,527 1232,527"/>
-            <text x="1250" y="525" font-size="140" textLength="246" lengthAdjust="spacingAndGlyphs">abs</text>
-            <text x="768" y="592" font-size="48" font-weight="500" textLength="586" lengthAdjust="spacingAndGlyphs">Research and Deployment</text>
-          </g>
-        </svg>
-        <div class="hero-actions">
-          <a class="button" href="/research">Explore research</a>
+<Page currentPath="/" title="Jhelum Labs — Research and Deployment" description="Jhelum Labs publishes open foundational AI research and model documentation for the W-1.1 program." jsonLd={jsonLd}>
+  <div class="home">
+
+    <!-- ══════════ HERO ══════════ -->
+    <section class="h-hero">
+      <div class="shell h-hero-inner">
+
+        <!-- Logo + wordmark — untouched -->
+        <div class="h-brand">
+          <img src="/logo.png" alt="Jhelum Labs" class="h-logo" />
+          <div class="h-brand-text">
+            <span class="h-brand-name">Jhelum Labs</span>
+            <span class="h-brand-sub">Research and Deployment</span>
+          </div>
+        </div>
+
+        <!-- Mission statement — Anthropic style -->
+        <div class="h-mission">
+          <h1 class="h-headline">
+            Research
+          </h1>
+          <p class="h-mission-text">
+            Jhelum Labs investigates the architecture, training and safety of
+            open experimental language models — publishing every finding openly
+            so AI development stays transparent and reproducible.
+          </p>
+          <div class="h-actions">
+            <a class="h-btn-primary" href="/research">Explore research</a>
+            <a class="h-btn-ghost" href="/playground">Try W-1.1 →</a>
+          </div>
+        </div>
+
+        <!-- Stats row -->
+        <div class="h-stats">
+          <div class="h-stat">
+            <span class="h-stat-num">{stats.total}</span>
+            <span class="h-stat-label">Publications</span>
+          </div>
+          <div class="h-stat-sep"></div>
+          <div class="h-stat">
+            <span class="h-stat-num">{stats.papers}</span>
+            <span class="h-stat-label">Research papers</span>
+          </div>
+          <div class="h-stat-sep"></div>
+          <div class="h-stat">
+            <span class="h-stat-num">{stats.documents}</span>
+            <span class="h-stat-label">Production docs</span>
+          </div>
+          <div class="h-stat-sep"></div>
+          <div class="h-stat">
+            <span class="h-stat-num">2</span>
+            <span class="h-stat-label">Model generations</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ══════════ RESEARCH TEAMS (Anthropic-style) ══════════ -->
+    <section class="h-teams shell">
+      <div class="h-teams-grid">
+        {[
+          { name: 'Architecture', desc: 'Designing efficient decoder-only Transformers — RoPE, RMSNorm, SwiGLU, GQA — for open reproducible pretraining.' },
+          { name: 'Training', desc: 'Documenting pretraining runs, loss curves, checkpointing and recovery across W-1.1 experiment phases.' },
+          { name: 'Evaluation', desc: 'Measuring intrinsic quality (perplexity, accuracy) and downstream benchmarks including PIQA, ARC and HellaSwag.' },
+          { name: 'Alignment', desc: 'Instruction-tuning, preference optimization and safety calibration for open experimental models.' },
+        ].map((team) => (
+          <div class="h-team-card">
+            <h3 class="h-team-name">{team.name}</h3>
+            <p class="h-team-desc">{team.desc}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- ══════════ FEATURED (latest 1 big card) ══════════ -->
+    <section class="h-featured shell">
+      <div class="h-section-head">
+        <div>
+          <p class="h-eyebrow">Latest publication</p>
+          <h2 class="h-section-title">Most recent research</h2>
+        </div>
+        <a class="h-view-all" href="/research">View all research ↗</a>
+      </div>
+      {recent[0] && (
+        <a class="h-featured-card" href={recent[0].articlePath}>
+          <div class="h-featured-meta">
+            <span class={`h-tag ${recent[0].type === 'Research Paper' ? 'h-tag--paper' : 'h-tag--doc'}`}>
+              {recent[0].type === 'Research Paper' ? 'Research paper' : 'Production doc'}
+            </span>
+            <time class="h-featured-date">{formatDate(recent[0].date)}</time>
+          </div>
+          <h2 class="h-featured-title">{recent[0].title}</h2>
+          <p class="h-featured-abstract">{recent[0].abstract}</p>
+          <span class="h-featured-cta">Read paper →</span>
+        </a>
+      )}
+    </section>
+
+    <!-- ══════════ RECENT LIST (Anthropic publications list) ══════════ -->
+    <section class="h-publications shell">
+      <div class="h-section-head">
+        <div>
+          <p class="h-eyebrow">Publications</p>
+          <h2 class="h-section-title">All research</h2>
+        </div>
+        <a class="h-view-all" href="/research">See all ↗</a>
+      </div>
+      <div class="h-pub-list">
+        {recent.slice(1).map((pub) => (
+          <a class="h-pub-row" href={pub.articlePath}>
+            <div class="h-pub-left">
+              <span class={`h-tag ${pub.type === 'Research Paper' ? 'h-tag--paper' : 'h-tag--doc'}`}>
+                {pub.type === 'Research Paper' ? 'Research' : 'Docs'}
+              </span>
+              <time class="h-pub-date">{formatDate(pub.date)}</time>
+            </div>
+            <div class="h-pub-center">
+              <h3 class="h-pub-title">{pub.title}</h3>
+              <p class="h-pub-abstract">{pub.abstract}</p>
+            </div>
+            <span class="h-pub-arrow" aria-hidden="true">↗</span>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- ══════════ W-1.1 CTA ══════════ -->
+    <section class="h-cta shell">
+      <div class="h-cta-inner">
+        <div>
+          <h2 class="h-cta-title">Try W-1.1 locally</h2>
+          <p class="h-cta-desc">
+            Download the open weights and run the model on your own machine.
+            Apache-2.0 · 493 MB · verified SHA-256.
+          </p>
+        </div>
+        <div class="h-cta-actions">
+          <a class="h-btn-primary" href="/playground">Get started →</a>
+          <a class="h-btn-ghost" href={SITE.githubUrl} target="_blank" rel="noreferrer">GitHub ↗</a>
         </div>
       </div>
     </section>
 
-    <section class="home-research shell">
-      <div class="section-head">
-        <div><p class="section-eyebrow">Latest publications</p><h2>Research</h2></div>
-        <a class="text-link" href="/research">View all research <span aria-hidden="true">↗</span></a>
-      </div>
-      <div class="card-grid">
-        {featured.map((publication) => <a class="card" href={publication.articlePath}>
-          <div class="card-image"><img src={publication.cover} alt={`Abstract cover for ${publication.title}`} width="1200" height="800" loading="lazy" /></div>
-          <div class="card-body"><span class="type">{publication.type}</span><h3>{publication.title}</h3><p>{publication.abstract}</p></div>
-        </a>)}
-      </div>
-    </section>
   </div>
 </Page>
+
+<style>
+.home { isolation: isolate }
+
+/* ══ Hero ══ */
+.h-hero {
+  padding: clamp(72px, 11vw, 130px) 0 clamp(60px, 9vw, 100px);
+  border-bottom: 1px solid var(--line);
+}
+.h-hero-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+/* Brand block — logo + name, unchanged */
+.h-brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.h-logo {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  border-radius: 12px;
+}
+[data-theme='dark'] .h-logo { filter: invert(1) }
+.h-brand-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.h-brand-name {
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  line-height: 1;
+}
+.h-brand-sub {
+  font-size: 0.8rem;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+}
+
+/* Mission */
+.h-mission { max-width: 800px }
+.h-headline {
+  font-size: clamp(3.5rem, 9vw, 7.5rem);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 0.96;
+  color: var(--text);
+  margin: 0 0 24px;
+}
+.h-mission-text {
+  font-size: clamp(1rem, 1.8vw, 1.2rem);
+  color: var(--text-soft);
+  line-height: 1.65;
+  max-width: 640px;
+  margin: 0 0 32px;
+}
+.h-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.h-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  border-radius: 9999px;
+  background: var(--text);
+  color: var(--bg);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  white-space: nowrap;
+}
+.h-btn-primary:hover { opacity: 0.85; transform: translateY(-1px) }
+.h-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 24px;
+  border-radius: 9999px;
+  border: 1px solid var(--line);
+  color: var(--text-soft);
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+.h-btn-ghost:hover { border-color: var(--line-hover); color: var(--text) }
+
+/* Stats */
+.h-stats {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex-wrap: wrap;
+}
+.h-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding-right: 28px;
+}
+.h-stat-sep {
+  width: 1px; height: 36px;
+  background: var(--line);
+  margin-right: 28px;
+  flex-shrink: 0;
+}
+.h-stat-num {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: var(--text);
+  line-height: 1;
+}
+.h-stat-label {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ══ Teams ══ */
+.h-teams {
+  padding: 72px 0;
+  border-bottom: 1px solid var(--line);
+}
+.h-teams-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.h-team-card {
+  padding: 28px 30px;
+  background: var(--surface-card);
+  transition: background 0.2s ease;
+}
+.h-team-card:hover { background: var(--surface-card-hover) }
+.h-team-name {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 10px;
+  letter-spacing: -0.02em;
+}
+.h-team-desc {
+  font-size: 0.88rem;
+  color: var(--text-soft);
+  line-height: 1.65;
+  margin: 0;
+}
+
+/* ══ Shared section head ══ */
+.h-section-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.h-eyebrow {
+  font-size: 0.73rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 6px;
+}
+.h-section-title {
+  font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  color: var(--text);
+  margin: 0;
+}
+.h-view-all {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-soft);
+  white-space: nowrap;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+.h-view-all:hover { color: var(--text) }
+
+/* ══ Tags ══ */
+.h-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: 1px solid var(--line);
+}
+.h-tag--paper {
+  color: var(--brand);
+  border-color: rgba(42,108,245,0.3);
+  background: rgba(42,108,245,0.08);
+}
+.h-tag--doc {
+  color: var(--text-soft);
+  background: var(--surface-2);
+}
+
+/* ══ Featured card ══ */
+.h-featured {
+  padding: 72px 0;
+  border-bottom: 1px solid var(--line);
+}
+.h-featured-card {
+  display: block;
+  padding: 36px 40px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface-card);
+  text-decoration: none;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+.h-featured-card:hover {
+  background: var(--surface-card-hover);
+  border-color: var(--line-hover);
+  transform: translateY(-2px);
+}
+.h-featured-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.h-featured-date { font-size: 0.8rem; color: var(--muted); font-family: var(--font-mono) }
+.h-featured-title {
+  font-size: clamp(1.6rem, 3.5vw, 2.6rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  margin: 0 0 14px;
+  line-height: 1.2;
+}
+.h-featured-abstract {
+  font-size: 1rem;
+  color: var(--text-soft);
+  line-height: 1.65;
+  margin: 0 0 24px;
+  max-width: 780px;
+}
+.h-featured-cta {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--brand);
+}
+
+/* ══ Publications list ══ */
+.h-publications {
+  padding: 72px 0;
+  border-bottom: 1px solid var(--line);
+}
+.h-pub-list { display: flex; flex-direction: column }
+.h-pub-row {
+  display: grid;
+  grid-template-columns: 190px 1fr 28px;
+  gap: 24px;
+  align-items: start;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--line-subtle);
+  text-decoration: none;
+  transition: opacity 0.15s ease;
+}
+.h-pub-row:first-child { border-top: 1px solid var(--line-subtle) }
+.h-pub-row:hover { opacity: 1 }
+.h-pub-row:hover .h-pub-title { color: var(--brand) }
+.h-pub-row:hover .h-pub-arrow { transform: translate(3px,-3px); color: var(--text) }
+.h-pub-left { display: flex; flex-direction: column; gap: 6px; padding-top: 3px }
+.h-pub-date { font-size: 0.78rem; color: var(--muted); font-family: var(--font-mono) }
+.h-pub-title {
+  font-size: 1.08rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  margin: 0 0 6px;
+  transition: color 0.15s ease;
+}
+.h-pub-abstract {
+  font-size: 0.86rem;
+  color: var(--text-soft);
+  line-height: 1.55;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.h-pub-arrow {
+  color: var(--muted);
+  font-size: 1rem;
+  padding-top: 3px;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+/* ══ CTA Banner ══ */
+.h-cta {
+  padding: 80px 0 100px;
+}
+.h-cta-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  padding: 48px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: linear-gradient(135deg, var(--surface-card), color-mix(in srgb, var(--surface-2) 85%, var(--brand) 15%));
+  flex-wrap: wrap;
+}
+.h-cta-title {
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  color: var(--text);
+  margin: 0 0 10px;
+}
+.h-cta-desc {
+  font-size: 1rem;
+  color: var(--text-soft);
+  max-width: 540px;
+  margin: 0;
+  line-height: 1.6;
+}
+.h-cta-actions {
+  display: flex;
+  gap: 12px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+/* ══ Responsive ══ */
+@media (max-width: 760px) {
+  .h-pub-row { grid-template-columns: 1fr 24px; gap: 14px }
+  .h-pub-left { display: none }
+  .h-stats { gap: 16px }
+  .h-stat-sep { display: none }
+  .h-featured-card { padding: 24px }
+  .h-cta-inner { padding: 28px }
+  .h-cta-actions { width: 100% }
+  .h-btn-primary, .h-btn-ghost { justify-content: center; flex: 1 }
+}
+
+@media (max-width: 480px) {
+  .h-pub-abstract { display: none }
+  .h-teams-grid { grid-template-columns: 1fr }
+  .h-headline { font-size: 3rem }
+}
+</style>
