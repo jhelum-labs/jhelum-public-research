@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
-import { ThemeProvider } from './context/ThemeContext.jsx'
+import { ThemeProvider, useTheme } from './context/ThemeContext.jsx'
+import LiquidChrome from './components/LiquidChrome.jsx'
 import Header from './components/Header.jsx'
 import Footer from './components/Footer.jsx'
 import ResearchHome from './pages/ResearchHome.jsx'
@@ -23,9 +24,18 @@ function ScrollToTop() {
   return null
 }
 
-export default function App() {
+function AppContent() {
+  const { theme } = useTheme()
+
   return (
-    <ThemeProvider>
+    <>
+      <LiquidChrome
+        className="site__liquid-chrome"
+        baseColor={theme === 'dark' ? [0.04, 0.08, 0.2] : [0.5, 0.68, 1]}
+        speed={0.18}
+        amplitude={0.34}
+        interactive={false}
+      />
       <ScrollToTop />
       <div className="app">
         <Header />
@@ -40,6 +50,14 @@ export default function App() {
         </main>
         <Footer />
       </div>
+    </>
+  )
+}
+
+export default function App() {
+  return (
+    <ThemeProvider>
+      <AppContent />
     </ThemeProvider>
   )
 }

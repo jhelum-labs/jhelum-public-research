@@ -76,6 +76,26 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+.site__liquid-chrome {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  width: 100vw;
+  height: 100vh;
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+[data-theme='dark'] .site__liquid-chrome {
+  opacity: 0.18;
+}
+
+.app {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+}
+
 h1, h2, h3, h4 {
   font-family: var(--font-display);
   color: var(--color-heading);
