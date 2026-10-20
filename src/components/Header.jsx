@@ -38,7 +38,7 @@ export default function Header() {
       <div className="container header__inner">
         <Logo />
         <nav className="header__nav" aria-label="Primary">
-          <NavLink to="/" className={({ isActive }) => 'nav-link' + (isActive ? ' nav-link--active' : '')} end>
+          <NavLink to="/research" className={({ isActive }) => 'nav-link' + (isActive ? ' nav-link--active' : '')}>
             Research
           </NavLink>
           <a href="#about" className="nav-link">About</a>

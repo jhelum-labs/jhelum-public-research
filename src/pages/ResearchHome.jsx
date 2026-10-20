@@ -1,13 +1,9 @@
-import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useResearchIndex, formatDate } from '../hooks/useResearch.js'
 import { CoverImage } from '../components/CoverImage.jsx'
 import { BrandMark, BrandWordmark } from '../components/Logo.jsx'
-import LiquidChrome from '../components/LiquidChrome.jsx'
-import { useTheme } from '../context/ThemeContext.jsx'
+import ScrollVelocity from '../components/ScrollVelocity.jsx'
 import './ResearchHome.css'
-
-const CATEGORIES = ['All', 'Research Paper', 'Production Document']
 
 function StatsBar({ articles }) {
   const total = articles?.length ?? 0
@@ -57,49 +53,14 @@ function FeaturedCard({ article }) {
   )
 }
 
-function ResearchRow({ article }) {
-  return (
-    <Link to={`/research/${article.slug}`} className="research-row">
-      <div className="research-row__thumb">
-        <CoverImage slug={article.slug} title={article.title} width={120} height={80} />
-      </div>
-      <span className="research-row__body">
-        <span className="research-row__top">
-          <span className={`badge ${article.category === 'Production Document' ? 'badge--prod' : 'badge--paper'}`}>
-            {article.category}
-          </span>
-          <span className="research-row__date">{formatDate(article.date)}</span>
-          {article.readingTime && <span className="research-row__read">{article.readingTime}</span>}
-        </span>
-        <h3 className="research-row__title">{article.title}</h3>
-        <p className="research-row__excerpt">{article.excerpt}</p>
-      </span>
-      <span className="research-row__arrow" aria-hidden="true">→</span>
-    </Link>
-  )
-}
-
 export default function ResearchHome() {
   const { articles, loading } = useResearchIndex()
-  const [activeFilter, setActiveFilter] = useState('All')
-  const { theme } = useTheme()
-
-  const filtered = activeFilter === 'All'
-    ? (articles || [])
-    : (articles || []).filter((a) => a.category === activeFilter)
 
   const featured = articles?.[0] ?? null
 
   return (
     <>
       <section className="hero">
-        <LiquidChrome
-          className="hero__liquid-chrome"
-          baseColor={theme === 'dark' ? [0.04, 0.08, 0.2] : [0.5, 0.68, 1]}
-          speed={0.52}
-          amplitude={0.6}
-          interactive
-        />
         <div className="container hero__inner">
           <BrandMark className="hero__mark" />
           <h1 className="hero__title">
@@ -109,11 +70,7 @@ export default function ResearchHome() {
         </div>
       </section>
 
-      <div className="research-ticker" aria-label="Jhelum Labs focus areas">
-        <div className="research-ticker__track">
-          <span>Research</span><i>✦</i><span>Deployment</span><i>✦</i><span>Open Models</span><i>✦</i><span>Applied AI</span><i>✦</i><span>Research</span><i>✦</i><span>Deployment</span><i>✦</i><span>Open Models</span><i>✦</i><span>Applied AI</span><i>✦</i>
-        </div>
-      </div>
+      <ScrollVelocity text="Jhelum Labs · Research and Deployment · " />
 
       <section className="stats-section">
         <div className="container">
@@ -124,42 +81,19 @@ export default function ResearchHome() {
       {featured && (
         <section className="featured-section">
           <div className="container">
-            <FeaturedCard article={featured} />
+            <div className="home-research__head">
+              <div>
+                <p className="home-research__eyebrow">Latest work</p>
+                <h2 className="home-research__title">Research</h2>
+              </div>
+              <Link to="/research" className="home-research__more">More research <span aria-hidden="true">↗</span></Link>
+            </div>
+            <div className="home-research__grid">
+              {(articles || []).slice(0, 3).map((article) => <FeaturedCard key={article.slug} article={article} />)}
+            </div>
           </div>
         </section>
       )}
-
-      <section className="all-research" id="all-research">
-        <div className="container">
-          <div className="section-head">
-            <h2 className="section-title">All research</h2>
-            <span className="section-count">
-              {filtered.length} {filtered.length === 1 ? 'publication' : 'publications'}
-            </span>
-          </div>
-
-          <div className="filter-tabs" role="tablist" aria-label="Filter by category">
-            {CATEGORIES.map((cat) => (
-              <button
-                key={cat}
-                role="tab"
-                aria-selected={activeFilter === cat}
-                className={`filter-tab${activeFilter === cat ? ' filter-tab--active' : ''}`}
-                onClick={() => setActiveFilter(cat)}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-
-          <div className="research-list">
-            {loading && <p className="loading">Loading publications…</p>}
-            {!loading && filtered.map((article) => (
-              <ResearchRow key={article.slug} article={article} />
-            ))}
-          </div>
-        </div>
-      </section>
     </>
   )
 }

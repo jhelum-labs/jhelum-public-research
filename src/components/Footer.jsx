@@ -16,7 +16,7 @@ export default function Footer() {
           <h4 className="footer__heading">Research</h4>
           <ul className="footer__list">
             <li><a href="/">Home</a></li>
-            <li><a href="/#all-research">All Research</a></li>
+            <li><a href="/research">All Research</a></li>
 
           </ul>
         </div>

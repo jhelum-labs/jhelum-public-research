@@ -174,7 +174,7 @@ export default function ResearchArticle() {
     return (
       <div className="container article__page">
         <p className="article__status">Article not found.</p>
-        <button className="btn" onClick={() => navigate('/')}>← Back to research</button>
+        <button className="btn" onClick={() => navigate('/research')}>← Back to research</button>
       </div>
     )
   }
@@ -184,7 +184,7 @@ export default function ResearchArticle() {
   return (
     <article className="article__page">
       <div className="container article__nav">
-        <Link to="/" className="article__back">← All research</Link>
+        <Link to="/research" className="article__back">← All research</Link>
         <ShareButton />
       </div>
 
