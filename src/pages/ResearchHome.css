@@ -56,6 +56,21 @@
   color: var(--color-heading);
 }
 
+.hero__labs {
+  display: inline-flex;
+  align-items: baseline;
+  margin-left: 0.08em;
+}
+
+.hero__labs-slash {
+  display: inline-block;
+  font-weight: 500;
+  letter-spacing: -0.18em;
+  margin-right: 0.01em;
+  transform: scaleX(0.72);
+  transform-origin: center;
+}
+
 .hero__subtitle {
   font-family: var(--font-body);
   font-style: normal;

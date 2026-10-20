@@ -94,7 +94,10 @@ export default function ResearchHome() {
         <div className="hero__chrome hero__chrome--right" aria-hidden="true" />
         <div className="container hero__inner">
           <BrandMark className="hero__mark" />
-          <h1 className="hero__title">Jhelum Labs</h1>
+          <h1 className="hero__title" aria-label="Jhelum Labs">
+            <span>Jhelum</span>
+            <span className="hero__labs"><span className="hero__labs-slash" aria-hidden="true">\</span>abs</span>
+          </h1>
           <p className="hero__subtitle">Research and Deployment</p>
           <p className="hero__intro">Open experimental AI research, systems, and publications.</p>
         </div>
