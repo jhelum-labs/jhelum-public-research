@@ -1,304 +1,300 @@
 ---
 import Page from '../../components/Page.astro'
-import { allPublications, formatDate, publicationTypes, publicationStats } from '../../lib/research.js'
+import { allPublications, formatDate, publicationTypes } from '../../lib/research.js'
 
 const requestedType = Astro.url.searchParams.get('type')
 const type = publicationTypes.includes(requestedType) ? requestedType : 'All'
 const publications = type === 'All' ? allPublications : allPublications.filter((p) => p.type === type)
-const stats = publicationStats()
 ---
-<Page currentPath="/research" title="Research — Jhelum Labs" description="Research papers and production documentation from Jhelum Labs, including the W-1.1 and W-1.2 model programs.">
-  <div class="rp-page shell">
+<Page currentPath="/research" title="Research — Jhelum Labs" description="Research papers and production documentation from Jhelum Labs W-1.1 and W-1.2 model programs.">
 
-    <!-- ── Hero header ── -->
-    <header class="rp-header">
-      <p class="rp-eyebrow">Jhelum Labs · AI Research</p>
+  <!-- ══ Header — Anthropic two-column ══ -->
+  <section class="rp-header">
+    <div class="shell rp-header-inner">
       <h1 class="rp-title">Research</h1>
-      <p class="rp-desc">
-        Our research teams document the safety, architecture, and training of
-        open experimental language models — so that AI development remains
-        transparent and reproducible.
-      </p>
-      <div class="rp-stats">
-        <div class="rp-stat">
-          <span class="rp-stat-num">{stats.total}</span>
-          <span class="rp-stat-label">Publications</span>
-        </div>
-        <div class="rp-stat-sep"></div>
-        <div class="rp-stat">
-          <span class="rp-stat-num">{stats.papers}</span>
-          <span class="rp-stat-label">Research papers</span>
-        </div>
-        <div class="rp-stat-sep"></div>
-        <div class="rp-stat">
-          <span class="rp-stat-num">{stats.documents}</span>
-          <span class="rp-stat-label">Production docs</span>
+      <div class="rp-header-right">
+        <p class="rp-desc">
+          Our research teams document the architecture, training and safety
+          of open experimental language models — so that AI development
+          remains transparent and reproducible.
+        </p>
+        <p class="rp-teams-label">Research teams:</p>
+        <div class="rp-team-links">
+          <a href="/research?type=Research+Paper">Architecture</a>
+          <a href="/research?type=Research+Paper">Training</a>
+          <a href="/research?type=Research+Paper">Evaluation</a>
+          <a href="/research?type=Production+Document">Alignment</a>
+          <a href="/research?type=Research+Paper">W-1.2</a>
         </div>
       </div>
-    </header>
+    </div>
+  </section>
 
-    <!-- ── Filter pills ── -->
-    <nav class="rp-filters" aria-label="Filter publications by type">
-      {publicationTypes.map((item) => (
-        <a
-          class={type === item ? 'rp-filter rp-filter--active' : 'rp-filter'}
-          href={item === 'All' ? '/research' : `/research?type=${encodeURIComponent(item)}`}
-        >
-          {item === 'All' ? 'All' : item === 'Research Paper' ? 'Research papers' : 'Production docs'}
-        </a>
-      ))}
-    </nav>
-
-    <!-- ── Publication list ── -->
-    <div class="rp-list">
-      {publications.map((pub) => (
-        <a class="rp-row" href={pub.articlePath}>
-          <div class="rp-row-left">
-            <span class={`rp-type ${pub.type === 'Research Paper' ? 'rp-type--paper' : 'rp-type--doc'}`}>
-              {pub.type === 'Research Paper' ? 'Research' : 'Production'}
-            </span>
-            <time class="rp-date" datetime={pub.date}>{formatDate(pub.date)}</time>
-          </div>
-          <div class="rp-row-center">
-            <h2 class="rp-row-title">{pub.title}</h2>
-            <p class="rp-row-abstract">{pub.abstract}</p>
-          </div>
-          <span class="rp-row-arrow" aria-hidden="true">↗</span>
-        </a>
+  <!-- ══ Team cards ══ -->
+  <section class="rp-teams">
+    <div class="shell rp-teams-grid">
+      {[
+        { name: 'Architecture', desc: 'Decoder-only Transformers with RoPE, RMSNorm, SwiGLU and GQA for open reproducible pretraining.' },
+        { name: 'Training', desc: 'Full documentation of pretraining runs, loss curves, checkpointing and recovery across all W-1.1 phases.' },
+        { name: 'Evaluation', desc: 'Perplexity, token accuracy and downstream benchmarks: PIQA 60.17%, BoolQ 59.30%, ARC Easy 44.78%.' },
+        { name: 'Alignment', desc: 'Instruction-tuning on 300K Q&A pairs and safety calibration for open experimental models.' },
+        { name: 'W-1.2', desc: '353M parameters, grouped-query attention, 50K vocab, 4,096 context length, 8B token training target.' },
+      ].map((t) => (
+        <div class="rp-team-card">
+          <h3>{t.name}</h3>
+          <p>{t.desc}</p>
+        </div>
       ))}
     </div>
+  </section>
 
-  </div>
+  <!-- ══ Filter + list ══ -->
+  <section class="rp-list-section">
+    <div class="shell rp-list-inner">
+
+      <!-- Featured large article + list (Anthropic split) -->
+      <div class="rp-split">
+        <!-- Left: featured visual -->
+        {publications[0] && (
+          <div class="rp-featured-wrap">
+            <a class="rp-featured" href={publications[0].articlePath}>
+              <div class="rp-featured-bg"></div>
+              <div class="rp-featured-body">
+                <span class="rp-featured-type">{publications[0].type}</span>
+                <time class="rp-featured-date">{formatDate(publications[0].date)}</time>
+                <h2 class="rp-featured-title">{publications[0].title}</h2>
+                <p class="rp-featured-abstract">{publications[0].abstract?.slice(0, 140)}…</p>
+                <span class="rp-featured-cta">Read →</span>
+              </div>
+            </a>
+          </div>
+        )}
+
+        <!-- Right: article rows -->
+        <div class="rp-rows">
+
+          <!-- Filter tabs -->
+          <nav class="rp-filters" aria-label="Filter by type">
+            {publicationTypes.map((item) => (
+              <a
+                class={type === item ? 'rp-filter rp-filter--active' : 'rp-filter'}
+                href={item === 'All' ? '/research' : `/research?type=${encodeURIComponent(item)}`}
+              >
+                {item === 'All' ? 'All' : item === 'Research Paper' ? 'Research' : 'Production'}
+              </a>
+            ))}
+          </nav>
+
+          {publications.slice(1).map((pub) => (
+            <a class="rp-row" href={pub.articlePath}>
+              <div class="rp-row-meta">
+                <span class="rp-row-type">{pub.type === 'Research Paper' ? 'Research' : 'Production'}</span>
+                <time>{formatDate(pub.date)}</time>
+              </div>
+              <h3 class="rp-row-title">{pub.title}</h3>
+              <p class="rp-row-excerpt">{pub.abstract?.slice(0, 120)}…</p>
+            </a>
+          ))}
+        </div>
+      </div>
+
+    </div>
+  </section>
+
 </Page>
 
 <style>
-/* ── Page shell ── */
-.rp-page {
-  padding: clamp(64px, 9vw, 108px) 0 100px;
-}
-
-/* ── Header ── */
+/* ══ Header ══ */
 .rp-header {
-  max-width: 760px;
-  margin-bottom: 52px;
+  padding: clamp(72px, 10vw, 120px) 0 clamp(56px, 8vw, 80px);
+  border-bottom: 1px solid var(--line);
 }
-
-.rp-eyebrow {
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin: 0 0 14px;
+.rp-header-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(40px, 6vw, 80px);
+  align-items: start;
 }
-
 .rp-title {
-  font-size: clamp(3rem, 7vw, 5.5rem);
+  font-size: clamp(4rem, 9vw, 8rem);
   font-weight: 800;
-  letter-spacing: -0.045em;
+  letter-spacing: -0.05em;
   line-height: 1.0;
   color: var(--text);
+  margin: 0;
+}
+.rp-desc {
+  font-size: clamp(.95rem, 1.5vw, 1.08rem);
+  color: var(--text-soft);
+  line-height: 1.7;
   margin: 0 0 20px;
 }
-
-.rp-desc {
-  font-size: clamp(1rem, 1.8vw, 1.15rem);
-  color: var(--text-soft);
-  line-height: 1.65;
-  max-width: 620px;
-  margin: 0 0 32px;
-}
-
-/* Stats row */
-.rp-stats {
-  display: flex;
-  align-items: center;
-  gap: 0;
-}
-
-.rp-stat {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  padding-right: 28px;
-}
-
-.rp-stat-sep {
-  width: 1px;
-  height: 32px;
-  background: var(--line);
-  margin-right: 28px;
-  flex-shrink: 0;
-}
-
-.rp-stat-num {
-  font-size: 1.8rem;
+.rp-teams-label {
+  font-size: .8rem;
   font-weight: 700;
-  letter-spacing: -0.04em;
   color: var(--text);
-  line-height: 1;
+  margin: 0 0 10px;
 }
-
-.rp-stat-label {
-  font-size: 0.73rem;
-  font-weight: 500;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-/* ── Filters ── */
-.rp-filters {
+.rp-team-links {
   display: flex;
-  gap: 8px;
   flex-wrap: wrap;
-  margin-bottom: 40px;
-  padding-bottom: 40px;
+  gap: 6px 18px;
+}
+.rp-team-links a {
+  font-size: .88rem;
+  color: var(--text-soft);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color .15s;
+}
+.rp-team-links a:hover { color: var(--text) }
+
+/* ══ Team cards ══ */
+.rp-teams {
+  padding: clamp(48px, 7vw, 80px) 0;
   border-bottom: 1px solid var(--line);
 }
-
-.rp-filter {
-  display: inline-flex;
-  align-items: center;
-  padding: 7px 18px;
-  border-radius: 9999px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  background: var(--surface-2);
-  border: 1px solid var(--line);
-  color: var(--text-soft);
-  text-decoration: none;
-  transition: all 0.15s ease;
-}
-
-.rp-filter:hover {
-  background: var(--surface-3);
-  color: var(--text);
-  border-color: var(--line-hover);
-}
-
-.rp-filter--active {
-  background: var(--text);
-  color: var(--bg) !important;
-  border-color: var(--text);
-  font-weight: 600;
-}
-
-/* ── Publication rows — Anthropic style ── */
-.rp-list {
-  display: flex;
-  flex-direction: column;
-}
-
-.rp-row {
+.rp-teams-grid {
   display: grid;
-  grid-template-columns: 200px 1fr 32px;
-  gap: 28px;
-  align-items: start;
-  padding: 28px 0;
-  border-bottom: 1px solid var(--line);
-  text-decoration: none;
-  transition: background 0.15s ease;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 32px;
 }
-
-.rp-row:first-child {
-  border-top: 1px solid var(--line);
-}
-
-.rp-row:hover {
-  background: transparent;
-}
-
-.rp-row:hover .rp-row-title {
-  color: var(--brand);
-}
-
-.rp-row:hover .rp-row-arrow {
-  transform: translate(3px, -3px);
-  color: var(--text);
-}
-
-/* Left column */
-.rp-row-left {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding-top: 3px;
-}
-
-.rp-type {
-  font-size: 0.72rem;
+.rp-team-card h3 {
+  font-size: 1rem;
   font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  padding: 3px 9px;
-  border-radius: 999px;
-  border: 1px solid var(--line);
-  width: fit-content;
-}
-
-.rp-type--paper {
-  color: var(--brand);
-  border-color: rgba(42, 108, 245, 0.3);
-  background: rgba(42, 108, 245, 0.08);
-}
-
-.rp-type--doc {
-  color: var(--text-soft);
-  background: var(--surface-2);
-}
-
-.rp-date {
-  font-size: 0.8rem;
-  color: var(--muted);
-  font-family: var(--font-mono);
-}
-
-/* Center column */
-.rp-row-title {
-  font-size: clamp(1.1rem, 2vw, 1.35rem);
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  line-height: 1.3;
   color: var(--text);
   margin: 0 0 8px;
-  transition: color 0.15s ease;
+  letter-spacing: -.015em;
+}
+.rp-team-card p {
+  font-size: .84rem;
+  color: var(--text-soft);
+  line-height: 1.65;
+  margin: 0;
 }
 
-.rp-row-abstract {
-  font-size: 0.9rem;
-  color: var(--text-soft);
-  line-height: 1.6;
-  margin: 0;
+/* ══ List section ══ */
+.rp-list-section {
+  padding: clamp(56px, 8vw, 96px) 0 100px;
+}
+.rp-split {
+  display: grid;
+  grid-template-columns: 5fr 4fr;
+  gap: 64px;
+  align-items: start;
+}
+
+/* Featured */
+.rp-featured-wrap { position: sticky; top: 88px }
+.rp-featured {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  height: clamp(360px, 45vw, 500px);
+  text-decoration: none;
+  transition: transform .25s ease;
+}
+.rp-featured:hover { transform: translateY(-3px) }
+.rp-featured-bg {
+  position: absolute; inset: 0;
+  background: linear-gradient(145deg, #0d1f3c 0%, #1a3a5c 40%, #2563eb 70%, #1e3a8a 100%);
+}
+.rp-featured-bg::after {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 70% 55% at 25% 35%, rgba(99,102,241,.4) 0%, transparent 65%);
+}
+.rp-featured-body {
+  position: relative; z-index: 1;
+  padding: 32px 28px;
+  height: 100%;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.rp-featured-type {
+  font-size: .66rem; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; color: rgba(255,255,255,.55);
+}
+.rp-featured-date { font-size: .78rem; color: rgba(255,255,255,.5) }
+.rp-featured-title {
+  font-size: clamp(1.3rem, 2.5vw, 2rem);
+  font-weight: 700; color: #fff; margin: 0;
+  line-height: 1.2; letter-spacing: -.03em;
+  margin-top: auto;
+}
+.rp-featured-abstract {
+  font-size: .88rem; color: rgba(255,255,255,.65);
+  line-height: 1.6; margin: 0;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+.rp-featured-cta {
+  font-size: .85rem; font-weight: 600;
+  color: rgba(255,255,255,.75); align-self: flex-start;
+  margin-top: 8px; transition: color .15s;
+}
+.rp-featured:hover .rp-featured-cta { color: #fff }
 
-/* Arrow */
-.rp-row-arrow {
-  color: var(--muted);
-  font-size: 1.1rem;
-  padding-top: 3px;
-  transition: transform 0.2s ease, color 0.2s ease;
+/* Filter tabs */
+.rp-filters {
+  display: flex; gap: 6px; flex-wrap: wrap;
+  margin-bottom: 8px; padding-bottom: 24px;
+  border-bottom: 1px solid var(--line);
+}
+.rp-filter {
+  display: inline-flex; align-items: center;
+  padding: 6px 16px; border-radius: 9999px;
+  font-size: .82rem; font-weight: 500;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  color: var(--text-soft);
+  text-decoration: none;
+  transition: all .15s ease;
+}
+.rp-filter:hover { background: var(--surface-3); color: var(--text) }
+.rp-filter--active {
+  background: var(--text); color: var(--bg) !important;
+  border-color: var(--text); font-weight: 600;
 }
 
-/* ── Responsive ── */
-@media (max-width: 720px) {
-  .rp-row {
-    grid-template-columns: 1fr 28px;
-    gap: 16px;
-  }
-  .rp-row-left {
-    display: none;
-  }
-  .rp-row-title { font-size: 1.05rem; }
-  .rp-stats { flex-wrap: wrap; gap: 16px; }
-  .rp-stat-sep { display: none; }
+/* Article rows */
+.rp-rows { display: flex; flex-direction: column }
+.rp-row {
+  display: block; padding: 22px 0;
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+}
+.rp-row:hover .rp-row-title { color: #2a6cf5 }
+.rp-row-meta {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 5px;
+  font-size: .76rem; color: var(--muted);
+}
+.rp-row-type { font-weight: 600; color: var(--text-soft) }
+.rp-row-title {
+  font-size: 1rem; font-weight: 700;
+  letter-spacing: -.015em; color: var(--text);
+  margin: 0 0 5px; line-height: 1.35;
+  transition: color .15s;
+}
+.rp-row-excerpt {
+  font-size: .82rem; color: var(--text-soft);
+  line-height: 1.55; margin: 0;
+  display: -webkit-box; -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical; overflow: hidden;
 }
 
-@media (max-width: 480px) {
-  .rp-row-abstract { display: none; }
+/* ══ Responsive ══ */
+@media (max-width: 900px) {
+  .rp-header-inner { grid-template-columns: 1fr; gap: 24px }
+  .rp-split { grid-template-columns: 1fr; gap: 40px }
+  .rp-featured-wrap { position: static }
+  .rp-title { font-size: 4rem }
+}
+@media (max-width: 600px) {
+  .rp-title { font-size: 3rem }
+  .rp-teams-grid { grid-template-columns: 1fr 1fr }
+  .rp-featured { height: 260px }
 }
 </style>

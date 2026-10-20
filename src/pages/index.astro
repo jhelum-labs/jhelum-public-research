@@ -1,10 +1,9 @@
 ---
 import Page from '../components/Page.astro'
 import { SITE } from '../lib/site.js'
-import { allPublications, formatDate, publicationStats } from '../lib/research.js'
+import { allPublications, formatDate } from '../lib/research.js'
 
-const recent = allPublications.slice(0, 6)
-const stats = publicationStats()
+const recent = allPublications.slice(0, 5)
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
@@ -15,422 +14,411 @@ const jsonLd = {
   sameAs: SITE.githubUrl ? [SITE.githubUrl] : [],
 }
 ---
-<Page currentPath="/" title="Jhelum Labs — Research and Deployment" description="Jhelum Labs publishes open foundational AI research and model documentation for the W-1.1 program." jsonLd={jsonLd}>
-  <div class="home">
+<Page currentPath="/" title="Jhelum Labs — Research and Deployment" description="Jhelum Labs publishes open foundational AI research and model documentation." jsonLd={jsonLd}>
 
-    <!-- ══════════ HERO — Silk Aurora background ══════════ -->
-    <section class="h-hero">
-      <!-- WebGL aurora — renders on client -->
-      <div id="aurora-mount" class="h-aurora-wrap" aria-hidden="true"></div>
+  <!-- ══════════ HERO — Two-column Anthropic style ══════════ -->
+  <section class="ah-hero">
+    <div class="shell ah-hero-inner">
+      <div class="ah-hero-left">
+        <h1 class="ah-hero-headline">
+          Open AI <span class="ah-underline">research</span> and<br/>
+          <span class="ah-underline">model weights</span><br/>
+          built in public
+        </h1>
+      </div>
+      <div class="ah-hero-right">
+        <p class="ah-hero-desc">
+          Jhelum Labs is an independent AI research group. We train language
+          models from scratch, document every experiment, and publish all
+          weights openly — so the world can verify, reproduce and build on
+          our work.
+        </p>
+        <a class="ah-btn-primary" href="/research">Explore research →</a>
+      </div>
+    </div>
+  </section>
 
-      <div class="shell h-hero-inner">
-        <!-- Logo + wordmark -->
-        <div class="h-brand">
-          <img src="/logo.png" alt="Jhelum Labs" class="h-logo" />
-          <div class="h-brand-text">
-            <span class="h-brand-name">Jhelum Labs</span>
-            <span class="h-brand-sub">Research and Deployment</span>
+  <!-- ══════════ FULL-WIDTH BANNER ══════════ -->
+  <section class="ah-banner">
+    <a href="/playground" class="ah-banner-link">
+      <div class="ah-banner-bg"></div>
+      <div class="ah-banner-content">
+        <h2 class="ah-banner-title">W-1.1</h2>
+        <p class="ah-banner-sub">Our first open 123M-parameter language model, trained from scratch.</p>
+        <span class="ah-banner-cta">Try W-1.1 →</span>
+      </div>
+    </a>
+  </section>
+
+  <!-- ══════════ RESEARCH TEAMS ══════════ -->
+  <section class="ah-teams">
+    <div class="shell">
+      <div class="ah-teams-inner">
+        <div class="ah-teams-left">
+          <p class="ah-eyebrow">Research teams</p>
+          <div class="ah-team-links">
+            <a href="/research?type=Research+Paper">Architecture</a>
+            <a href="/research?type=Research+Paper">Training</a>
+            <a href="/research?type=Research+Paper">Evaluation</a>
+            <a href="/research?type=Production+Document">Alignment</a>
+          </div>
+        </div>
+        <div class="ah-teams-grid">
+          {[
+            { name: 'Architecture', desc: 'Designing efficient decoder-only Transformers using RoPE, RMSNorm, SwiGLU and grouped-query attention for open reproducible pretraining.' },
+            { name: 'Training', desc: 'Documenting every pretraining run — loss curves, checkpointing, recovery — across all W-1.1 experiment phases on H100 and T4 GPUs.' },
+            { name: 'Evaluation', desc: 'Measuring intrinsic quality with perplexity and token accuracy, plus downstream benchmarks including PIQA, ARC, BoolQ and HellaSwag.' },
+            { name: 'Alignment', desc: 'Instruction-tuning on 300K Q&A pairs, preference optimization and safety calibration for experimental open models.' },
+            { name: 'W-1.2', desc: 'Planning the next generation: 353M parameters, grouped-query attention, 50K BPE vocabulary, 4,096 context, 8B training tokens.' },
+          ].map((t) => (
+            <div class="ah-team-card">
+              <h3>{t.name}</h3>
+              <p>{t.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ RECENT PUBLICATIONS (Anthropic two-column) ══════════ -->
+  <section class="ah-pubs">
+    <div class="shell">
+      <div class="ah-pubs-inner">
+
+        <!-- Left: featured visual -->
+        <div class="ah-pubs-left">
+          <div class="ah-pubs-visual">
+            <div class="ah-visual-card">
+              <div class="ah-visual-bg"></div>
+              <div class="ah-visual-text">
+                <span class="ah-visual-eyebrow">{recent[0]?.type}</span>
+                <h3>{recent[0]?.title}</h3>
+                <p>{recent[0]?.abstract?.slice(0, 120)}…</p>
+                <a href={recent[0]?.articlePath} class="ah-visual-link">Read →</a>
+              </div>
+            </div>
           </div>
         </div>
 
-        <!-- Mission -->
-        <div class="h-mission">
-          <h1 class="h-headline">Research</h1>
-          <p class="h-mission-text">
-            Jhelum Labs investigates the architecture, training and safety of
-            open experimental language models — publishing every finding openly
-            so AI development stays transparent and reproducible.
-          </p>
-          <div class="h-actions">
-            <a class="h-btn-primary" href="/research">Explore research</a>
-            <a class="h-btn-ghost" href="/playground">Try W-1.1 →</a>
-          </div>
+        <!-- Right: list -->
+        <div class="ah-pubs-right">
+          {recent.slice(1).map((pub) => (
+            <a class="ah-pub-item" href={pub.articlePath}>
+              <div class="ah-pub-meta">
+                <span class="ah-pub-type">{pub.type === 'Research Paper' ? pub.type : 'Production'}</span>
+                <time>{formatDate(pub.date)}</time>
+              </div>
+              <h3 class="ah-pub-title">{pub.title}</h3>
+              <p class="ah-pub-excerpt">{pub.abstract?.slice(0, 100)}…</p>
+            </a>
+          ))}
+          <a class="ah-see-all" href="/research">See all publications →</a>
         </div>
-
-        <!-- Split-flap stats -->
-        <div id="flap-mount" class="h-flap-row"></div>
 
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- ══════════ TEAMS ══════════ -->
-    <section class="h-teams shell">
-      <div class="h-teams-grid" id="teams-reveal">
+  <!-- ══════════ W-1.1 MODEL CARD ══════════ -->
+  <section class="ah-model">
+    <div class="shell ah-model-inner">
+      <div>
+        <p class="ah-eyebrow">W-1.1 · 125M</p>
+        <h2 class="ah-model-title">Open weights. Run it yourself.</h2>
+        <p class="ah-model-desc">
+          Download the safetensors file, install dependencies, and run
+          inference locally in under 5 minutes. No API key. No cloud.
+          Full source code on GitHub.
+        </p>
+        <div class="ah-model-actions">
+          <a class="ah-btn-primary" href="/playground">Get started →</a>
+          <a class="ah-btn-outline" href={SITE.githubUrl} target="_blank" rel="noreferrer">GitHub ↗</a>
+        </div>
+      </div>
+      <div class="ah-model-specs">
         {[
-          { name: 'Architecture', desc: 'Designing efficient decoder-only Transformers — RoPE, RMSNorm, SwiGLU, GQA — for open reproducible pretraining.' },
-          { name: 'Training', desc: 'Documenting pretraining runs, loss curves, checkpointing and recovery across W-1.1 experiment phases.' },
-          { name: 'Evaluation', desc: 'Measuring intrinsic quality (perplexity, accuracy) and downstream benchmarks including PIQA, ARC and HellaSwag.' },
-          { name: 'Alignment', desc: 'Instruction-tuning, preference optimization and safety calibration for open experimental models.' },
-        ].map((team) => (
-          <div class="h-team-card">
-            <h3 class="h-team-name">{team.name}</h3>
-            <p class="h-team-desc">{team.desc}</p>
+          ['Parameters', '123.7M'],
+          ['Vocabulary', '32K BPE'],
+          ['Context', '2,048 tokens'],
+          ['Architecture', 'Decoder-only'],
+          ['Training', 'H100 80GB'],
+          ['License', 'Apache-2.0'],
+        ].map(([label, value]) => (
+          <div class="ah-spec-row">
+            <span class="ah-spec-label">{label}</span>
+            <span class="ah-spec-value">{value}</span>
           </div>
         ))}
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- ══════════ FEATURED ══════════ -->
-    <section class="h-featured shell">
-      <div class="h-section-head">
-        <div>
-          <p class="h-eyebrow">Latest publication</p>
-          <h2 class="h-section-title">Most recent research</h2>
-        </div>
-        <a class="h-view-all" href="/research">View all research ↗</a>
-      </div>
-      {recent[0] && (
-        <a class="h-featured-card" href={recent[0].articlePath}>
-          <div class="h-featured-meta">
-            <span class={`h-tag ${recent[0].type === 'Research Paper' ? 'h-tag--paper' : 'h-tag--doc'}`}>
-              {recent[0].type === 'Research Paper' ? 'Research paper' : 'Production doc'}
-            </span>
-            <time class="h-featured-date">{formatDate(recent[0].date)}</time>
-          </div>
-          <h2 class="h-featured-title">{recent[0].title}</h2>
-          <p class="h-featured-abstract">{recent[0].abstract}</p>
-          <span class="h-featured-cta">Read paper →</span>
-        </a>
-      )}
-    </section>
-
-    <!-- ══════════ PUBLICATION LIST — scroll reveal ══════════ -->
-    <section class="h-publications shell">
-      <div class="h-section-head">
-        <div>
-          <p class="h-eyebrow">Publications</p>
-          <h2 class="h-section-title">All research</h2>
-        </div>
-        <a class="h-view-all" href="/research">See all ↗</a>
-      </div>
-      <div class="h-pub-list" id="pub-reveal">
-        {recent.slice(1).map((pub) => (
-          <a class="h-pub-row" href={pub.articlePath}>
-            <div class="h-pub-left">
-              <span class={`h-tag ${pub.type === 'Research Paper' ? 'h-tag--paper' : 'h-tag--doc'}`}>
-                {pub.type === 'Research Paper' ? 'Research' : 'Docs'}
-              </span>
-              <time class="h-pub-date">{formatDate(pub.date)}</time>
-            </div>
-            <div class="h-pub-center">
-              <h3 class="h-pub-title">{pub.title}</h3>
-              <p class="h-pub-abstract">{pub.abstract}</p>
-            </div>
-            <span class="h-pub-arrow" aria-hidden="true">↗</span>
-          </a>
-        ))}
-      </div>
-    </section>
-
-    <!-- ══════════ CTA ══════════ -->
-    <section class="h-cta shell">
-      <div class="h-cta-inner">
-        <div>
-          <h2 class="h-cta-title">Try W-1.1 locally</h2>
-          <p class="h-cta-desc">
-            Download the open weights and run the model on your own machine.
-            Apache-2.0 · 493 MB · verified SHA-256.
-          </p>
-        </div>
-        <div class="h-cta-actions">
-          <a class="h-btn-primary" href="/playground">Get started →</a>
-          <a class="h-btn-ghost" href={SITE.githubUrl} target="_blank" rel="noreferrer">GitHub ↗</a>
-        </div>
-      </div>
-    </section>
-
-  </div>
 </Page>
 
-<!-- ── Client islands ── -->
-<script>
-  import SilkAurora from '../components/SilkAurora.jsx'
-  import SplitFlap  from '../components/SplitFlap.jsx'
-  import { createElement } from 'react'
-  import { createRoot } from 'react-dom/client'
-  import '../components/SilkAurora.css'
-  import '../components/SplitFlap.css'
-
-  /* Silk Aurora */
-  const auroraMount = document.getElementById('aurora-mount')
-  if (auroraMount) {
-    createRoot(auroraMount).render(
-      createElement(SilkAurora, {
-        baseColor:   [0.03, 0.03, 0.07],
-        accentColor: [0.08, 0.38, 0.45],
-        intensity: 0.9,
-        grain: 0.7,
-        speed: 0.8,
-      })
-    )
-  }
-
-  /* Split Flap stats */
-  const flapMount = document.getElementById('flap-mount')
-  if (flapMount) {
-    const stats = [
-      { label: 'Publications', value: '11' },
-      { label: 'Papers',       value: '07' },
-      { label: 'Prod docs',    value: '03' },
-      { label: 'Models',       value: '02' },
-    ]
-    const row = document.createElement('div')
-    row.className = 'h-flap-stats'
-    stats.forEach(({ label, value }) => {
-      const item = document.createElement('div')
-      item.className = 'h-flap-item'
-      const sfDiv = document.createElement('div')
-      sfDiv.className = 'h-flap-sf'
-      const lbl = document.createElement('span')
-      lbl.className = 'h-flap-label'
-      lbl.textContent = label
-      item.appendChild(sfDiv)
-      item.appendChild(lbl)
-      row.appendChild(item)
-      createRoot(sfDiv).render(
-        createElement(SplitFlap, {
-          text: value,
-          accentColor: '#2a6cf5',
-          staggerDelay: 50,
-          flipSpeed: 38,
-        })
-      )
-    })
-    flapMount.appendChild(row)
-  }
-
-  /* Scroll reveal — publication rows */
-  const pubReveal = document.getElementById('pub-reveal')
-  if (pubReveal) {
-    const rows = Array.from(pubReveal.children)
-    rows.forEach((row, i) => {
-      row.style.opacity = '0'
-      row.style.transform = 'translateY(20px)'
-      row.style.transition = `opacity 0.5s ease ${i * 75}ms, transform 0.5s ease ${i * 75}ms`
-    })
-    const obs = new IntersectionObserver((entries) => {
-      entries.forEach((e) => {
-        if (e.isIntersecting) {
-          e.target.style.opacity = '1'
-          e.target.style.transform = 'translateY(0)'
-          obs.unobserve(e.target)
-        }
-      })
-    }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' })
-    rows.forEach((r) => obs.observe(r))
-  }
-
-  /* Scroll reveal — team cards */
-  const teamsReveal = document.getElementById('teams-reveal')
-  if (teamsReveal) {
-    const cards = Array.from(teamsReveal.children)
-    cards.forEach((card, i) => {
-      card.style.opacity = '0'
-      card.style.transform = 'translateY(18px)'
-      card.style.transition = `opacity 0.5s ease ${i * 90}ms, transform 0.5s ease ${i * 90}ms`
-    })
-    const obs = new IntersectionObserver((entries) => {
-      entries.forEach((e) => {
-        if (e.isIntersecting) {
-          e.target.style.opacity = '1'
-          e.target.style.transform = 'translateY(0)'
-          obs.unobserve(e.target)
-        }
-      })
-    }, { threshold: 0.1 })
-    cards.forEach((c) => obs.observe(c))
-  }
-</script>
-
 <style>
-.home { isolation: isolate }
-
 /* ══ Hero ══ */
-.h-hero {
-  position: relative;
-  overflow: hidden;
-  padding: clamp(72px, 11vw, 130px) 0 clamp(60px, 9vw, 100px);
+.ah-hero {
+  padding: clamp(80px, 12vw, 140px) 0 clamp(64px, 10vw, 110px);
   border-bottom: 1px solid var(--line);
 }
-
-.h-aurora-wrap {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  opacity: 0.55;
+.ah-hero-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(40px, 6vw, 80px);
+  align-items: end;
 }
-
-.h-hero-inner {
-  position: relative;
-  z-index: 1;
+.ah-hero-headline {
+  font-size: clamp(2.6rem, 5.5vw, 4.8rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  color: var(--text);
+  margin: 0;
+}
+.ah-underline {
+  text-decoration: underline;
+  text-decoration-thickness: 3px;
+  text-underline-offset: 4px;
+  text-decoration-color: var(--text);
+}
+.ah-hero-right {
   display: flex;
   flex-direction: column;
-  gap: 48px;
+  gap: 28px;
+  padding-bottom: 8px;
 }
-
-/* Brand */
-.h-brand { display: flex; align-items: center; gap: 16px }
-.h-logo { width: 64px; height: 64px; object-fit: contain; border-radius: 12px }
-[data-theme='dark'] .h-logo { filter: invert(1) }
-.h-brand-text { display: flex; flex-direction: column; gap: 2px }
-.h-brand-name { font-size: 1.4rem; font-weight: 700; letter-spacing: -.03em; color: var(--text); line-height: 1 }
-.h-brand-sub { font-size: .8rem; color: var(--muted); letter-spacing: .02em }
-
-/* Mission */
-.h-mission { max-width: 800px }
-.h-headline {
-  font-size: clamp(3.5rem, 9vw, 7.5rem);
-  font-weight: 800;
-  letter-spacing: -.05em;
-  line-height: .96;
-  color: var(--text);
-  margin: 0 0 24px;
-}
-.h-mission-text {
-  font-size: clamp(1rem, 1.8vw, 1.18rem);
+.ah-hero-desc {
+  font-size: clamp(1rem, 1.5vw, 1.12rem);
   color: var(--text-soft);
-  line-height: 1.65;
-  max-width: 640px;
-  margin: 0 0 32px;
+  line-height: 1.7;
+  margin: 0;
 }
-.h-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap }
-.h-btn-primary {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 12px 28px; border-radius: 9999px;
-  background: var(--text); color: var(--bg);
-  font-size: .9rem; font-weight: 600;
-  text-decoration: none;
-  transition: opacity .15s ease, transform .15s ease;
-}
-.h-btn-primary:hover { opacity: .85; transform: translateY(-1px) }
-.h-btn-ghost {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 12px 24px; border-radius: 9999px;
-  border: 1px solid var(--line);
-  color: var(--text-soft); font-size: .9rem; font-weight: 500;
-  text-decoration: none;
-  transition: border-color .15s ease, color .15s ease;
-}
-.h-btn-ghost:hover { border-color: var(--line-hover); color: var(--text) }
 
-/* Split flap row */
-.h-flap-row { display: flex }
-.h-flap-stats { display: flex; align-items: flex-start; gap: 28px; flex-wrap: wrap }
-.h-flap-item { display: flex; flex-direction: column; align-items: center; gap: 8px }
-.h-flap-sf { display: flex }
-.h-flap-label {
-  font-size: .68rem; font-weight: 600; letter-spacing: .08em;
-  text-transform: uppercase; color: var(--muted);
+/* Buttons */
+.ah-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 11px 24px;
+  border-radius: 9999px;
+  background: var(--text);
+  color: var(--bg);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  width: fit-content;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+.ah-btn-primary:hover { opacity: 0.85; transform: translateY(-1px) }
+.ah-btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 22px;
+  border-radius: 9999px;
+  border: 1px solid var(--line-hover);
+  color: var(--text-soft);
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  width: fit-content;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+.ah-btn-outline:hover { border-color: var(--text); color: var(--text) }
+
+/* ══ Full-width banner ══ */
+.ah-banner { width: 100% }
+.ah-banner-link { display: block; text-decoration: none; position: relative; overflow: hidden; height: clamp(320px, 45vw, 520px) }
+.ah-banner-bg {
+  position: absolute; inset: 0;
+  background: linear-gradient(
+    180deg,
+    #0a1628 0%,
+    #0d2137 25%,
+    #1a3a5c 50%,
+    #c4621a 78%,
+    #0a0a0a 100%
+  );
+}
+/* animated aurora glow */
+.ah-banner-bg::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 50% at 50% 60%, rgba(180,80,20,.35) 0%, transparent 70%);
+  animation: banner-pulse 6s ease-in-out infinite;
+}
+@keyframes banner-pulse {
+  0%,100% { opacity: .7; transform: scaleX(1) }
+  50% { opacity: 1; transform: scaleX(1.05) }
+}
+.ah-banner-content {
+  position: relative; z-index: 1;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  height: 100%; text-align: center; padding: 40px 24px;
+}
+.ah-banner-title {
+  font-size: clamp(3rem, 9vw, 7rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: #fff;
+  margin: 0 0 12px;
+  font-family: 'Playfair Display', Georgia, serif;
+}
+.ah-banner-sub { font-size: clamp(.95rem,1.8vw,1.2rem); color: rgba(255,255,255,.75); margin: 0 0 28px; max-width: 480px }
+.ah-banner-cta {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 11px 28px; border-radius: 9999px;
+  background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.3);
+  color: #fff; font-size: .9rem; font-weight: 600;
+  backdrop-filter: blur(8px); transition: background .2s ease;
+}
+.ah-banner-link:hover .ah-banner-cta { background: rgba(255,255,255,.2) }
+
+/* ══ Eyebrow ══ */
+.ah-eyebrow {
+  font-size: .72rem; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--muted); margin: 0 0 16px;
 }
 
 /* ══ Teams ══ */
-.h-teams { padding: 72px 0; border-bottom: 1px solid var(--line) }
-.h-teams-grid {
+.ah-teams {
+  padding: clamp(64px,9vw,100px) 0;
+  border-bottom: 1px solid var(--line);
+}
+.ah-teams-inner { display: grid; grid-template-columns: 200px 1fr; gap: 64px }
+.ah-team-links {
+  display: flex; flex-direction: column; gap: 8px;
+}
+.ah-team-links a {
+  font-size: .88rem; font-weight: 500;
+  color: var(--text-soft); text-decoration: underline;
+  text-underline-offset: 3px; transition: color .15s ease;
+}
+.ah-team-links a:hover { color: var(--text) }
+.ah-teams-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 1px;
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  overflow: hidden;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 32px;
+  border-top: 1px solid var(--line);
+  padding-top: 32px;
 }
-.h-team-card { padding: 28px 30px; background: var(--surface-card); transition: background .2s ease }
-.h-team-card:hover { background: var(--surface-card-hover) }
-.h-team-name { font-size: 1.05rem; font-weight: 700; color: var(--text); margin: 0 0 10px; letter-spacing: -.02em }
-.h-team-desc { font-size: .88rem; color: var(--text-soft); line-height: 1.65; margin: 0 }
-
-/* ══ Shared ══ */
-.h-section-head {
-  display: flex; align-items: flex-end; justify-content: space-between;
-  gap: 16px; margin-bottom: 28px;
+.ah-team-card h3 {
+  font-size: 1rem; font-weight: 700; color: var(--text);
+  margin: 0 0 10px; letter-spacing: -.015em;
 }
-.h-eyebrow {
-  font-size: .73rem; font-weight: 600; letter-spacing: .09em;
-  text-transform: uppercase; color: var(--muted); margin: 0 0 6px;
-}
-.h-section-title {
-  font-size: clamp(1.6rem, 3.5vw, 2.4rem);
-  font-weight: 700; letter-spacing: -.035em; color: var(--text); margin: 0;
-}
-.h-view-all {
-  font-size: .88rem; font-weight: 600; color: var(--text-soft);
-  white-space: nowrap; text-decoration: none; transition: color .15s ease;
-}
-.h-view-all:hover { color: var(--text) }
-
-/* Tags */
-.h-tag {
-  display: inline-flex; align-items: center;
-  padding: 3px 10px; border-radius: 999px;
-  font-size: .7rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
-  border: 1px solid var(--line);
-}
-.h-tag--paper { color: var(--brand); border-color: rgba(42,108,245,.3); background: rgba(42,108,245,.08) }
-.h-tag--doc { color: var(--text-soft); background: var(--surface-2) }
-
-/* ══ Featured ══ */
-.h-featured { padding: 72px 0; border-bottom: 1px solid var(--line) }
-.h-featured-card {
-  display: block; padding: 36px 40px;
-  border: 1px solid var(--line); border-radius: 16px;
-  background: var(--surface-card); text-decoration: none;
-  transition: background .2s ease, border-color .2s ease, transform .2s ease;
-}
-.h-featured-card:hover { background: var(--surface-card-hover); border-color: var(--line-hover); transform: translateY(-2px) }
-.h-featured-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 16px }
-.h-featured-date { font-size: .8rem; color: var(--muted); font-family: var(--font-mono) }
-.h-featured-title {
-  font-size: clamp(1.6rem, 3.5vw, 2.6rem);
-  font-weight: 700; letter-spacing: -.03em; color: var(--text);
-  margin: 0 0 14px; line-height: 1.2;
-}
-.h-featured-abstract { font-size: 1rem; color: var(--text-soft); line-height: 1.65; margin: 0 0 24px; max-width: 780px }
-.h-featured-cta { font-size: .9rem; font-weight: 600; color: var(--brand) }
+.ah-team-card p { font-size: .85rem; color: var(--text-soft); line-height: 1.65; margin: 0 }
 
 /* ══ Publications ══ */
-.h-publications { padding: 72px 0; border-bottom: 1px solid var(--line) }
-.h-pub-list { display: flex; flex-direction: column }
-.h-pub-row {
-  display: grid; grid-template-columns: 190px 1fr 28px;
-  gap: 24px; align-items: start;
-  padding: 24px 0; border-bottom: 1px solid var(--line-subtle);
-  text-decoration: none;
+.ah-pubs {
+  padding: clamp(64px,9vw,100px) 0;
+  border-bottom: 1px solid var(--line);
 }
-.h-pub-row:first-child { border-top: 1px solid var(--line-subtle) }
-.h-pub-row:hover .h-pub-title { color: var(--brand) }
-.h-pub-row:hover .h-pub-arrow { transform: translate(3px,-3px); color: var(--text) }
-.h-pub-left { display: flex; flex-direction: column; gap: 6px; padding-top: 3px }
-.h-pub-date { font-size: .78rem; color: var(--muted); font-family: var(--font-mono) }
-.h-pub-title { font-size: 1.08rem; font-weight: 600; letter-spacing: -.02em; color: var(--text); margin: 0 0 6px; transition: color .15s ease }
-.h-pub-abstract { font-size: .86rem; color: var(--text-soft); line-height: 1.55; margin: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden }
-.h-pub-arrow { color: var(--muted); font-size: 1rem; padding-top: 3px; transition: transform .2s ease, color .2s ease }
+.ah-pubs-inner { display: grid; grid-template-columns: 5fr 4fr; gap: 64px; align-items: start }
 
-/* ══ CTA ══ */
-.h-cta { padding: 80px 0 100px }
-.h-cta-inner {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 40px; padding: 48px;
-  border: 1px solid var(--line); border-radius: 16px;
-  background: linear-gradient(135deg, var(--surface-card), color-mix(in srgb, var(--surface-2) 85%, var(--brand) 15%));
-  flex-wrap: wrap;
+/* Visual card */
+.ah-pubs-visual { position: sticky; top: 90px }
+.ah-visual-card {
+  position: relative; overflow: hidden;
+  border-radius: 16px; height: clamp(280px,38vw,420px);
 }
-.h-cta-title { font-size: clamp(1.8rem,3.5vw,2.6rem); font-weight: 700; letter-spacing: -.035em; color: var(--text); margin: 0 0 10px }
-.h-cta-desc { font-size: 1rem; color: var(--text-soft); max-width: 540px; margin: 0; line-height: 1.6 }
-.h-cta-actions { display: flex; gap: 12px; flex-shrink: 0; flex-wrap: wrap }
+.ah-visual-bg {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg,#0d1f3c 0%,#1a3a5c 40%,#2a5c8a 70%,#0a0a0a 100%);
+}
+.ah-visual-bg::after {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 70% 60% at 30% 40%, rgba(42,108,245,.3) 0%, transparent 65%);
+}
+.ah-visual-text {
+  position: relative; z-index: 1; padding: 32px 28px;
+  display: flex; flex-direction: column; gap: 12px; height: 100%;
+}
+.ah-visual-eyebrow {
+  font-size: .68rem; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; color: rgba(255,255,255,.6);
+}
+.ah-visual-text h3 {
+  font-size: clamp(1.2rem,2.5vw,1.8rem);
+  font-weight: 700; color: #fff; margin: 0; line-height: 1.25; letter-spacing: -.025em;
+}
+.ah-visual-text p { font-size: .88rem; color: rgba(255,255,255,.65); line-height: 1.6; margin: 0 }
+.ah-visual-link {
+  margin-top: auto; font-size: .88rem; font-weight: 600;
+  color: rgba(255,255,255,.8); align-self: flex-start;
+  transition: color .15s ease;
+}
+.ah-visual-link:hover { color: #fff }
+
+/* Article list */
+.ah-pubs-right { display: flex; flex-direction: column; gap: 0 }
+.ah-pub-item {
+  display: block; padding: 24px 0;
+  border-bottom: 1px solid var(--line);
+  text-decoration: none; transition: opacity .15s ease;
+}
+.ah-pub-item:first-child { border-top: 1px solid var(--line) }
+.ah-pub-item:hover { opacity: 1 }
+.ah-pub-item:hover .ah-pub-title { color: var(--brand) }
+.ah-pub-meta {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 6px; font-size: .78rem; color: var(--muted);
+}
+.ah-pub-type { font-weight: 600; color: var(--text-soft) }
+.ah-pub-title {
+  font-size: 1rem; font-weight: 700; letter-spacing: -.015em;
+  color: var(--text); margin: 0 0 6px; line-height: 1.35;
+  transition: color .15s ease;
+}
+.ah-pub-excerpt { font-size: .83rem; color: var(--text-soft); line-height: 1.55; margin: 0 }
+.ah-see-all {
+  display: inline-flex; align-items: center; gap: 4px;
+  margin-top: 20px; font-size: .88rem; font-weight: 600;
+  color: var(--text-soft); transition: color .15s ease;
+}
+.ah-see-all:hover { color: var(--text) }
+
+/* ══ Model card ══ */
+.ah-model {
+  padding: clamp(64px,9vw,100px) 0;
+  border-bottom: 1px solid var(--line);
+}
+.ah-model-inner {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;
+}
+.ah-model-title {
+  font-size: clamp(2rem,4vw,3.2rem);
+  font-weight: 800; letter-spacing: -.04em; color: var(--text);
+  margin: 0 0 16px; line-height: 1.1;
+}
+.ah-model-desc { font-size: 1rem; color: var(--text-soft); line-height: 1.7; margin: 0 0 28px }
+.ah-model-actions { display: flex; gap: 12px; flex-wrap: wrap }
+.ah-model-specs {
+  border: 1px solid var(--line);
+  border-radius: 14px; overflow: hidden;
+  background: var(--surface-card);
+}
+.ah-spec-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 13px 20px; border-bottom: 1px solid var(--line);
+  font-size: .88rem;
+}
+.ah-spec-row:last-child { border-bottom: none }
+.ah-spec-label { color: var(--muted) }
+.ah-spec-value { font-weight: 600; color: var(--text); font-family: var(--font-mono); font-size: .82rem }
 
 /* ══ Responsive ══ */
-@media (max-width: 760px) {
-  .h-pub-row { grid-template-columns: 1fr 24px; gap: 14px }
-  .h-pub-left { display: none }
-  .h-featured-card { padding: 24px }
-  .h-cta-inner { padding: 28px }
-  .h-cta-actions { width: 100% }
-  .h-btn-primary, .h-btn-ghost { justify-content: center; flex: 1 }
-  .h-aurora-wrap { opacity: 0.35 }
+@media (max-width: 900px) {
+  .ah-hero-inner { grid-template-columns: 1fr; gap: 28px }
+  .ah-teams-inner { grid-template-columns: 1fr; gap: 28px }
+  .ah-pubs-inner { grid-template-columns: 1fr; gap: 40px }
+  .ah-pubs-visual { position: static }
+  .ah-model-inner { grid-template-columns: 1fr; gap: 36px }
 }
-@media (max-width: 480px) {
-  .h-pub-abstract { display: none }
-  .h-teams-grid { grid-template-columns: 1fr }
-  .h-headline { font-size: 3rem }
-  .h-flap-stats { gap: 16px }
+@media (max-width: 600px) {
+  .ah-hero-headline { font-size: 2.4rem }
+  .ah-banner-link { height: 260px }
+  .ah-teams-grid { grid-template-columns: 1fr }
 }
 </style>

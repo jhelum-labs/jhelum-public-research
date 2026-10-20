@@ -1,56 +1,59 @@
 /* ==========================================================================
-   Jhelum Labs Research — OpenAI-Style Design System
-   Preserves: LiquidChrome WebGL Canvas, TextRepel Physics, SVG Logo & Mark
+   Jhelum Labs Research — Anthropic-Style Design System
    ========================================================================== */
 
+/* DEFAULT = light (warm cream like Anthropic) */
 :root {
-  --bg: #000000;
-  --surface: #0a0a0c;
-  --surface-2: #121216;
-  --surface-3: #1c1c22;
-  --surface-card: #0c0c0f;
-  --surface-card-hover: #15151b;
-  --text: #f4f4f6;
-  --text-soft: #a1a1aa;
-  --muted: #71717a;
-  --line: rgba(255, 255, 255, 0.08);
-  --line-subtle: rgba(255, 255, 255, 0.05);
-  --line-hover: rgba(255, 255, 255, 0.2);
-  --brand: #2a6cf5;
-  --brand-glow: rgba(42, 108, 245, 0.22);
-  --mark-j: #f4f4f6;
-  --badge-bg: rgba(255, 255, 255, 0.06);
-  --badge-border: rgba(255, 255, 255, 0.12);
-  --badge-text: #e4e4e7;
-  --success: #10b981;
-  --warning: #f59e0b;
+  --bg: #f2ede8;
+  --bg-alt: #ede8e2;
+  --surface: #ede8e2;
+  --surface-2: #e5dfd9;
+  --surface-3: #d9d2cb;
+  --surface-card: #ede8e2;
+  --surface-card-hover: #e5dfd9;
+  --text: #0c0a08;
+  --text-soft: #4a4540;
+  --muted: #8a8278;
+  --line: rgba(12, 10, 8, 0.1);
+  --line-subtle: rgba(12, 10, 8, 0.06);
+  --line-hover: rgba(12, 10, 8, 0.25);
+  --brand: #0c0a08;
+  --brand-glow: rgba(12, 10, 8, 0.08);
+  --mark-j: #0c0a08;
+  --badge-bg: rgba(12, 10, 8, 0.06);
+  --badge-border: rgba(12, 10, 8, 0.12);
+  --badge-text: #0c0a08;
+  --success: #1a7a4a;
+  --warning: #b45309;
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-mono: 'JetBrains Mono', SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  color-scheme: dark;
+  color-scheme: light;
 }
 
-:root[data-theme='light'] {
-  --bg: #ffffff;
-  --surface: #fafafb;
-  --surface-2: #f4f4f6;
-  --surface-3: #e8e8ed;
-  --surface-card: #ffffff;
-  --surface-card-hover: #f7f7fa;
-  --text: #09090b;
-  --text-soft: #52525b;
-  --muted: #71717a;
-  --line: rgba(0, 0, 0, 0.08);
-  --line-subtle: rgba(0, 0, 0, 0.04);
-  --line-hover: rgba(0, 0, 0, 0.2);
-  --brand: #2a6cf5;
-  --brand-glow: rgba(42, 108, 245, 0.12);
-  --mark-j: #09090b;
-  --badge-bg: rgba(0, 0, 0, 0.04);
-  --badge-border: rgba(0, 0, 0, 0.09);
-  --badge-text: #18181b;
-  --success: #059669;
-  --warning: #d97706;
-  color-scheme: light;
+/* Dark mode */
+:root[data-theme='dark'] {
+  --bg: #0c0a08;
+  --bg-alt: #111009;
+  --surface: #131109;
+  --surface-2: #1c1a10;
+  --surface-3: #252218;
+  --surface-card: #141209;
+  --surface-card-hover: #1e1c12;
+  --text: #f2ede8;
+  --text-soft: #b8b0a5;
+  --muted: #7a7268;
+  --line: rgba(242, 237, 232, 0.09);
+  --line-subtle: rgba(242, 237, 232, 0.05);
+  --line-hover: rgba(242, 237, 232, 0.22);
+  --brand: #f2ede8;
+  --brand-glow: rgba(242, 237, 232, 0.1);
+  --mark-j: #f2ede8;
+  --badge-bg: rgba(242, 237, 232, 0.07);
+  --badge-border: rgba(242, 237, 232, 0.13);
+  --badge-text: #f2ede8;
+  --success: #34d399;
+  --warning: #fbbf24;
+  color-scheme: dark;
 }
 
 /* Base resets & typography */
@@ -265,6 +268,31 @@ a:hover {
   line-height: 1;
 }
 
+.brand-logo-img {
+  display: block;
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  border-radius: 6px;
+  transition: transform 0.2s ease;
+}
+
+[data-theme='dark'] .brand-logo-img {
+  filter: invert(1);
+}
+
+.brand:hover .brand-logo-img {
+  transform: scale(1.06);
+}
+
+.brand-wordmark {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--text);
+  white-space: nowrap;
+}
+
 .brand-logo-svg {
   display: block;
   width: 32px;
@@ -348,18 +376,10 @@ a:hover {
   border-color: var(--line-hover);
 }
 
-:root[data-theme='dark'] .sun-icon {
-  display: block;
-}
-:root[data-theme='dark'] .moon-icon {
-  display: none;
-}
-:root[data-theme='light'] .sun-icon {
-  display: none;
-}
-:root[data-theme='light'] .moon-icon {
-  display: block;
-}
+:root .sun-icon { display: none; }
+:root .moon-icon { display: block; }
+:root[data-theme='dark'] .sun-icon { display: block; }
+:root[data-theme='dark'] .moon-icon { display: none; }
 
 .menu-button {
   display: none;
