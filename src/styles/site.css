@@ -239,68 +239,67 @@ a:hover {
 }
 
 .header-inner {
+  position: relative;
   min-height: 64px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 32px;
+  gap: 24px;
 }
 
+/* Left: icon + navigation */
 .header-left {
   display: flex;
   align-items: center;
-  gap: 36px;
+  gap: 20px;
 }
-
-.brand {
+.header-mark {
   display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  text-decoration: none;
   line-height: 1;
-}
-
-.brand-mark {
-  display: block;
-  height: 28px;
-  width: auto;
-  color: var(--text);
+  text-decoration: none;
   flex-shrink: 0;
 }
-.brand-name {
-  font-size: 1rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--text);
-  white-space: nowrap;
-}
-
-.brand-logo-svg {
+.header-mark-svg {
   display: block;
-  width: 32px;
-  height: 32px;
+  width: 26px;
+  height: 26px;
   transition: transform 0.2s ease;
 }
-
-.brand:hover .brand-logo-svg {
-  transform: rotate(6deg) scale(1.05);
+.header-mark:hover .header-mark-svg {
+  transform: scale(1.08);
 }
-
-.brand-text {
-  font-size: 1.05rem;
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  color: var(--text);
-}
-
-.brand-text b {
-  color: var(--brand);
-}
-
-.desktop-nav {
+.header-nav-left {
   display: flex;
   align-items: center;
   gap: 24px;
+}
+
+/* Footer brand mark — smaller */
+.brand-mark {
+  display: block;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+/* Center: brand wordmark — Anthropic style */
+.brand-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  text-decoration: none;
+  line-height: 1;
+  z-index: 1;
+}
+.brand-center-svg {
+  display: block;
+  height: 30px;
+  width: auto;
+  color: var(--text);
+  transition: opacity 0.15s ease;
+}
+.brand-center:hover .brand-center-svg {
+  opacity: 0.7;
 }
 
 .nav-link {
@@ -336,6 +335,25 @@ a:hover {
   display: flex;
   align-items: center;
   gap: 12px;
+}
+
+.header-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  border-radius: 9999px;
+  background: var(--text);
+  color: var(--bg) !important;
+  font-size: 0.84rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+.header-cta:hover {
+  opacity: 0.88;
+  transform: translateY(-1px);
 }
 
 .theme-toggle-btn {
@@ -1798,6 +1816,13 @@ a:hover {
   .desktop-nav {
     display: none;
   }
+  .brand-center {
+    position: static;
+    transform: none;
+  }
+  .header-cta {
+    display: none;
+  }
   .menu-button {
     display: inline-flex;
   }
@@ -1838,9 +1863,7 @@ a:hover {
 
 /* Static editorial home and research presentation */
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
-html { scroll-behavior: auto; }
-*, *::before, *::after { animation: none !important; transition: none !important; }
-.home-liquid, .announcement-pill, .hero-logo, .text-repel, .metrics-section { display: none !important; }
+/* Animations and transitions restored — removed destructive static-mode overrides */
 .home-page { overflow: visible; }
 .hero { min-height: auto; padding: clamp(76px, 10vw, 132px) 0 clamp(68px, 9vw, 108px); border: 0; background: transparent; text-align: center; }
 .hero-content { max-width: 760px; }

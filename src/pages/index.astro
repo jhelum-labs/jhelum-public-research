@@ -16,7 +16,7 @@ const jsonLd = {
 ---
 <Page currentPath="/" title="Jhelum Labs — Research and Deployment" description="Jhelum Labs is an independent AI research organization building advanced language models." jsonLd={jsonLd}>
 
-  <!-- HERO — Anthropic style: straight into big headline, no logo repeated -->
+  <!-- HERO — Anthropic-style editorial paragraph -->
   <section class="hi-hero">
     <div class="shell">
 
@@ -24,10 +24,8 @@ const jsonLd = {
       <div class="hi-headline-wrap">
         <p class="hi-headline">
           <strong>Building advanced AI. Advancing research. Prioritizing safety.</strong>
-          {' '}Jhelum Labs is an independent AI research and development organization
-          focused on building advanced language models and reliable, production-ready
-          systems. Our work spans large language models, AI safety, alignment,
-          evaluation and responsible deployment — making powerful AI more accessible.
+          {' '}Jhelum Labs is an independent AI research organization building advanced
+          language models and reliable, production-ready systems.
         </p>
       </div>
 
@@ -103,7 +101,7 @@ const jsonLd = {
             <h3 class="hi-pub-title">{pub.title}</h3>
             <p class="hi-pub-excerpt">{pub.abstract?.slice(0, 120)}...</p>
           </div>
-          <span class="hi-pub-arrow" aria-hidden="true">arrow</span>
+          <span class="hi-pub-arrow" aria-hidden="true">→</span>
         </a>
       ))}
     </div>
@@ -114,28 +112,43 @@ const jsonLd = {
 <style>
 /* HERO */
 .hi-hero {
-  padding: clamp(64px,9vw,110px) 0 clamp(56px,8vw,96px);
+  padding: clamp(80px,10vw,130px) 0 clamp(56px,8vw,96px);
   border-bottom: 1px solid var(--line);
+  position: relative;
+  overflow: hidden;
+}
+.hi-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 15% 50%, rgba(42, 108, 245, 0.06) 0%, transparent 55%);
+  pointer-events: none;
+}
+
+@keyframes heroFadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* Anthropic full-width bold paragraph */
 .hi-headline-wrap {
-  max-width: 860px;
+  max-width: 960px;
   margin-bottom: 36px;
+  animation: heroFadeUp 0.8s ease-out both;
 }
 .hi-headline {
-  font-size: clamp(1.45rem, 3.2vw, 2.5rem);
-  line-height: 1.38;
+  font-size: clamp(1.6rem, 3.8vw, 2.8rem);
+  line-height: 1.32;
   color: var(--text);
   margin: 0;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
   font-weight: 400;
 }
 .hi-headline strong {
   font-weight: 800;
 }
 
-.hi-actions { display: flex; gap: 12px; flex-wrap: wrap }
+.hi-actions { display: flex; gap: 12px; flex-wrap: wrap; animation: heroFadeUp 0.8s ease-out 0.24s both }
 .hi-btn-primary {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 11px 24px; border-radius: 9999px;
@@ -275,6 +288,8 @@ const jsonLd = {
   .hi-learn-grid { grid-template-columns: 1fr 1fr }
   .hi-headline { font-size: 1.4rem }
   .hi-banner-link { height: 240px }
+  .hi-wordmark-wrap { margin-bottom: 32px }
+  .hi-wordmark { width: 100% }
 }
 @media (max-width: 400px) {
   .hi-learn-grid { grid-template-columns: 1fr }
