@@ -16,140 +16,161 @@ const jsonLd = {
 ---
 <Page currentPath="/" title="Jhelum Labs — Research and Deployment" description="Jhelum Labs publishes open foundational AI research and model documentation." jsonLd={jsonLd}>
 
-  <!-- ══════════ HERO — Two-column Anthropic style ══════════ -->
-  <section class="ah-hero">
-    <div class="shell ah-hero-inner">
-      <div class="ah-hero-left">
-        <h1 class="ah-hero-headline">
-          Open AI <span class="ah-underline">research</span> and<br/>
-          <span class="ah-underline">model weights</span><br/>
-          built in public
-        </h1>
+  <!-- ══════════════════════════════════════════════
+       HERO
+       Logo mark + full wordmark centered on page
+       Then Anthropic-style two-column headline
+  ══════════════════════════════════════════════ -->
+  <section class="hero-section">
+    <div class="shell">
+
+      <!-- Full SVG wordmark with "Research and Deployment" subtitle -->
+      <div class="hero-brand-block">
+        <svg
+          class="hero-wordmark"
+          viewBox="0 0 1536 700"
+          xmlns="http://www.w3.org/2000/svg"
+          role="img"
+          aria-label="Jhelum Labs — Research and Deployment"
+        >
+          <!-- J mark — blue polygons -->
+          <g fill="#2a6cf5">
+            <polygon points="152,310 306,310 335,344 176,344 49,611 82,611 196,372 358,372 394,413 228,413 124,628 0,628"/>
+            <polygon points="396,185 627,472 553,598 497,606 576,473 388,240 370,266 537,477 458,611 402,620 482,485 326,289"/>
+            <polygon points="203,513 295,651 570,614 633,720 236,780 146,640 168,592 258,729 589,683 572,655 275,697 183,559"/>
+          </g>
+          <!-- J hook -->
+          <path d="M322 443H362V538C362 575 340 592 308 592C295 592 290 590 290 590L272 560H322Z" fill="currentColor"/>
+          <!-- Wordmark text -->
+          <g fill="currentColor" font-family="Poppins, 'Segoe UI', Arial, sans-serif" font-weight="700">
+            <text x="648" y="525" font-size="140" textLength="518" lengthAdjust="spacingAndGlyphs">Jhelum</text>
+            <polygon points="1189,415 1210,415 1253,527 1232,527"/>
+            <text x="1250" y="525" font-size="140" textLength="246" lengthAdjust="spacingAndGlyphs">abs</text>
+            <!-- Subtitle line -->
+            <text x="648" y="620" font-size="52" font-weight="400" fill="var(--text-soft)" textLength="700" lengthAdjust="spacingAndGlyphs">Research and Deployment</text>
+          </g>
+        </svg>
       </div>
-      <div class="ah-hero-right">
-        <p class="ah-hero-desc">
-          Jhelum Labs is an independent AI research group. We train language
-          models from scratch, document every experiment, and publish all
-          weights openly — so the world can verify, reproduce and build on
-          our work.
-        </p>
-        <a class="ah-btn-primary" href="/research">Explore research →</a>
+
+      <!-- Anthropic-style two-column headline -->
+      <div class="hero-content">
+        <div class="hero-left">
+          <h1 class="hero-headline">
+            Open AI <span class="hero-u">research</span><br/>
+            and <span class="hero-u">model weights</span><br/>
+            built in public
+          </h1>
+        </div>
+        <div class="hero-right">
+          <p class="hero-desc">
+            Jhelum Labs is an independent AI research group. We train
+            language models from scratch, document every experiment,
+            and publish all weights openly — so the world can verify,
+            reproduce and build on our work.
+          </p>
+          <div class="hero-actions">
+            <a class="hero-btn-primary" href="/research">Explore research</a>
+            <a class="hero-btn-ghost" href="/playground">Try W-1.1 →</a>
+          </div>
+        </div>
       </div>
+
     </div>
   </section>
 
-  <!-- ══════════ FULL-WIDTH BANNER ══════════ -->
-  <section class="ah-banner">
-    <a href="/playground" class="ah-banner-link">
-      <div class="ah-banner-bg"></div>
-      <div class="ah-banner-content">
-        <h2 class="ah-banner-title">W-1.1</h2>
-        <p class="ah-banner-sub">Our first open 123M-parameter language model, trained from scratch.</p>
-        <span class="ah-banner-cta">Try W-1.1 →</span>
+  <!-- ══════════════════════════════════════════════
+       FULL-WIDTH GRADIENT BANNER (like Anthropic's Claude banner)
+  ══════════════════════════════════════════════ -->
+  <section class="banner-section">
+    <a href="/playground" class="banner-link">
+      <div class="banner-bg"></div>
+      <div class="banner-inner shell">
+        <div class="banner-tag">W-1.1 · Open Weights</div>
+        <h2 class="banner-title">W-1.1</h2>
+        <p class="banner-sub">Our first 123M-parameter language model, trained from scratch. Apache-2.0.</p>
+        <span class="banner-cta">Read more →</span>
       </div>
     </a>
   </section>
 
-  <!-- ══════════ RESEARCH TEAMS ══════════ -->
-  <section class="ah-teams">
-    <div class="shell">
-      <div class="ah-teams-inner">
-        <div class="ah-teams-left">
-          <p class="ah-eyebrow">Research teams</p>
-          <div class="ah-team-links">
-            <a href="/research?type=Research+Paper">Architecture</a>
-            <a href="/research?type=Research+Paper">Training</a>
-            <a href="/research?type=Research+Paper">Evaluation</a>
-            <a href="/research?type=Production+Document">Alignment</a>
-          </div>
+  <!-- ══════════════════════════════════════════════
+       RESEARCH TEAMS (Anthropic-style)
+  ══════════════════════════════════════════════ -->
+  <section class="teams-section shell">
+    <div class="teams-head">
+      <h2 class="teams-title">Research teams</h2>
+      <a href="/research" class="teams-link">View all research →</a>
+    </div>
+    <div class="teams-grid">
+      {[
+        { name: 'Architecture', desc: 'Decoder-only Transformers with RoPE, RMSNorm, SwiGLU and grouped-query attention for open reproducible pretraining.' },
+        { name: 'Training',     desc: 'Full documentation of every pretraining phase — loss curves, checkpointing, GPU logs and recovery procedures.' },
+        { name: 'Evaluation',   desc: 'Perplexity, token accuracy and downstream benchmarks: PIQA 60.17%, BoolQ 59.30%, ARC Easy 44.78%.' },
+        { name: 'Alignment',    desc: 'Instruction-tuning on 300K Q&A pairs, preference optimization and safety calibration for open models.' },
+        { name: 'W-1.2',        desc: '353M parameters, grouped-query attention, 50K vocab, 4,096-token context, 8B token training target.' },
+      ].map((t) => (
+        <div class="team-card">
+          <h3>{t.name}</h3>
+          <p>{t.desc}</p>
         </div>
-        <div class="ah-teams-grid">
-          {[
-            { name: 'Architecture', desc: 'Designing efficient decoder-only Transformers using RoPE, RMSNorm, SwiGLU and grouped-query attention for open reproducible pretraining.' },
-            { name: 'Training', desc: 'Documenting every pretraining run — loss curves, checkpointing, recovery — across all W-1.1 experiment phases on H100 and T4 GPUs.' },
-            { name: 'Evaluation', desc: 'Measuring intrinsic quality with perplexity and token accuracy, plus downstream benchmarks including PIQA, ARC, BoolQ and HellaSwag.' },
-            { name: 'Alignment', desc: 'Instruction-tuning on 300K Q&A pairs, preference optimization and safety calibration for experimental open models.' },
-            { name: 'W-1.2', desc: 'Planning the next generation: 353M parameters, grouped-query attention, 50K BPE vocabulary, 4,096 context, 8B training tokens.' },
-          ].map((t) => (
-            <div class="ah-team-card">
-              <h3>{t.name}</h3>
-              <p>{t.desc}</p>
-            </div>
-          ))}
-        </div>
-      </div>
+      ))}
     </div>
   </section>
 
-  <!-- ══════════ RECENT PUBLICATIONS (Anthropic two-column) ══════════ -->
-  <section class="ah-pubs">
-    <div class="shell">
-      <div class="ah-pubs-inner">
-
-        <!-- Left: featured visual -->
-        <div class="ah-pubs-left">
-          <div class="ah-pubs-visual">
-            <div class="ah-visual-card">
-              <div class="ah-visual-bg"></div>
-              <div class="ah-visual-text">
-                <span class="ah-visual-eyebrow">{recent[0]?.type}</span>
-                <h3>{recent[0]?.title}</h3>
-                <p>{recent[0]?.abstract?.slice(0, 120)}…</p>
-                <a href={recent[0]?.articlePath} class="ah-visual-link">Read →</a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Right: list -->
-        <div class="ah-pubs-right">
-          {recent.slice(1).map((pub) => (
-            <a class="ah-pub-item" href={pub.articlePath}>
-              <div class="ah-pub-meta">
-                <span class="ah-pub-type">{pub.type === 'Research Paper' ? pub.type : 'Production'}</span>
-                <time>{formatDate(pub.date)}</time>
-              </div>
-              <h3 class="ah-pub-title">{pub.title}</h3>
-              <p class="ah-pub-excerpt">{pub.abstract?.slice(0, 100)}…</p>
-            </a>
-          ))}
-          <a class="ah-see-all" href="/research">See all publications →</a>
-        </div>
-
-      </div>
+  <!-- ══════════════════════════════════════════════
+       LATEST RESEARCH — Anthropic split layout
+       Left: featured visual card  |  Right: article rows
+  ══════════════════════════════════════════════ -->
+  <section class="pubs-section shell">
+    <div class="pubs-head">
+      <h2 class="pubs-title">Latest research</h2>
+      <a href="/research" class="pubs-link">See all publications →</a>
     </div>
-  </section>
+    <div class="pubs-split">
 
-  <!-- ══════════ W-1.1 MODEL CARD ══════════ -->
-  <section class="ah-model">
-    <div class="shell ah-model-inner">
-      <div>
-        <p class="ah-eyebrow">W-1.1 · 125M</p>
-        <h2 class="ah-model-title">Open weights. Run it yourself.</h2>
-        <p class="ah-model-desc">
-          Download the safetensors file, install dependencies, and run
-          inference locally in under 5 minutes. No API key. No cloud.
-          Full source code on GitHub.
-        </p>
-        <div class="ah-model-actions">
-          <a class="ah-btn-primary" href="/playground">Get started →</a>
-          <a class="ah-btn-outline" href={SITE.githubUrl} target="_blank" rel="noreferrer">GitHub ↗</a>
-        </div>
-      </div>
-      <div class="ah-model-specs">
-        {[
-          ['Parameters', '123.7M'],
-          ['Vocabulary', '32K BPE'],
-          ['Context', '2,048 tokens'],
-          ['Architecture', 'Decoder-only'],
-          ['Training', 'H100 80GB'],
-          ['License', 'Apache-2.0'],
-        ].map(([label, value]) => (
-          <div class="ah-spec-row">
-            <span class="ah-spec-label">{label}</span>
-            <span class="ah-spec-value">{value}</span>
+      <!-- Featured card -->
+      {recent[0] && (
+        <a class="pub-featured" href={recent[0].articlePath}>
+          <div class="pub-featured-bg"></div>
+          <div class="pub-featured-body">
+            <span class="pub-featured-type">{recent[0].type}</span>
+            <time class="pub-featured-date">{formatDate(recent[0].date)}</time>
+            <h3 class="pub-featured-title">{recent[0].title}</h3>
+            <p class="pub-featured-abstract">{recent[0].abstract?.slice(0,130)}…</p>
+            <span class="pub-featured-cta">Read →</span>
           </div>
+        </a>
+      )}
+
+      <!-- Article rows -->
+      <div class="pub-rows">
+        {recent.slice(1).map((pub) => (
+          <a class="pub-row" href={pub.articlePath}>
+            <div class="pub-row-meta">
+              <span class="pub-row-type">{pub.type === 'Research Paper' ? 'Research' : 'Production'}</span>
+              <time>{formatDate(pub.date)}</time>
+            </div>
+            <h3 class="pub-row-title">{pub.title}</h3>
+            <p class="pub-row-excerpt">{pub.abstract?.slice(0,110)}…</p>
+          </a>
         ))}
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       W-1.1 CTA
+  ══════════════════════════════════════════════ -->
+  <section class="cta-section shell">
+    <div class="cta-inner">
+      <div>
+        <h2 class="cta-title">Try W-1.1 on your machine</h2>
+        <p class="cta-desc">Download 493 MB of open weights and run inference locally. No API key. Apache-2.0.</p>
+      </div>
+      <div class="cta-actions">
+        <a class="hero-btn-primary" href="/playground">Get started →</a>
+        <a class="hero-btn-ghost" href={SITE.githubUrl} target="_blank" rel="noreferrer">GitHub ↗</a>
       </div>
     </div>
   </section>
@@ -158,267 +179,281 @@ const jsonLd = {
 
 <style>
 /* ══ Hero ══ */
-.ah-hero {
-  padding: clamp(80px, 12vw, 140px) 0 clamp(64px, 10vw, 110px);
+.hero-section {
+  padding: clamp(72px, 10vw, 120px) 0 clamp(56px, 8vw, 96px);
   border-bottom: 1px solid var(--line);
 }
-.ah-hero-inner {
+
+/* Full wordmark block — centered, only on home page */
+.hero-brand-block {
+  display: flex;
+  justify-content: center;
+  margin-bottom: clamp(56px, 8vw, 96px);
+}
+.hero-wordmark {
+  width: min(100%, 680px);
+  height: auto;
+  color: var(--text);
+}
+
+/* Two-column headline */
+.hero-content {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: clamp(40px, 6vw, 80px);
+  gap: clamp(36px, 5vw, 72px);
   align-items: end;
 }
-.ah-hero-headline {
-  font-size: clamp(2.6rem, 5.5vw, 4.8rem);
+.hero-headline {
+  font-size: clamp(2.4rem, 5vw, 4.4rem);
   font-weight: 800;
   letter-spacing: -0.04em;
   line-height: 1.05;
   color: var(--text);
   margin: 0;
 }
-.ah-underline {
+.hero-u {
   text-decoration: underline;
-  text-decoration-thickness: 3px;
+  text-decoration-thickness: 2px;
   text-underline-offset: 4px;
-  text-decoration-color: var(--text);
 }
-.ah-hero-right {
+.hero-right {
   display: flex;
   flex-direction: column;
-  gap: 28px;
-  padding-bottom: 8px;
+  gap: 24px;
+  padding-bottom: 4px;
 }
-.ah-hero-desc {
-  font-size: clamp(1rem, 1.5vw, 1.12rem);
+.hero-desc {
+  font-size: clamp(.95rem,1.5vw,1.08rem);
   color: var(--text-soft);
-  line-height: 1.7;
+  line-height: 1.72;
   margin: 0;
 }
+.hero-actions { display: flex; gap: 12px; flex-wrap: wrap }
 
 /* Buttons */
-.ah-btn-primary {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 11px 24px;
-  border-radius: 9999px;
-  background: var(--text);
-  color: var(--bg);
-  font-size: 0.9rem;
-  font-weight: 600;
-  text-decoration: none;
-  width: fit-content;
-  transition: opacity 0.15s ease, transform 0.15s ease;
+.hero-btn-primary {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 11px 24px; border-radius: 9999px;
+  background: var(--text); color: var(--bg);
+  font-size: .9rem; font-weight: 600;
+  text-decoration: none; white-space: nowrap;
+  transition: opacity .15s ease, transform .15s ease;
 }
-.ah-btn-primary:hover { opacity: 0.85; transform: translateY(-1px) }
-.ah-btn-outline {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 10px 22px;
-  border-radius: 9999px;
+.hero-btn-primary:hover { opacity: .85; transform: translateY(-1px) }
+.hero-btn-ghost {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 22px; border-radius: 9999px;
   border: 1px solid var(--line-hover);
-  color: var(--text-soft);
-  font-size: 0.9rem;
-  font-weight: 500;
-  text-decoration: none;
-  width: fit-content;
-  transition: border-color 0.15s ease, color 0.15s ease;
+  color: var(--text-soft); font-size: .9rem; font-weight: 500;
+  text-decoration: none; white-space: nowrap;
+  transition: border-color .15s ease, color .15s ease;
 }
-.ah-btn-outline:hover { border-color: var(--text); color: var(--text) }
+.hero-btn-ghost:hover { border-color: var(--text); color: var(--text) }
 
-/* ══ Full-width banner ══ */
-.ah-banner { width: 100% }
-.ah-banner-link { display: block; text-decoration: none; position: relative; overflow: hidden; height: clamp(320px, 45vw, 520px) }
-.ah-banner-bg {
-  position: absolute; inset: 0;
-  background: linear-gradient(
-    180deg,
-    #0a1628 0%,
-    #0d2137 25%,
-    #1a3a5c 50%,
-    #c4621a 78%,
-    #0a0a0a 100%
-  );
+/* ══ Banner ══ */
+.banner-section { width: 100% }
+.banner-link {
+  display: block; position: relative; overflow: hidden;
+  height: clamp(300px,42vw,500px); text-decoration: none;
 }
-/* animated aurora glow */
-.ah-banner-bg::after {
-  content: '';
+.banner-bg {
   position: absolute; inset: 0;
-  background: radial-gradient(ellipse 80% 50% at 50% 60%, rgba(180,80,20,.35) 0%, transparent 70%);
-  animation: banner-pulse 6s ease-in-out infinite;
+  background: linear-gradient(180deg,#060d1a 0%,#0d2040 20%,#1a3a6a 45%,#c4621a 78%,#070707 100%);
 }
-@keyframes banner-pulse {
+.banner-bg::after {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 45% at 50% 65%, rgba(190,90,20,.4) 0%, transparent 65%);
+  animation: banner-glow 7s ease-in-out infinite;
+}
+@keyframes banner-glow {
   0%,100% { opacity: .7; transform: scaleX(1) }
-  50% { opacity: 1; transform: scaleX(1.05) }
+  50% { opacity: 1; transform: scaleX(1.06) }
 }
-.ah-banner-content {
+.banner-inner {
   position: relative; z-index: 1;
-  display: flex; flex-direction: column;
+  height: 100%; display: flex; flex-direction: column;
   align-items: center; justify-content: center;
-  height: 100%; text-align: center; padding: 40px 24px;
+  text-align: center; gap: 12px; padding: 40px 24px;
 }
-.ah-banner-title {
-  font-size: clamp(3rem, 9vw, 7rem);
-  font-weight: 700;
-  letter-spacing: -0.04em;
-  color: #fff;
-  margin: 0 0 12px;
-  font-family: 'Playfair Display', Georgia, serif;
+.banner-tag {
+  font-size: .7rem; font-weight: 700; letter-spacing: .12em;
+  text-transform: uppercase; color: rgba(255,255,255,.55);
 }
-.ah-banner-sub { font-size: clamp(.95rem,1.8vw,1.2rem); color: rgba(255,255,255,.75); margin: 0 0 28px; max-width: 480px }
-.ah-banner-cta {
+.banner-title {
+  font-size: clamp(3.5rem,10vw,8rem);
+  font-weight: 700; letter-spacing: -0.04em; color: #fff; margin: 0;
+  font-family: 'Playfair Display', Georgia, serif; line-height: 1;
+}
+.banner-sub {
+  font-size: clamp(.9rem,1.6vw,1.1rem);
+  color: rgba(255,255,255,.65); margin: 0; max-width: 480px;
+}
+.banner-cta {
   display: inline-flex; align-items: center; gap: 8px;
-  padding: 11px 28px; border-radius: 9999px;
-  background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.3);
-  color: #fff; font-size: .9rem; font-weight: 600;
-  backdrop-filter: blur(8px); transition: background .2s ease;
+  padding: 10px 26px; border-radius: 9999px;
+  border: 1px solid rgba(255,255,255,.35);
+  background: rgba(255,255,255,.08);
+  color: rgba(255,255,255,.85); font-size: .88rem; font-weight: 600;
+  backdrop-filter: blur(8px); margin-top: 4px;
+  transition: background .2s ease;
 }
-.ah-banner-link:hover .ah-banner-cta { background: rgba(255,255,255,.2) }
-
-/* ══ Eyebrow ══ */
-.ah-eyebrow {
-  font-size: .72rem; font-weight: 700; letter-spacing: .1em;
-  text-transform: uppercase; color: var(--muted); margin: 0 0 16px;
-}
+.banner-link:hover .banner-cta { background: rgba(255,255,255,.18) }
 
 /* ══ Teams ══ */
-.ah-teams {
+.teams-section {
   padding: clamp(64px,9vw,100px) 0;
   border-bottom: 1px solid var(--line);
 }
-.ah-teams-inner { display: grid; grid-template-columns: 200px 1fr; gap: 64px }
-.ah-team-links {
-  display: flex; flex-direction: column; gap: 8px;
+.teams-head {
+  display: flex; align-items: baseline;
+  justify-content: space-between; gap: 16px; margin-bottom: 40px;
 }
-.ah-team-links a {
-  font-size: .88rem; font-weight: 500;
-  color: var(--text-soft); text-decoration: underline;
-  text-underline-offset: 3px; transition: color .15s ease;
+.teams-title {
+  font-size: clamp(1.6rem,3vw,2.4rem);
+  font-weight: 700; letter-spacing: -.04em; color: var(--text); margin: 0;
 }
-.ah-team-links a:hover { color: var(--text) }
-.ah-teams-grid {
+.teams-link {
+  font-size: .88rem; font-weight: 600; color: var(--text-soft);
+  white-space: nowrap; text-decoration: none; transition: color .15s;
+}
+.teams-link:hover { color: var(--text) }
+.teams-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 32px;
-  border-top: 1px solid var(--line);
-  padding-top: 32px;
+  grid-template-columns: repeat(auto-fill, minmax(220px,1fr));
+  gap: 1px; border: 1px solid var(--line);
+  border-radius: 14px; overflow: hidden;
 }
-.ah-team-card h3 {
+.team-card {
+  padding: 26px 28px; background: var(--surface-card);
+  transition: background .2s ease;
+}
+.team-card:hover { background: var(--surface-card-hover) }
+.team-card h3 {
   font-size: 1rem; font-weight: 700; color: var(--text);
   margin: 0 0 10px; letter-spacing: -.015em;
 }
-.ah-team-card p { font-size: .85rem; color: var(--text-soft); line-height: 1.65; margin: 0 }
+.team-card p {
+  font-size: .84rem; color: var(--text-soft); line-height: 1.65; margin: 0;
+}
 
 /* ══ Publications ══ */
-.ah-pubs {
+.pubs-section {
   padding: clamp(64px,9vw,100px) 0;
   border-bottom: 1px solid var(--line);
 }
-.ah-pubs-inner { display: grid; grid-template-columns: 5fr 4fr; gap: 64px; align-items: start }
-
-/* Visual card */
-.ah-pubs-visual { position: sticky; top: 90px }
-.ah-visual-card {
-  position: relative; overflow: hidden;
-  border-radius: 16px; height: clamp(280px,38vw,420px);
+.pubs-head {
+  display: flex; align-items: baseline;
+  justify-content: space-between; gap: 16px; margin-bottom: 36px;
 }
-.ah-visual-bg {
+.pubs-title {
+  font-size: clamp(1.6rem,3vw,2.4rem);
+  font-weight: 700; letter-spacing: -.04em; color: var(--text); margin: 0;
+}
+.pubs-link {
+  font-size: .88rem; font-weight: 600; color: var(--text-soft);
+  white-space: nowrap; text-decoration: none; transition: color .15s;
+}
+.pubs-link:hover { color: var(--text) }
+.pubs-split {
+  display: grid; grid-template-columns: 5fr 4fr;
+  gap: 56px; align-items: start;
+}
+
+/* Featured card */
+.pub-featured {
+  display: block; position: relative; overflow: hidden;
+  border-radius: 14px; height: clamp(320px,38vw,460px);
+  text-decoration: none;
+  transition: transform .25s ease;
+}
+.pub-featured:hover { transform: translateY(-3px) }
+.pub-featured-bg {
   position: absolute; inset: 0;
-  background: linear-gradient(135deg,#0d1f3c 0%,#1a3a5c 40%,#2a5c8a 70%,#0a0a0a 100%);
+  background: linear-gradient(145deg,#060d20 0%,#0d1f40 35%,#1a3060 65%,#0a0a14 100%);
 }
-.ah-visual-bg::after {
+.pub-featured-bg::after {
   content: ''; position: absolute; inset: 0;
-  background: radial-gradient(ellipse 70% 60% at 30% 40%, rgba(42,108,245,.3) 0%, transparent 65%);
+  background: radial-gradient(ellipse 70% 60% at 30% 35%, rgba(42,108,245,.35) 0%, transparent 65%);
 }
-.ah-visual-text {
-  position: relative; z-index: 1; padding: 32px 28px;
-  display: flex; flex-direction: column; gap: 12px; height: 100%;
+.pub-featured-body {
+  position: relative; z-index: 1; padding: 28px 26px;
+  height: 100%; display: flex; flex-direction: column; gap: 8px;
 }
-.ah-visual-eyebrow {
-  font-size: .68rem; font-weight: 700; letter-spacing: .1em;
-  text-transform: uppercase; color: rgba(255,255,255,.6);
+.pub-featured-type {
+  font-size: .66rem; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; color: rgba(255,255,255,.5);
 }
-.ah-visual-text h3 {
-  font-size: clamp(1.2rem,2.5vw,1.8rem);
-  font-weight: 700; color: #fff; margin: 0; line-height: 1.25; letter-spacing: -.025em;
+.pub-featured-date { font-size: .76rem; color: rgba(255,255,255,.45) }
+.pub-featured-title {
+  font-size: clamp(1.25rem,2.5vw,1.9rem);
+  font-weight: 700; color: #fff; margin: 0;
+  line-height: 1.2; letter-spacing: -.025em; margin-top: auto;
 }
-.ah-visual-text p { font-size: .88rem; color: rgba(255,255,255,.65); line-height: 1.6; margin: 0 }
-.ah-visual-link {
-  margin-top: auto; font-size: .88rem; font-weight: 600;
-  color: rgba(255,255,255,.8); align-self: flex-start;
-  transition: color .15s ease;
+.pub-featured-abstract {
+  font-size: .86rem; color: rgba(255,255,255,.6);
+  line-height: 1.58; margin: 0;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
 }
-.ah-visual-link:hover { color: #fff }
+.pub-featured-cta {
+  font-size: .84rem; font-weight: 600;
+  color: rgba(255,255,255,.7); align-self: flex-start; margin-top: 8px;
+  transition: color .15s;
+}
+.pub-featured:hover .pub-featured-cta { color: #fff }
 
-/* Article list */
-.ah-pubs-right { display: flex; flex-direction: column; gap: 0 }
-.ah-pub-item {
-  display: block; padding: 24px 0;
+/* Article rows */
+.pub-rows { display: flex; flex-direction: column }
+.pub-row {
+  display: block; padding: 22px 0;
   border-bottom: 1px solid var(--line);
-  text-decoration: none; transition: opacity .15s ease;
+  text-decoration: none;
 }
-.ah-pub-item:first-child { border-top: 1px solid var(--line) }
-.ah-pub-item:hover { opacity: 1 }
-.ah-pub-item:hover .ah-pub-title { color: var(--brand) }
-.ah-pub-meta {
+.pub-row:first-child { border-top: 1px solid var(--line) }
+.pub-row:hover .pub-row-title { color: #2a6cf5 }
+.pub-row-meta {
   display: flex; align-items: center; gap: 10px;
-  margin-bottom: 6px; font-size: .78rem; color: var(--muted);
+  margin-bottom: 5px; font-size: .74rem; color: var(--muted);
 }
-.ah-pub-type { font-weight: 600; color: var(--text-soft) }
-.ah-pub-title {
+.pub-row-type { font-weight: 600; color: var(--text-soft) }
+.pub-row-title {
   font-size: 1rem; font-weight: 700; letter-spacing: -.015em;
-  color: var(--text); margin: 0 0 6px; line-height: 1.35;
-  transition: color .15s ease;
+  color: var(--text); margin: 0 0 5px; line-height: 1.35;
+  transition: color .15s;
 }
-.ah-pub-excerpt { font-size: .83rem; color: var(--text-soft); line-height: 1.55; margin: 0 }
-.ah-see-all {
-  display: inline-flex; align-items: center; gap: 4px;
-  margin-top: 20px; font-size: .88rem; font-weight: 600;
-  color: var(--text-soft); transition: color .15s ease;
+.pub-row-excerpt {
+  font-size: .82rem; color: var(--text-soft); line-height: 1.55; margin: 0;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
 }
-.ah-see-all:hover { color: var(--text) }
 
-/* ══ Model card ══ */
-.ah-model {
-  padding: clamp(64px,9vw,100px) 0;
-  border-bottom: 1px solid var(--line);
-}
-.ah-model-inner {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;
-}
-.ah-model-title {
-  font-size: clamp(2rem,4vw,3.2rem);
-  font-weight: 800; letter-spacing: -.04em; color: var(--text);
-  margin: 0 0 16px; line-height: 1.1;
-}
-.ah-model-desc { font-size: 1rem; color: var(--text-soft); line-height: 1.7; margin: 0 0 28px }
-.ah-model-actions { display: flex; gap: 12px; flex-wrap: wrap }
-.ah-model-specs {
+/* ══ CTA ══ */
+.cta-section { padding: clamp(64px,9vw,100px) 0 clamp(80px,10vw,120px) }
+.cta-inner {
+  display: flex; align-items: center;
+  justify-content: space-between; gap: 40px;
+  padding: 44px 48px; border-radius: 16px;
   border: 1px solid var(--line);
-  border-radius: 14px; overflow: hidden;
-  background: var(--surface-card);
+  background: var(--surface-card); flex-wrap: wrap;
 }
-.ah-spec-row {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 13px 20px; border-bottom: 1px solid var(--line);
-  font-size: .88rem;
+.cta-title {
+  font-size: clamp(1.6rem,3vw,2.4rem); font-weight: 700;
+  letter-spacing: -.04em; color: var(--text); margin: 0 0 10px;
 }
-.ah-spec-row:last-child { border-bottom: none }
-.ah-spec-label { color: var(--muted) }
-.ah-spec-value { font-weight: 600; color: var(--text); font-family: var(--font-mono); font-size: .82rem }
+.cta-desc { font-size: .95rem; color: var(--text-soft); max-width: 520px; margin: 0; line-height: 1.6 }
+.cta-actions { display: flex; gap: 12px; flex-shrink: 0; flex-wrap: wrap }
 
 /* ══ Responsive ══ */
-@media (max-width: 900px) {
-  .ah-hero-inner { grid-template-columns: 1fr; gap: 28px }
-  .ah-teams-inner { grid-template-columns: 1fr; gap: 28px }
-  .ah-pubs-inner { grid-template-columns: 1fr; gap: 40px }
-  .ah-pubs-visual { position: static }
-  .ah-model-inner { grid-template-columns: 1fr; gap: 36px }
+@media (max-width:900px) {
+  .hero-content { grid-template-columns: 1fr; gap: 28px }
+  .pubs-split { grid-template-columns: 1fr; gap: 40px }
+  .pub-featured { height: 280px }
+  .cta-inner { padding: 28px }
 }
-@media (max-width: 600px) {
-  .ah-hero-headline { font-size: 2.4rem }
-  .ah-banner-link { height: 260px }
-  .ah-teams-grid { grid-template-columns: 1fr }
+@media (max-width:640px) {
+  .hero-headline { font-size: 2.2rem }
+  .banner-link { height: 260px }
+  .teams-grid { grid-template-columns: 1fr }
+  .cta-actions { width: 100% }
+  .hero-btn-primary, .hero-btn-ghost { flex: 1; justify-content: center }
+  .hero-wordmark { width: 100% }
 }
 </style>
