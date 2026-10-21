@@ -1,0 +1,154 @@
+<h1>Abstract</h1>
+<p>Large language models are changing mathematics and reasoning in two uncomfortable ways at once. First, they can produce fluent, confident mathematical argument faster than the community's slow, adversarial verification process can check it, risking a flood of plausible-looking but unverified claims. Second, their own way of "thinking" is structurally unlike deliberate human reasoning: a single forward pass with no persistent working memory, no built-in self-doubt, and no mechanism to notice and correct a wrong step before committing to it.</p>
+<p>We argue these are related problems with a shared fix. Rather than trying to make a model "think like a human" in general — which is not yet a well-posed engineering goal — we propose a scoped program: force mathematical reasoning into discrete, checkable steps; verify each step with an external symbolic or numerical check rather than the model's own confidence; backtrack on failure instead of rationalizing forward; and, when a step produces an identity not already known to the system, verify it independently before storing it or reporting it to the user. This is a design document and a validation plan. Nothing in this paper has been trained or evaluated on a real model.</p>
+
+<h1>1. Introduction</h1>
+<h2>The Verification Gap in Mathematics</h2>
+<p>Mathematical knowledge has historically advanced through a slow, adversarial checking process: a claimed proof is scrutinized, often for years, before the community trusts it. This slowness is not incidental — it is the mechanism that catches errors. Language models can now produce fluent mathematical prose, including proof-shaped text, far faster than that process can absorb it. The risk is not that mathematics stops being true; it is that confidently-stated, subtly-wrong material accumulates faster than experts can review it.</p>
+
+<h2>The Reasoning-Mode Gap</h2>
+<p>Current language models reason in a way that is structurally unlike deliberate human thought. Human cognition is commonly described as having a fast, automatic mode and a slow, effortful, correctable mode. A standard Transformer's forward pass is closer to the fast mode: pattern completion, with no persistent internal state that updates as reasoning proceeds, no explicit mechanism to notice "this step looks wrong," and no calibrated sense of its own uncertainty. Chain-of-thought prompting and process-level training push toward the slow mode, but a gap remains between "writes text that looks like steps" and "verifies each step before trusting it."</p>
+
+<h1>2. Background</h1>
+<p><strong>Calibration.</strong> A standard way to score calibration is the Brier score — the mean squared error between a stated probability <span class="math-inline" data-tex="hat{p}">p̂</span> and the true outcome <span class="math-inline" data-tex="y">y</span> over N predictions:</p>
+
+<div class="math-block">
+  <div class="math-eq"><span class="math-eq-img"><img src="/research-figures/equations/vr-01-brier-score.png" alt="Equation 1" width="320" height="95" loading="lazy" class="math-img"></span><span class="math-tag">(1)</span></div>
+</div>
+
+<p>A lower score indicates better-calibrated confidence; a model that is always 100% confident and always right scores 0, while overconfidence on wrong answers is heavily penalized.</p>
+
+<h1>3. Verified Step-by-Step Mathematical Reasoning</h1>
+<h2>3.1 Design</h2>
+
+<figure class="article-figure"><img src="/research-figures/reasoning-flow-diagram.png" alt="Figure 1 — The proposed reasoning loop" /><figcaption><strong>Figure 1:</strong> The proposed reasoning loop. Each step is proposed, then checked externally before being committed; a failed check triggers backtracking rather than continuation. A parallel path (right of center, lower half) handles the case where a step yields an identity not already known to the system.</figcaption></figure>
+
+<p>The mechanism has four parts:</p>
+<ol>
+<li><strong>Discrete steps.</strong> The model produces one reasoning step at a time — a stated sub-goal, a method choice, or a single derivation — rather than one uninterrupted stream. Each step is a separate, addressable unit the system can check and, if necessary, discard.</li>
+<li><strong>External verification per step, not self-report.</strong> Where a step makes an algebraic or arithmetic claim, it is checked with a computer algebra system. An identity claim f = g is checked either by symbolic simplification of f − g to zero, or by evaluating both sides at many random values and requiring agreement to numerical precision.</li>
+<li><strong>Backtracking on failure.</strong> A step that fails verification is not pushed through. The system returns to the last verified step and proposes a different method. This is the main way this design departs from a single forward pass.</li>
+<li><strong>Process-level training signal.</strong> Training rewards correct intermediate steps, not only a correct final answer. For a solution of m steps:</li>
+</ol>
+
+<div class="math-block">
+  <div class="math-eq"><span class="math-eq-img"><img src="/research-figures/equations/vr-02-process-reward.png" alt="Equation 2" width="589" height="89" loading="lazy" class="math-img"></span><span class="math-tag">(2)</span></div>
+</div>
+
+<h2>3.2 Numerical Verification</h2>
+<p>For a claimed identity over a domain D, the symbolic check tests whether the difference simplifies to zero:</p>
+
+<div class="math-block">
+  <div class="math-eq"><span class="math-eq-img"><img src="/research-figures/equations/vr-03-simplify-zero.png" alt="Equation 3" width="669" height="46" loading="lazy" class="math-img"></span><span class="math-tag">(3)</span></div>
+</div>
+
+<p>When symbolic simplification does not terminate, the fallback is repeated random-value testing. If a false identity would fail at any single randomly drawn point with probability at least p, then the probability that T independent random trials all pass by chance is bounded:</p>
+
+<div class="math-block">
+  <div class="math-eq"><span class="math-eq-img"><img src="/research-figures/equations/vr-04-survival-bound.png" alt="Equation 4" width="596" height="39" loading="lazy" class="math-img"></span><span class="math-tag">(4)</span></div>
+</div>
+
+<div class="article-chart-block">
+  <p class="article-chart-title">Figure — False-identity survival probability vs number of trials (p = 0.99)</p>
+  <div class="abc-survival-chart">
+    <div class="abc-survival-y">
+      <span>100%</span><span>1%</span><span>0.01%</span><span>0.0001%</span>
+    </div>
+    <div class="abc-survival-area">
+      <!-- preserveAspectRatio="none" stretches this to fill the column, which is
+           harmless for a straight line and horizontal rules but would distort
+           any text, so the value labels live in the HTML tick row below. -->
+      <svg viewBox="0 0 500 120" preserveAspectRatio="none" width="100%" height="100%" aria-hidden="true">
+        <line x1="0" y1="0" x2="500" y2="0" stroke="var(--line)" stroke-width="0.5"/>
+        <line x1="0" y1="40" x2="500" y2="40" stroke="var(--line)" stroke-width="0.5"/>
+        <line x1="0" y1="80" x2="500" y2="80" stroke="var(--line)" stroke-width="0.5"/>
+        <line x1="0" y1="120" x2="500" y2="120" stroke="var(--line)" stroke-width="0.5"/>
+        <!-- Survival S(T) = (1-p)^T with p = 0.99, so S = 10^(-2T). On a
+             logarithmic axis that is the straight descent below: 100% at T=0,
+             1% at T=1, 0.01% at T=2, below the axis floor by T=3. -->
+        <polyline
+          points="0,0 166.7,40 333.3,80 500,120"
+          fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+        <circle cx="166.7" cy="40" r="4" fill="var(--accent)"/>
+        <circle cx="333.3" cy="80" r="4" fill="var(--accent)"/>
+      </svg>
+      <div class="abc-survival-x">
+        <span>T=0<em>100%</em></span>
+        <span>T=1<em>1%</em></span>
+        <span>T=2<em>0.01%</em></span>
+        <span>T=3<em>&lt;0.0001%</em></span>
+      </div>
+    </div>
+  </div>
+  <p class="article-chart-note">Worst-case probability that a false identity survives T random trials when each trial detects it with probability p = 0.99. After T = 5 trials the survival probability is below 0.1%. In practice, for generic polynomial identities, p is much closer to 1 and the practical false-acceptance rate is far lower than this bound.</p>
+</div>
+
+<h1>4. Discovering and Remembering New Identities</h1>
+<p>While solving a problem, a model may produce a simplification or identity not in its training data or a known formula table. We treat this as a <em>candidate</em>, not a discovery, until it passes the same two-part verification. Only a verified candidate is stored in a small persistent memory keyed by the identity and its derivation, and only then reported to the user — stated as verified and accompanied by the derivation that produced it.</p>
+<p>The persistent store for verified identities is a natural fit for the chunk memory in the Vitasta architecture, extended with the exact-match retrieval channel described in that architecture's report.</p>
+
+<h1>5. Roadmap</h1>
+<table><thead><tr><th>#</th><th>Addition</th><th>What it addresses</th><th>Status</th></tr></thead><tbody>
+<tr><td>1</td><td>Reasoning scratchpad</td><td>Fast-only pattern completion</td><td>Standard practice</td></tr>
+<tr><td>2</td><td>Calibrated confidence output</td><td>Overconfidence; no self-knowledge</td><td>Partially solved</td></tr>
+<tr><td>3</td><td>Self-verification pass</td><td>No self-correction loop</td><td>Feasible now</td></tr>
+<tr><td>4</td><td>Trained abstention</td><td>Confident guessing on uncertain claims</td><td>Feasible</td></tr>
+<tr><td>5</td><td>Formal-checker-in-the-loop</td><td>The verification gap</td><td>This paper</td></tr>
+<tr><td>6</td><td>Multi-timescale memory</td><td>No persistent working memory</td><td>Designed in Vitasta; untested</td></tr>
+<tr><td>7</td><td>Persistent memory across sessions</td><td>No memory beyond one context</td><td>Common in products</td></tr>
+<tr><td>8</td><td>Iterative self-correction loop</td><td>Single forward pass, no revision</td><td>Feasible wrapper</td></tr>
+<tr><td>9</td><td>Reasoning-trace training</td><td>Rewards outcome, not process</td><td>This paper</td></tr>
+<tr><td>10</td><td>User-instruction tracking</td><td>No model of what the user has stated</td><td>Engineering task</td></tr>
+</tbody></table>
+
+<div class="article-chart-block">
+  <p class="article-chart-title">Figure — Roadmap item feasibility (10 items)</p>
+  <div class="article-bar-chart">
+    <div class="abc-row"><span class="abc-label">1. Scratchpad</span><div class="abc-track"><div class="abc-fill abc-fill--green" style="width:100%"></div></div><span class="abc-val">Standard practice ✓</span></div>
+    <div class="abc-row"><span class="abc-label">2. Calibrated conf.</span><div class="abc-track"><div class="abc-fill abc-fill--amber" style="width:60%"></div></div><span class="abc-val">Partially solved</span></div>
+    <div class="abc-row"><span class="abc-label">3. Self-verify pass</span><div class="abc-track"><div class="abc-fill" style="width:78%"></div></div><span class="abc-val">Feasible now</span></div>
+    <div class="abc-row"><span class="abc-label">4. Abstention</span><div class="abc-track"><div class="abc-fill" style="width:72%"></div></div><span class="abc-val">Feasible</span></div>
+    <div class="abc-row"><span class="abc-label">5. Formal checker</span><div class="abc-track"><div class="abc-fill abc-fill--purple" style="width:85%"></div></div><span class="abc-val">This paper</span></div>
+    <div class="abc-row"><span class="abc-label">6. Working memory</span><div class="abc-track"><div class="abc-fill abc-fill--amber" style="width:45%"></div></div><span class="abc-val">Designed, untested</span></div>
+    <div class="abc-row"><span class="abc-label">7. Session memory</span><div class="abc-track"><div class="abc-fill abc-fill--amber" style="width:65%"></div></div><span class="abc-val">Deployed elsewhere</span></div>
+    <div class="abc-row"><span class="abc-label">8. Iterative correction</span><div class="abc-track"><div class="abc-fill" style="width:75%"></div></div><span class="abc-val">Feasible wrapper</span></div>
+    <div class="abc-row"><span class="abc-label">9. Process training</span><div class="abc-track"><div class="abc-fill abc-fill--purple" style="width:85%"></div></div><span class="abc-val">This paper</span></div>
+    <div class="abc-row"><span class="abc-label">10. Instruction track.</span><div class="abc-track"><div class="abc-fill" style="width:75%"></div></div><span class="abc-val">Engineering task</span></div>
+  </div>
+  <p class="article-chart-note">Items 1–5 and 8–10 require no new architecture. Items 6–7 involve persistent state and are designed but not yet validated on a real model. Items excluded from the roadmap entirely: embodied grounding, emotional filtering, persistent identity.</p>
+</div>
+
+<h1>6. Validation Plan</h1>
+<ol>
+<li><strong>Symbolic verifier correctness.</strong> Confirm the checks correctly accept known true identities and reject known false ones on a curated benchmark, before any model-facing use.</li>
+<li><strong>Step-level accuracy.</strong> Measure how often a model's proposed step passes external verification, with and without backtracking enabled, on a benchmark of multi-step algebra and calculus problems.</li>
+<li><strong>Final-answer accuracy with and without the loop.</strong> Compare accuracy and rate of confidently-stated wrong answers for the same base model with the verification loop on vs off.</li>
+<li><strong>Calibration.</strong> Compare stated confidence against realized accuracy before and after training toward calibration.</li>
+<li><strong>Discovery-mechanism false-positive rate.</strong> On a benchmark with known, exhaustively catalogued identities, measure how often the mechanism flags something as new that is already known, and how often it stores an unverified identity (target: zero by construction, but must be checked empirically).</li>
+</ol>
+
+<h1>7. Limitations and Risks</h1>
+<ol>
+<li>Symbolic and numerical verification cover checkable claims only. Inequalities, existence claims, or statements involving infinite structures are not reducible to a simplify-to-zero or random-sampling check.</li>
+<li>Self-verification by the same model has known blind spots; the design relies on an external, independent check to avoid this, but any step type not covered by the external checker falls back to weaker model-internal review.</li>
+<li>The discovery mechanism will mostly surface known results. Framing outputs as "verified and new to this conversation" rather than "a mathematical discovery" is a communication requirement, not only a technical one.</li>
+<li>Per-step external verification adds real computational and latency cost proportional to the number of steps; this cost has not been measured.</li>
+<li>The verification-gap problem in mathematics is partly social and institutional — journal review norms, publication incentives, education practice — and no tooling change fully addresses that part.</li>
+</ol>
+
+<h1>References</h1>
+<ol>
+<li>Kahneman, D. Thinking, Fast and Slow. Farrar, Straus and Giroux, 2011.</li>
+<li>Wei et al. Chain-of-thought prompting elicits reasoning in large language models. NeurIPS, 2022.</li>
+<li>Lightman et al. Let's verify step by step. arXiv:2305.20050, 2023.</li>
+<li>Trinh et al. Solving olympiad geometry without human demonstrations. Nature, 2024.</li>
+<li>DeepMind. AlphaProof. DeepMind blog, 2024.</li>
+<li>Kadavath et al. Language models (mostly) know what they know. arXiv:2207.05221, 2022.</li>
+<li>Lin et al. Teaching models to express their uncertainty in words. arXiv:2205.14334, 2022.</li>
+<li>Wang et al. Self-consistency improves chain of thought reasoning. ICLR, 2023.</li>
+<li>Madaan et al. Self-Refine. NeurIPS, 2023.</li>
+<li>Baddeley, A. Working memory. Science, 1992.</li>
+<li>Schaeffer et al. Are emergent abilities of large language models a mirage? NeurIPS, 2023.</li>
+<li>Lakoff &amp; Johnson. Philosophy in the Flesh. Basic Books, 1999.</li>
+<li>Damasio, A. Descartes' Error. Putnam, 1994.</li>
+</ol>

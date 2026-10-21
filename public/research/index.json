@@ -1,5 +1,25 @@
 [
   {
+    "slug": "vitasta-architecture",
+    "title": "Vitasta: A Recurrent-Core Hybrid Architecture",
+    "category": "Research Paper",
+    "date": "2026-09-01",
+    "sizeMB": "0.38 MB",
+    "authors": ["Jhelum Labs"],
+    "readingTime": "22 min read",
+    "excerpt": "Vitasta is a language-model architecture designed to address six standing limitations of full self-attention Transformers: quadratic compute, hard context limits, context rot, weak state tracking, dependence on positional signals, and heavy data demands. Its backbone is a gated delta-rule recurrent layer paired with bounded retrieval memory and exact-match retrieval. Overall progress: 25.3% on the defined validation ladder."
+  },
+  {
+    "slug": "verified-reasoning",
+    "title": "Verified Steps, Not Faster Guesses",
+    "category": "Research Paper",
+    "date": "2026-09-01",
+    "sizeMB": "0.22 MB",
+    "authors": ["Jhelum Labs"],
+    "readingTime": "16 min read",
+    "excerpt": "A program for mathematical rigor and deliberate reasoning in language models. We propose forcing mathematical reasoning into discrete, externally verified steps with backtracking on failure — addressing both the verification gap in mathematics and the reasoning-mode gap in current language models. A design document and validation plan; nothing has been trained or evaluated on a real model."
+  },
+  {
     "slug": "w-1.2-architecture",
     "title": "W-1.2 Architecture Specification",
     "category": "Research Paper",
