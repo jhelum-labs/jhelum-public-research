@@ -16,162 +16,138 @@ const jsonLd = {
 ---
 <Page currentPath="/" title="Jhelum Labs — Research and Deployment" description="Jhelum Labs publishes open foundational AI research and model documentation." jsonLd={jsonLd}>
 
-  <!-- ══════════════════════════════════════════════
-       HERO
-       Logo mark + full wordmark centered on page
-       Then Anthropic-style two-column headline
-  ══════════════════════════════════════════════ -->
-  <section class="hero-section">
+  <!-- ══════════════════════════════════════════
+       HERO — Anthropic style
+       Logo on page body + full-width bold headline
+       + description right beside it
+  ══════════════════════════════════════════ -->
+  <section class="hi-hero">
     <div class="shell">
 
-      <!-- Full SVG wordmark with "Research and Deployment" subtitle -->
-      <div class="hero-brand-block">
+      <!-- Logo + wordmark on page (only on homepage) -->
+      <div class="hi-brand">
         <svg
-          class="hero-wordmark"
-          viewBox="0 0 1536 700"
+          class="hi-wordmark"
+          viewBox="0 0 1536 1024"
           xmlns="http://www.w3.org/2000/svg"
           role="img"
-          aria-label="Jhelum Labs — Research and Deployment"
+          aria-label="Jhelum Labs"
         >
-          <!-- J mark — blue polygons -->
           <g fill="#2a6cf5">
             <polygon points="152,310 306,310 335,344 176,344 49,611 82,611 196,372 358,372 394,413 228,413 124,628 0,628"/>
             <polygon points="396,185 627,472 553,598 497,606 576,473 388,240 370,266 537,477 458,611 402,620 482,485 326,289"/>
             <polygon points="203,513 295,651 570,614 633,720 236,780 146,640 168,592 258,729 589,683 572,655 275,697 183,559"/>
           </g>
-          <!-- J hook -->
           <path d="M322 443H362V538C362 575 340 592 308 592C295 592 290 590 290 590L272 560H322Z" fill="currentColor"/>
-          <!-- Wordmark text -->
-          <g fill="currentColor" font-family="Poppins, 'Segoe UI', Arial, sans-serif" font-weight="700">
+          <g fill="currentColor" font-family="Poppins,'Segoe UI',Arial,sans-serif" font-weight="700">
             <text x="648" y="525" font-size="140" textLength="518" lengthAdjust="spacingAndGlyphs">Jhelum</text>
             <polygon points="1189,415 1210,415 1253,527 1232,527"/>
             <text x="1250" y="525" font-size="140" textLength="246" lengthAdjust="spacingAndGlyphs">abs</text>
-            <!-- Subtitle line -->
-            <text x="648" y="620" font-size="52" font-weight="400" fill="var(--text-soft)" textLength="700" lengthAdjust="spacingAndGlyphs">Research and Deployment</text>
+            <text x="648" y="630" font-size="52" font-weight="400" opacity="0.5" textLength="700" lengthAdjust="spacingAndGlyphs">Research and Deployment</text>
           </g>
         </svg>
       </div>
 
-      <!-- Anthropic-style two-column headline -->
-      <div class="hero-content">
-        <div class="hero-left">
-          <h1 class="hero-headline">
-            Open AI <span class="hero-u">research</span><br/>
-            and <span class="hero-u">model weights</span><br/>
-            built in public
-          </h1>
-        </div>
-        <div class="hero-right">
-          <p class="hero-desc">
-            Jhelum Labs is an independent AI research group. We train
-            language models from scratch, document every experiment,
-            and publish all weights openly — so the world can verify,
-            reproduce and build on our work.
-          </p>
-          <div class="hero-actions">
-            <a class="hero-btn-primary" href="/research">Explore research</a>
-            <a class="hero-btn-ghost" href="/playground">Try W-1.1 →</a>
-          </div>
-        </div>
+      <!-- Anthropic headline: bold statement left + description right -->
+      <div class="hi-headline-wrap">
+        <p class="hi-headline">
+          <strong>Open AI research and model weights built in public.</strong>
+          {' '}Jhelum Labs is an independent AI research group dedicated to training
+          language models from scratch, documenting every experiment, and
+          publishing all weights openly — so the world can verify, reproduce
+          and build on our work.
+        </p>
+      </div>
+
+      <div class="hi-actions">
+        <a class="hi-btn-primary" href="/research">Explore research</a>
+        <a class="hi-btn-ghost" href="/playground">Try W-1.1 →</a>
       </div>
 
     </div>
   </section>
 
-  <!-- ══════════════════════════════════════════════
-       FULL-WIDTH GRADIENT BANNER (like Anthropic's Claude banner)
-  ══════════════════════════════════════════════ -->
-  <section class="banner-section">
-    <a href="/playground" class="banner-link">
-      <div class="banner-bg"></div>
-      <div class="banner-inner shell">
-        <div class="banner-tag">W-1.1 · Open Weights</div>
-        <h2 class="banner-title">W-1.1</h2>
-        <p class="banner-sub">Our first 123M-parameter language model, trained from scratch. Apache-2.0.</p>
-        <span class="banner-cta">Read more →</span>
+  <!-- ══════════════════════════════════════════
+       GRADIENT BANNER — like Anthropic's Claude Opus card
+  ══════════════════════════════════════════ -->
+  <section class="hi-banner">
+    <a href="/playground" class="hi-banner-link">
+      <div class="hi-banner-bg"></div>
+      <div class="hi-banner-inner shell">
+        <div class="hi-banner-tag">
+          <span class="hi-banner-dot"></span>
+          W-1.1 · Open Weights
+        </div>
+        <h2 class="hi-banner-title">W-1.1</h2>
+        <p class="hi-banner-sub">Our first 123M-parameter language model, trained from scratch.</p>
+        <span class="hi-banner-cta">Read more →</span>
       </div>
     </a>
   </section>
 
-  <!-- ══════════════════════════════════════════════
-       RESEARCH TEAMS (Anthropic-style)
-  ══════════════════════════════════════════════ -->
-  <section class="teams-section shell">
-    <div class="teams-head">
-      <h2 class="teams-title">Research teams</h2>
-      <a href="/research" class="teams-link">View all research →</a>
-    </div>
-    <div class="teams-grid">
-      {[
-        { name: 'Architecture', desc: 'Decoder-only Transformers with RoPE, RMSNorm, SwiGLU and grouped-query attention for open reproducible pretraining.' },
-        { name: 'Training',     desc: 'Full documentation of every pretraining phase — loss curves, checkpointing, GPU logs and recovery procedures.' },
-        { name: 'Evaluation',   desc: 'Perplexity, token accuracy and downstream benchmarks: PIQA 60.17%, BoolQ 59.30%, ARC Easy 44.78%.' },
-        { name: 'Alignment',    desc: 'Instruction-tuning on 300K Q&A pairs, preference optimization and safety calibration for open models.' },
-        { name: 'W-1.2',        desc: '353M parameters, grouped-query attention, 50K vocab, 4,096-token context, 8B token training target.' },
-      ].map((t) => (
-        <div class="team-card">
-          <h3>{t.name}</h3>
-          <p>{t.desc}</p>
+  <!-- ══════════════════════════════════════════
+       LEARN MORE — Anthropic 4-card image grid
+  ══════════════════════════════════════════ -->
+  <section class="hi-learn shell">
+    <p class="hi-learn-label">Learn more</p>
+    <div class="hi-learn-grid">
+      <a class="hi-card" href="/research?type=Research+Paper">
+        <div class="hi-card-img hi-card-img--arch">
+          <div class="hi-card-img-inner"></div>
         </div>
-      ))}
+        <div class="hi-card-cat">Architecture</div>
+        <h3 class="hi-card-title">W-1.1 Architecture</h3>
+        <p class="hi-card-desc">Decoder-only Transformer with RoPE, RMSNorm, SwiGLU and tied embeddings — 123M parameters trained from scratch.</p>
+      </a>
+      <a class="hi-card" href="/research/w-1.1-project-instruct">
+        <div class="hi-card-img hi-card-img--align">
+          <div class="hi-card-img-inner"></div>
+        </div>
+        <div class="hi-card-cat">Alignment</div>
+        <h3 class="hi-card-title">Project Instruct</h3>
+        <p class="hi-card-desc">Instruction-tuning on 300K Q&A pairs. The W-1.1 model learns to follow instructions across diverse task types.</p>
+      </a>
+      <a class="hi-card" href="/research/w-1.2-architecture">
+        <div class="hi-card-img hi-card-img--w12">
+          <div class="hi-card-img-inner"></div>
+        </div>
+        <div class="hi-card-cat">W-1.2 Roadmap</div>
+        <h3 class="hi-card-title">Next generation</h3>
+        <p class="hi-card-desc">353M parameters, grouped-query attention, 50K vocab, 4,096-token context, 8B token training target.</p>
+      </a>
+      <a class="hi-card" href="/research/w-1.1-final">
+        <div class="hi-card-img hi-card-img--safety">
+          <div class="hi-card-img-inner"></div>
+        </div>
+        <div class="hi-card-cat">Safety</div>
+        <h3 class="hi-card-title">Model safety</h3>
+        <p class="hi-card-desc">Every release includes explicit experimental-use warnings, benchmark transparency and open weight verification via SHA-256.</p>
+      </a>
     </div>
   </section>
 
-  <!-- ══════════════════════════════════════════════
-       LATEST RESEARCH — Anthropic split layout
-       Left: featured visual card  |  Right: article rows
-  ══════════════════════════════════════════════ -->
-  <section class="pubs-section shell">
-    <div class="pubs-head">
-      <h2 class="pubs-title">Latest research</h2>
-      <a href="/research" class="pubs-link">See all publications →</a>
+  <!-- ══════════════════════════════════════════
+       LATEST RESEARCH — clean list like OpenAI research index
+  ══════════════════════════════════════════ -->
+  <section class="hi-pubs shell">
+    <div class="hi-pubs-head">
+      <h2 class="hi-pubs-title">Latest research</h2>
+      <a href="/research" class="hi-pubs-more">View all →</a>
     </div>
-    <div class="pubs-split">
-
-      <!-- Featured card -->
-      {recent[0] && (
-        <a class="pub-featured" href={recent[0].articlePath}>
-          <div class="pub-featured-bg"></div>
-          <div class="pub-featured-body">
-            <span class="pub-featured-type">{recent[0].type}</span>
-            <time class="pub-featured-date">{formatDate(recent[0].date)}</time>
-            <h3 class="pub-featured-title">{recent[0].title}</h3>
-            <p class="pub-featured-abstract">{recent[0].abstract?.slice(0,130)}…</p>
-            <span class="pub-featured-cta">Read →</span>
+    <div class="hi-pubs-list">
+      {recent.map((pub) => (
+        <a class="hi-pub-row" href={pub.articlePath}>
+          <div class="hi-pub-left">
+            <span class="hi-pub-type">{pub.type === 'Research Paper' ? 'Research' : 'Production'}</span>
+            <time class="hi-pub-date">{formatDate(pub.date)}</time>
           </div>
+          <div class="hi-pub-center">
+            <h3 class="hi-pub-title">{pub.title}</h3>
+            <p class="hi-pub-excerpt">{pub.abstract?.slice(0, 120)}…</p>
+          </div>
+          <span class="hi-pub-arrow" aria-hidden="true">↗</span>
         </a>
-      )}
-
-      <!-- Article rows -->
-      <div class="pub-rows">
-        {recent.slice(1).map((pub) => (
-          <a class="pub-row" href={pub.articlePath}>
-            <div class="pub-row-meta">
-              <span class="pub-row-type">{pub.type === 'Research Paper' ? 'Research' : 'Production'}</span>
-              <time>{formatDate(pub.date)}</time>
-            </div>
-            <h3 class="pub-row-title">{pub.title}</h3>
-            <p class="pub-row-excerpt">{pub.abstract?.slice(0,110)}…</p>
-          </a>
-        ))}
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ══════════════════════════════════════════════
-       W-1.1 CTA
-  ══════════════════════════════════════════════ -->
-  <section class="cta-section shell">
-    <div class="cta-inner">
-      <div>
-        <h2 class="cta-title">Try W-1.1 on your machine</h2>
-        <p class="cta-desc">Download 493 MB of open weights and run inference locally. No API key. Apache-2.0.</p>
-      </div>
-      <div class="cta-actions">
-        <a class="hero-btn-primary" href="/playground">Get started →</a>
-        <a class="hero-btn-ghost" href={SITE.githubUrl} target="_blank" rel="noreferrer">GitHub ↗</a>
-      </div>
+      ))}
     </div>
   </section>
 
@@ -179,59 +155,46 @@ const jsonLd = {
 
 <style>
 /* ══ Hero ══ */
-.hero-section {
-  padding: clamp(72px, 10vw, 120px) 0 clamp(56px, 8vw, 96px);
+.hi-hero {
+  padding: clamp(64px,9vw,110px) 0 clamp(56px,8vw,96px);
   border-bottom: 1px solid var(--line);
 }
 
-/* Full wordmark block — centered, only on home page */
-.hero-brand-block {
-  display: flex;
-  justify-content: center;
-  margin-bottom: clamp(56px, 8vw, 96px);
+/* Logo block */
+.hi-brand {
+  margin-bottom: clamp(48px,7vw,80px);
 }
-.hero-wordmark {
-  width: min(100%, 680px);
+.hi-wordmark {
+  width: min(100%, 560px);
   height: auto;
   color: var(--text);
+  display: block;
 }
 
-/* Two-column headline */
-.hero-content {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: clamp(36px, 5vw, 72px);
-  align-items: end;
+/* Anthropic-style full-width headline paragraph */
+.hi-headline-wrap {
+  max-width: 900px;
+  margin-bottom: 36px;
 }
-.hero-headline {
-  font-size: clamp(2.4rem, 5vw, 4.4rem);
-  font-weight: 800;
-  letter-spacing: -0.04em;
-  line-height: 1.05;
+.hi-headline {
+  font-size: clamp(1.5rem, 3.5vw, 2.6rem);
+  line-height: 1.35;
   color: var(--text);
   margin: 0;
+  letter-spacing: -0.02em;
+  font-weight: 400;
 }
-.hero-u {
-  text-decoration: underline;
-  text-decoration-thickness: 2px;
-  text-underline-offset: 4px;
+.hi-headline strong {
+  font-weight: 800;
+  color: var(--text);
 }
-.hero-right {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  padding-bottom: 4px;
-}
-.hero-desc {
-  font-size: clamp(.95rem,1.5vw,1.08rem);
-  color: var(--text-soft);
-  line-height: 1.72;
-  margin: 0;
-}
-.hero-actions { display: flex; gap: 12px; flex-wrap: wrap }
 
-/* Buttons */
-.hero-btn-primary {
+.hi-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.hi-btn-primary {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 11px 24px; border-radius: 9999px;
   background: var(--text); color: var(--bg);
@@ -239,8 +202,8 @@ const jsonLd = {
   text-decoration: none; white-space: nowrap;
   transition: opacity .15s ease, transform .15s ease;
 }
-.hero-btn-primary:hover { opacity: .85; transform: translateY(-1px) }
-.hero-btn-ghost {
+.hi-btn-primary:hover { opacity: .85; transform: translateY(-1px) }
+.hi-btn-ghost {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 10px 22px; border-radius: 9999px;
   border: 1px solid var(--line-hover);
@@ -248,212 +211,203 @@ const jsonLd = {
   text-decoration: none; white-space: nowrap;
   transition: border-color .15s ease, color .15s ease;
 }
-.hero-btn-ghost:hover { border-color: var(--text); color: var(--text) }
+.hi-btn-ghost:hover { border-color: var(--text); color: var(--text) }
 
 /* ══ Banner ══ */
-.banner-section { width: 100% }
-.banner-link {
-  display: block; position: relative; overflow: hidden;
-  height: clamp(300px,42vw,500px); text-decoration: none;
+.hi-banner { width: 100% }
+.hi-banner-link {
+  display: block; position: relative;
+  overflow: hidden; text-decoration: none;
+  height: clamp(280px, 40vw, 480px);
 }
-.banner-bg {
+.hi-banner-bg {
   position: absolute; inset: 0;
-  background: linear-gradient(180deg,#060d1a 0%,#0d2040 20%,#1a3a6a 45%,#c4621a 78%,#070707 100%);
+  background: linear-gradient(180deg,
+    #050d1a 0%, #0b1f3a 18%, #163660 40%,
+    #bf5c18 72%, #080808 100%);
 }
-.banner-bg::after {
+.hi-banner-bg::after {
   content: ''; position: absolute; inset: 0;
-  background: radial-gradient(ellipse 80% 45% at 50% 65%, rgba(190,90,20,.4) 0%, transparent 65%);
-  animation: banner-glow 7s ease-in-out infinite;
+  background: radial-gradient(ellipse 80% 50% at 50% 68%,
+    rgba(185,88,24,.45) 0%, transparent 65%);
+  animation: banner-glow 8s ease-in-out infinite;
 }
 @keyframes banner-glow {
-  0%,100% { opacity: .7; transform: scaleX(1) }
-  50% { opacity: 1; transform: scaleX(1.06) }
+  0%,100% { opacity: .7 }
+  50% { opacity: 1 }
 }
-.banner-inner {
-  position: relative; z-index: 1;
-  height: 100%; display: flex; flex-direction: column;
+.hi-banner-inner {
+  position: relative; z-index: 1; height: 100%;
+  display: flex; flex-direction: column;
   align-items: center; justify-content: center;
-  text-align: center; gap: 12px; padding: 40px 24px;
+  text-align: center; gap: 14px; padding: 40px 24px;
 }
-.banner-tag {
-  font-size: .7rem; font-weight: 700; letter-spacing: .12em;
-  text-transform: uppercase; color: rgba(255,255,255,.55);
+.hi-banner-tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: .72rem; font-weight: 600; letter-spacing: .1em;
+  text-transform: uppercase; color: rgba(255,255,255,.6);
 }
-.banner-title {
-  font-size: clamp(3.5rem,10vw,8rem);
+.hi-banner-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: rgba(255,255,255,.5); flex-shrink: 0;
+}
+.hi-banner-title {
+  font-size: clamp(3rem, 10vw, 8rem);
   font-weight: 700; letter-spacing: -0.04em; color: #fff; margin: 0;
   font-family: 'Playfair Display', Georgia, serif; line-height: 1;
 }
-.banner-sub {
-  font-size: clamp(.9rem,1.6vw,1.1rem);
-  color: rgba(255,255,255,.65); margin: 0; max-width: 480px;
+.hi-banner-sub {
+  font-size: clamp(.88rem,1.5vw,1.05rem);
+  color: rgba(255,255,255,.65); margin: 0; max-width: 460px;
 }
-.banner-cta {
+.hi-banner-cta {
   display: inline-flex; align-items: center; gap: 8px;
-  padding: 10px 26px; border-radius: 9999px;
-  border: 1px solid rgba(255,255,255,.35);
+  padding: 9px 24px; border-radius: 9999px;
+  border: 1px solid rgba(255,255,255,.3);
   background: rgba(255,255,255,.08);
-  color: rgba(255,255,255,.85); font-size: .88rem; font-weight: 600;
-  backdrop-filter: blur(8px); margin-top: 4px;
+  color: rgba(255,255,255,.85); font-size: .86rem; font-weight: 600;
+  backdrop-filter: blur(8px);
   transition: background .2s ease;
 }
-.banner-link:hover .banner-cta { background: rgba(255,255,255,.18) }
+.hi-banner-link:hover .hi-banner-cta { background: rgba(255,255,255,.18) }
 
-/* ══ Teams ══ */
-.teams-section {
-  padding: clamp(64px,9vw,100px) 0;
+/* ══ Learn more cards ══ */
+.hi-learn {
+  padding: clamp(56px,8vw,96px) 0;
   border-bottom: 1px solid var(--line);
 }
-.teams-head {
-  display: flex; align-items: baseline;
-  justify-content: space-between; gap: 16px; margin-bottom: 40px;
+.hi-learn-label {
+  font-size: .78rem; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--muted);
+  margin: 0 0 24px;
 }
-.teams-title {
-  font-size: clamp(1.6rem,3vw,2.4rem);
-  font-weight: 700; letter-spacing: -.04em; color: var(--text); margin: 0;
-}
-.teams-link {
-  font-size: .88rem; font-weight: 600; color: var(--text-soft);
-  white-space: nowrap; text-decoration: none; transition: color .15s;
-}
-.teams-link:hover { color: var(--text) }
-.teams-grid {
+.hi-learn-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px,1fr));
-  gap: 1px; border: 1px solid var(--line);
-  border-radius: 14px; overflow: hidden;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
 }
-.team-card {
-  padding: 26px 28px; background: var(--surface-card);
-  transition: background .2s ease;
+.hi-card {
+  display: flex; flex-direction: column;
+  text-decoration: none;
+  transition: opacity .15s ease;
 }
-.team-card:hover { background: var(--surface-card-hover) }
-.team-card h3 {
-  font-size: 1rem; font-weight: 700; color: var(--text);
-  margin: 0 0 10px; letter-spacing: -.015em;
+.hi-card:hover { opacity: .85 }
+.hi-card-img {
+  width: 100%; aspect-ratio: 4/3;
+  border-radius: 10px; overflow: hidden; margin-bottom: 14px;
+  position: relative;
 }
-.team-card p {
-  font-size: .84rem; color: var(--text-soft); line-height: 1.65; margin: 0;
+.hi-card-img-inner {
+  position: absolute; inset: 0;
+  background-size: cover; background-position: center;
+}
+/* Card visual backgrounds */
+.hi-card-img--arch .hi-card-img-inner {
+  background: linear-gradient(135deg,#0d1f40 0%,#1a3a6a 50%,#2a5c9a 100%);
+}
+.hi-card-img--arch .hi-card-img-inner::after {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(circle at 30% 30%, rgba(42,108,245,.5) 0%, transparent 60%);
+}
+.hi-card-img--align .hi-card-img-inner {
+  background: linear-gradient(135deg,#1a0a2e 0%,#2d1460 50%,#4a2080 100%);
+}
+.hi-card-img--align .hi-card-img-inner::after {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(circle at 60% 40%, rgba(139,92,246,.5) 0%, transparent 55%);
+}
+.hi-card-img--w12 .hi-card-img-inner {
+  background: linear-gradient(135deg,#0a1a0a 0%,#1a3a1a 50%,#2a5a2a 100%);
+}
+.hi-card-img--w12 .hi-card-img-inner::after {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(34,197,94,.4) 0%, transparent 55%);
+}
+.hi-card-img--safety .hi-card-img-inner {
+  background: linear-gradient(135deg,#1a1a0a 0%,#3a3a10 50%,#5a5a18 100%);
+}
+.hi-card-img--safety .hi-card-img-inner::after {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(circle at 40% 60%, rgba(234,179,8,.35) 0%, transparent 55%);
+}
+.hi-card-cat {
+  font-size: .72rem; font-weight: 700; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 6px;
+}
+.hi-card-title {
+  font-size: 1.05rem; font-weight: 700; color: var(--text);
+  margin: 0 0 8px; letter-spacing: -.02em; line-height: 1.3;
+}
+.hi-card-desc {
+  font-size: .84rem; color: var(--text-soft);
+  line-height: 1.6; margin: 0;
 }
 
-/* ══ Publications ══ */
-.pubs-section {
-  padding: clamp(64px,9vw,100px) 0;
+/* ══ Latest research ══ */
+.hi-pubs {
+  padding: clamp(56px,8vw,96px) 0 clamp(72px,10vw,120px);
+}
+.hi-pubs-head {
+  display: flex; align-items: baseline;
+  justify-content: space-between; gap: 16px;
+  margin-bottom: 0; padding-bottom: 16px;
   border-bottom: 1px solid var(--line);
 }
-.pubs-head {
-  display: flex; align-items: baseline;
-  justify-content: space-between; gap: 16px; margin-bottom: 36px;
-}
-.pubs-title {
-  font-size: clamp(1.6rem,3vw,2.4rem);
+.hi-pubs-title {
+  font-size: clamp(1.4rem,2.5vw,2rem);
   font-weight: 700; letter-spacing: -.04em; color: var(--text); margin: 0;
 }
-.pubs-link {
+.hi-pubs-more {
   font-size: .88rem; font-weight: 600; color: var(--text-soft);
-  white-space: nowrap; text-decoration: none; transition: color .15s;
+  text-decoration: none; white-space: nowrap; transition: color .15s;
 }
-.pubs-link:hover { color: var(--text) }
-.pubs-split {
-  display: grid; grid-template-columns: 5fr 4fr;
-  gap: 56px; align-items: start;
-}
-
-/* Featured card */
-.pub-featured {
-  display: block; position: relative; overflow: hidden;
-  border-radius: 14px; height: clamp(320px,38vw,460px);
-  text-decoration: none;
-  transition: transform .25s ease;
-}
-.pub-featured:hover { transform: translateY(-3px) }
-.pub-featured-bg {
-  position: absolute; inset: 0;
-  background: linear-gradient(145deg,#060d20 0%,#0d1f40 35%,#1a3060 65%,#0a0a14 100%);
-}
-.pub-featured-bg::after {
-  content: ''; position: absolute; inset: 0;
-  background: radial-gradient(ellipse 70% 60% at 30% 35%, rgba(42,108,245,.35) 0%, transparent 65%);
-}
-.pub-featured-body {
-  position: relative; z-index: 1; padding: 28px 26px;
-  height: 100%; display: flex; flex-direction: column; gap: 8px;
-}
-.pub-featured-type {
-  font-size: .66rem; font-weight: 700; letter-spacing: .1em;
-  text-transform: uppercase; color: rgba(255,255,255,.5);
-}
-.pub-featured-date { font-size: .76rem; color: rgba(255,255,255,.45) }
-.pub-featured-title {
-  font-size: clamp(1.25rem,2.5vw,1.9rem);
-  font-weight: 700; color: #fff; margin: 0;
-  line-height: 1.2; letter-spacing: -.025em; margin-top: auto;
-}
-.pub-featured-abstract {
-  font-size: .86rem; color: rgba(255,255,255,.6);
-  line-height: 1.58; margin: 0;
-  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
-}
-.pub-featured-cta {
-  font-size: .84rem; font-weight: 600;
-  color: rgba(255,255,255,.7); align-self: flex-start; margin-top: 8px;
-  transition: color .15s;
-}
-.pub-featured:hover .pub-featured-cta { color: #fff }
-
-/* Article rows */
-.pub-rows { display: flex; flex-direction: column }
-.pub-row {
-  display: block; padding: 22px 0;
+.hi-pubs-more:hover { color: var(--text) }
+.hi-pubs-list { display: flex; flex-direction: column }
+.hi-pub-row {
+  display: grid; grid-template-columns: 200px 1fr 24px;
+  gap: 28px; align-items: start; padding: 24px 0;
   border-bottom: 1px solid var(--line);
   text-decoration: none;
+  transition: opacity .15s ease;
 }
-.pub-row:first-child { border-top: 1px solid var(--line) }
-.pub-row:hover .pub-row-title { color: #2a6cf5 }
-.pub-row-meta {
-  display: flex; align-items: center; gap: 10px;
-  margin-bottom: 5px; font-size: .74rem; color: var(--muted);
+.hi-pub-row:hover { opacity: 1 }
+.hi-pub-row:hover .hi-pub-title { color: #2a6cf5 }
+.hi-pub-row:hover .hi-pub-arrow { transform: translate(2px,-2px); color: var(--text) }
+.hi-pub-left {
+  display: flex; flex-direction: column; gap: 4px; padding-top: 2px;
 }
-.pub-row-type { font-weight: 600; color: var(--text-soft) }
-.pub-row-title {
+.hi-pub-type {
+  font-size: .74rem; font-weight: 700; letter-spacing: .04em;
+  text-transform: uppercase; color: var(--text-soft);
+}
+.hi-pub-date { font-size: .76rem; color: var(--muted) }
+.hi-pub-title {
   font-size: 1rem; font-weight: 700; letter-spacing: -.015em;
   color: var(--text); margin: 0 0 5px; line-height: 1.35;
   transition: color .15s;
 }
-.pub-row-excerpt {
+.hi-pub-excerpt {
   font-size: .82rem; color: var(--text-soft); line-height: 1.55; margin: 0;
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
 }
-
-/* ══ CTA ══ */
-.cta-section { padding: clamp(64px,9vw,100px) 0 clamp(80px,10vw,120px) }
-.cta-inner {
-  display: flex; align-items: center;
-  justify-content: space-between; gap: 40px;
-  padding: 44px 48px; border-radius: 16px;
-  border: 1px solid var(--line);
-  background: var(--surface-card); flex-wrap: wrap;
+.hi-pub-arrow {
+  color: var(--muted); font-size: 1rem; padding-top: 2px;
+  transition: transform .2s ease, color .2s ease;
 }
-.cta-title {
-  font-size: clamp(1.6rem,3vw,2.4rem); font-weight: 700;
-  letter-spacing: -.04em; color: var(--text); margin: 0 0 10px;
-}
-.cta-desc { font-size: .95rem; color: var(--text-soft); max-width: 520px; margin: 0; line-height: 1.6 }
-.cta-actions { display: flex; gap: 12px; flex-shrink: 0; flex-wrap: wrap }
 
 /* ══ Responsive ══ */
-@media (max-width:900px) {
-  .hero-content { grid-template-columns: 1fr; gap: 28px }
-  .pubs-split { grid-template-columns: 1fr; gap: 40px }
-  .pub-featured { height: 280px }
-  .cta-inner { padding: 28px }
+@media (max-width: 900px) {
+  .hi-learn-grid { grid-template-columns: repeat(2, 1fr) }
+  .hi-pub-row { grid-template-columns: 1fr 24px; gap: 16px }
+  .hi-pub-left { display: none }
 }
-@media (max-width:640px) {
-  .hero-headline { font-size: 2.2rem }
-  .banner-link { height: 260px }
-  .teams-grid { grid-template-columns: 1fr }
-  .cta-actions { width: 100% }
-  .hero-btn-primary, .hero-btn-ghost { flex: 1; justify-content: center }
-  .hero-wordmark { width: 100% }
+@media (max-width: 600px) {
+  .hi-learn-grid { grid-template-columns: 1fr 1fr }
+  .hi-wordmark { width: 100% }
+  .hi-headline { font-size: 1.4rem }
+  .hi-banner-link { height: 240px }
+}
+@media (max-width: 400px) {
+  .hi-learn-grid { grid-template-columns: 1fr }
 }
 </style>

@@ -260,32 +260,19 @@ a:hover {
   line-height: 1;
 }
 
-.brand-svg {
-  display: block;
-  height: 28px;
-  width: auto;
-  transition: opacity 0.2s ease;
-}
-.brand:hover .brand-svg { opacity: 0.8; }
-
 .brand-logo-img {
   display: block;
-  width: 34px;
-  height: 34px;
+  height: 36px;
+  width: auto;
   object-fit: contain;
-  border-radius: 6px;
-  transition: transform 0.2s ease;
+  transition: opacity 0.2s ease;
 }
-[data-theme='dark'] .brand-logo-img { filter: invert(1); }
-.brand:hover .brand-logo-img { transform: scale(1.06); }
-
-.brand-wordmark {
-  font-size: 1rem;
-  font-weight: 700;
-  letter-spacing: -0.025em;
-  color: var(--text);
-  white-space: nowrap;
+/* In dark mode the logo is black — invert it to white */
+:root[data-theme='dark'] .brand-logo-img,
+:root:not([data-theme='light']) .brand-logo-img {
+  filter: invert(1) brightness(2);
 }
+.brand:hover .brand-logo-img { opacity: 0.8; }
 
 .brand-logo-svg {
   display: block;
