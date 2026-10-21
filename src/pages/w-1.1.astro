@@ -1,0 +1,553 @@
+---
+import Page from '../components/Page.astro'
+---
+<Page
+  currentPath="/w-1.1"
+  title="W-1.1 — Jhelum Labs"
+  description="W-1.1 is an experimental autoregressive language model by Jhelum Labs. Technical overview, training methodology, and experimental results."
+  canonical="/w-1.1"
+>
+
+  <!-- VIDEO HERO — the film plays unobstructed; the page's own title sits below it -->
+  <section class="w11-hero">
+    <div class="w11-hero-video-wrap">
+      <video
+        class="w11-hero-video"
+        src="/jhelum-w-1.1-research.mp4"
+        muted autoplay loop playsinline preload="auto"
+        aria-label="W-1.1 research overview film"
+      ></video>
+    </div>
+    <div class="w11-hero-inner shell">
+      <p class="w11-hero-date">Jhelum Labs · W-Series · 2024</p>
+      <h1 class="w11-hero-title">W-1.1</h1>
+      <p class="w11-hero-sub">An Experimental Language Model</p>
+
+      <!-- Table of contents — Anthropic style numbered list -->
+      <nav class="w11-toc" aria-label="Table of contents">
+        <a class="w11-toc-item" href="#abstract">
+          <span class="w11-toc-num">(1)</span>
+          <span class="w11-toc-line"></span>
+          <span class="w11-toc-label">Abstract</span>
+        </a>
+        <a class="w11-toc-item" href="#architecture">
+          <span class="w11-toc-num">(2)</span>
+          <span class="w11-toc-line"></span>
+          <span class="w11-toc-label">Architecture</span>
+        </a>
+        <a class="w11-toc-item" href="#experiments">
+          <span class="w11-toc-num">(3)</span>
+          <span class="w11-toc-line"></span>
+          <span class="w11-toc-label">Experiments</span>
+        </a>
+        <a class="w11-toc-item" href="#results">
+          <span class="w11-toc-num">(4)</span>
+          <span class="w11-toc-line"></span>
+          <span class="w11-toc-label">Results &amp; Roadmap</span>
+        </a>
+      </nav>
+    </div>
+  </section>
+
+  <!-- ARTICLE BODY -->
+  <article class="w11-article shell">
+
+    <section id="abstract" class="w11-section">
+      <p class="w11-lead">
+        W-1.1 is Jhelum Labs' first language-model development programme — a decoder-only Transformer trained from scratch, targeting 123M parameters, open weights, and transparent research documentation.
+      </p>
+      <p>The project focuses on building and studying Transformer-based language models, with particular attention to training methodology, data preparation, model architecture, optimization, text generation, and reproducibility. Rather than treating model development as simply downloading pretrained weights, the project emphasizes understanding and implementing every underlying component: tokenization, Transformer blocks, attention mechanisms, training loops, validation, checkpointing, and inference.</p>
+      <p>The W-1.1 development programme has included small-scale prototype experiments (Tazi), a Spark experimental model, and the target W-1.1-125M model — intended to follow a GPT-2-small-like architectural approach with approximately 40,000-token vocabulary and 2 billion training tokens.</p>
+
+      <div class="w11-meta-pills">
+        <span class="w11-pill">Autoregressive Transformer</span>
+        <span class="w11-pill">~125M Parameters</span>
+        <span class="w11-pill">Apache-2.0</span>
+        <span class="w11-pill">Open Weights</span>
+        <span class="w11-pill">Experimental</span>
+      </div>
+    </section>
+
+    <section id="architecture" class="w11-section">
+      <h2 class="w11-h2">Architecture &amp; Design</h2>
+      <p>The W-1.1-125M target follows a decoder-only Transformer design. A decoder-only Transformer predicts the next token from the preceding context, learning statistical and semantic patterns in text through autoregressive generation.</p>
+
+      <div class="w11-arch-grid">
+        <div class="w11-arch-card">
+          <div class="w11-arch-num">01</div>
+          <h3>Token Embeddings</h3>
+          <p>Convert discrete token identifiers into dense numerical representations the model can process.</p>
+        </div>
+        <div class="w11-arch-card">
+          <div class="w11-arch-num">02</div>
+          <h3>Causal Self-Attention</h3>
+          <p>Each token incorporates information from earlier tokens only — no future token access during next-token prediction.</p>
+        </div>
+        <div class="w11-arch-card">
+          <div class="w11-arch-num">03</div>
+          <h3>Feed-Forward Networks</h3>
+          <p>Transform token representations through learned nonlinear functions within each Transformer block.</p>
+        </div>
+        <div class="w11-arch-card">
+          <div class="w11-arch-num">04</div>
+          <h3>RMSNorm + Residuals</h3>
+          <p>Maintain stable information flow and support optimization of deeper networks across all layers.</p>
+        </div>
+        <div class="w11-arch-card">
+          <div class="w11-arch-num">05</div>
+          <h3>RoPE Positional Encoding</h3>
+          <p>Rotary position embeddings encode token order relative to sequence position efficiently.</p>
+        </div>
+        <div class="w11-arch-card">
+          <div class="w11-arch-num">06</div>
+          <h3>SwiGLU FFN</h3>
+          <p>Gated linear unit activation in feed-forward layers for improved model expressivity.</p>
+        </div>
+      </div>
+
+      <p>The proposed vocabulary size is approximately 40,000 tokens using byte-pair encoding (BPE), representing common words efficiently while retaining the ability to process uncommon words and fragments. Tied input/output embeddings reduce total parameter count.</p>
+    </section>
+
+    <section id="experiments" class="w11-section">
+      <h2 class="w11-h2">Experimental Phases</h2>
+
+      <h3 class="w11-h3">Tazi — Prototype Pipeline</h3>
+      <p>The initial Tazi experiments verified the fundamental training pipeline on locally available hardware. Phase 2 used a 15,965,952-parameter model trained on processed OpenWebText:</p>
+      <ul class="w11-list">
+        <li>Training tokens: <strong>120,490,409</strong></li>
+        <li>Validation tokens: <strong>13,387,824</strong></li>
+        <li>Vocabulary: <strong>8,000 tokens</strong></li>
+        <li>Effective batch size: <strong>2,048 tokens</strong> per optimizer update</li>
+      </ul>
+      <p>A key finding: validation loss decreased initially then began increasing after ~1,500 steps — indicating overfitting and motivating further attention to regularization, validation monitoring, and checkpoint selection.</p>
+
+      <h3 class="w11-h3">Spark — First Experimental Model</h3>
+      <p>Spark trained a ~17M parameter model on TinyStories using a Colab NVIDIA T4 GPU. This experiment established a practical text-generation workflow and surfaced a checkpoint-resume issue that highlighted the importance of preserving optimizer state, scheduler state, and RNG state alongside model weights.</p>
+
+      <div class="w11-table-wrap">
+        <table class="w11-table">
+          <thead>
+            <tr><th>Configuration</th><th>Value</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Model parameters</td><td>~17 million</td></tr>
+            <tr><td>Vocabulary size</td><td>8,000 tokens</td></tr>
+            <tr><td>Context length</td><td>256 tokens</td></tr>
+            <tr><td>Hidden dimension</td><td>384</td></tr>
+            <tr><td>Transformer layers</td><td>8</td></tr>
+            <tr><td>Attention heads</td><td>6</td></tr>
+            <tr><td>Dropout</td><td>0.1</td></tr>
+            <tr><td>Max training steps</td><td>20,000</td></tr>
+            <tr><td>Initial learning rate</td><td>3 × 10⁻⁴</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="results" class="w11-section">
+      <h2 class="w11-h2">Results &amp; Roadmap</h2>
+
+      <div class="w11-table-wrap">
+        <table class="w11-table">
+          <thead>
+            <tr><th>Experiment</th><th>Metric</th><th>Recorded Result</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Tazi Phase 2</td><td>Parameters</td><td>15,965,952</td></tr>
+            <tr><td>Tazi Phase 2</td><td>Processed tokens</td><td>133,878,233</td></tr>
+            <tr><td>Spark</td><td>Parameters</td><td>~17 million</td></tr>
+            <tr><td>Spark</td><td>Best validation loss</td><td><strong>1.490866</strong></td></tr>
+            <tr><td>Spark</td><td>Training progress</td><td>Step 19,499 / 20,000</td></tr>
+            <tr><td>W-1.1-125M</td><td>Target parameters</td><td>~125 million</td></tr>
+            <tr><td>W-1.1-125M</td><td>Planned training tokens</td><td>~2 billion</td></tr>
+            <tr><td>W-1.1-125M</td><td>Planned vocabulary</td><td>~40,000 tokens</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Benchmark comparison chart -->
+      <h3 class="w11-h3">Benchmark Comparison — W-1.1 Instruct vs GPT-2 Small</h3>
+      <div class="w11-bench">
+        <div class="w11-bench-legend">
+          <span class="w11-bench-key w11-bench-key--w11"></span> W-1.1 Instruct
+          <span class="w11-bench-key w11-bench-key--gpt2"></span> GPT-2 Small
+        </div>
+        <div class="w11-bench-rows">
+
+          <div class="w11-bench-row">
+            <div class="w11-bench-label">ARC-Easy</div>
+            <div class="w11-bench-bars">
+              <div class="w11-bench-bar-wrap">
+                <div class="w11-bench-bar w11-bench-bar--w11" style="width:40.70%"></div>
+                <span class="w11-bench-val">40.70%</span>
+              </div>
+              <div class="w11-bench-bar-wrap">
+                <div class="w11-bench-bar w11-bench-bar--gpt2" style="width:39.65%"></div>
+                <span class="w11-bench-val">39.65%</span>
+              </div>
+            </div>
+            <span class="w11-bench-diff w11-bench-diff--pos">+1.05 pp</span>
+          </div>
+
+          <div class="w11-bench-row">
+            <div class="w11-bench-label">HellaSwag</div>
+            <div class="w11-bench-bars">
+              <div class="w11-bench-bar-wrap">
+                <div class="w11-bench-bar w11-bench-bar--w11" style="width:28.33%"></div>
+                <span class="w11-bench-val">28.33%</span>
+              </div>
+              <div class="w11-bench-bar-wrap">
+                <div class="w11-bench-bar w11-bench-bar--gpt2" style="width:31.15%"></div>
+                <span class="w11-bench-val">31.15%</span>
+              </div>
+            </div>
+            <span class="w11-bench-diff w11-bench-diff--neg">−2.82 pp</span>
+          </div>
+
+          <div class="w11-bench-row">
+            <div class="w11-bench-label">PIQA</div>
+            <div class="w11-bench-bars">
+              <div class="w11-bench-bar-wrap">
+                <div class="w11-bench-bar w11-bench-bar--w11" style="width:58.98%"></div>
+                <span class="w11-bench-val">58.98%</span>
+              </div>
+              <div class="w11-bench-bar-wrap">
+                <div class="w11-bench-bar w11-bench-bar--gpt2" style="width:62.46%"></div>
+                <span class="w11-bench-val">62.46%</span>
+              </div>
+            </div>
+            <span class="w11-bench-diff w11-bench-diff--neg">−3.48 pp</span>
+          </div>
+
+          <div class="w11-bench-row">
+            <div class="w11-bench-label">WinoGrande</div>
+            <div class="w11-bench-bars">
+              <div class="w11-bench-bar-wrap">
+                <div class="w11-bench-bar w11-bench-bar--w11" style="width:50.43%"></div>
+                <span class="w11-bench-val">50.43%</span>
+              </div>
+              <div class="w11-bench-bar-wrap">
+                <div class="w11-bench-bar w11-bench-bar--gpt2" style="width:52.09%"></div>
+                <span class="w11-bench-val">52.09%</span>
+              </div>
+            </div>
+            <span class="w11-bench-diff w11-bench-diff--neg">−1.66 pp</span>
+          </div>
+
+          <div class="w11-bench-row">
+            <div class="w11-bench-label">OpenBookQA</div>
+            <div class="w11-bench-bars">
+              <div class="w11-bench-bar-wrap">
+                <div class="w11-bench-bar w11-bench-bar--w11" style="width:29.60%"></div>
+                <span class="w11-bench-val">29.60%</span>
+              </div>
+              <div class="w11-bench-bar-wrap">
+                <div class="w11-bench-bar w11-bench-bar--gpt2" style="width:27.00%"></div>
+                <span class="w11-bench-val">27.00%</span>
+              </div>
+            </div>
+            <span class="w11-bench-diff w11-bench-diff--pos">+2.60 pp</span>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="w11-note">
+        <strong>Benchmark status:</strong> No verified scores for MMLU, HellaSwag, ARC, or GSM8K are included in the current results. These require measurement and verification before reporting. The Tazi and Spark figures are internal experimental measurements, not independently verified benchmark results.
+      </div>
+
+      <h3 class="w11-h3">Next Steps</h3>
+      <p>The immediate roadmap for W-1.1-125M:</p>
+      <ul class="w11-list">
+        <li>Finalize the 125M-parameter decoder-only architecture</li>
+        <li>Validate the ~40,000-token BPE tokenizer</li>
+        <li>Prepare, filter, and audit the training corpus</li>
+        <li>Implement reliable checkpoint recovery (model + optimizer + scheduler + RNG state)</li>
+        <li>Run a short pilot to measure throughput, memory, and loss stability</li>
+        <li>Scale toward the 2-billion-token training target</li>
+        <li>Run standardized evaluation on documented held-out datasets</li>
+      </ul>
+
+      <p class="w11-attr">Research attribution: Jhelum Labs · Project: W-1.1 · Document type: Technical overview and experimental research summary · Benchmark status: Internal experimental results; standardized external benchmark scores require measurement and verification.</p>
+    </section>
+
+  </article>
+
+</Page>
+
+<style>
+/* ── HERO ──
+   The film is the hero. Nothing is layered over it: the video keeps its full
+   frame (no object-fit cropping of its own title cards) and the page's title
+   block sits underneath, on the page background. */
+.w11-hero {
+  position: relative;
+}
+.w11-hero-video-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #050d1a;
+  overflow: hidden;
+}
+.w11-hero-video {
+  width: 100%; height: 100%;
+  object-fit: contain;
+  display: block;
+  background: #050d1a;
+}
+.w11-hero-inner {
+  position: relative;
+  display: flex; flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: clamp(32px, 5vw, 52px) 24px 0;
+  gap: 10px;
+  background: var(--bg);
+}
+.w11-hero-date {
+  font-family: var(--font-sans);
+  font-size: .72rem; font-weight: 600;
+  letter-spacing: .12em; text-transform: uppercase;
+  color: var(--muted);
+  margin: 0;
+}
+.w11-hero-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(3.2rem, 9vw, 6.5rem);
+  font-weight: 700; letter-spacing: -0.04em;
+  color: var(--text); margin: 0; line-height: 1;
+}
+.w11-hero-sub {
+  font-family: var(--font-sans);
+  font-size: clamp(.9rem, 1.6vw, 1.1rem);
+  color: var(--text-soft);
+  margin: 0 0 28px;
+}
+
+/* ToC — Anthropic style */
+.w11-toc {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 6px;
+  width: 100%; max-width: 380px;
+}
+.w11-toc-item {
+  display: grid;
+  grid-template-columns: 28px 1fr auto;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  text-decoration: none;
+  transition: opacity .15s;
+}
+.w11-toc-item:hover { opacity: .75 }
+.w11-toc-num {
+  font-family: var(--font-sans);
+  font-size: .7rem; color: var(--muted);
+  text-align: right;
+}
+.w11-toc-line {
+  height: 1px;
+  background: var(--line);
+}
+.w11-toc-label {
+  font-family: var(--font-sans);
+  font-size: .82rem; font-weight: 500;
+  color: var(--text-soft);
+  white-space: nowrap;
+}
+
+/* ── ARTICLE ── */
+.w11-article {
+  padding: clamp(64px,9vw,112px) 0 clamp(80px,12vw,140px);
+  max-width: 760px;
+}
+
+.w11-section {
+  margin-bottom: clamp(56px,8vw,96px);
+}
+
+.w11-lead {
+  font-size: clamp(1.2rem, 2.2vw, 1.6rem);
+  font-weight: 500;
+  line-height: 1.45;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  margin: 0 0 1.4em;
+}
+
+.w11-h2 {
+  font-size: clamp(1.5rem, 2.8vw, 2rem);
+  font-weight: 700; letter-spacing: -0.03em;
+  color: var(--text); margin: 0 0 1em;
+  font-family: var(--font-sans);
+  padding-bottom: .6em;
+  border-bottom: 1px solid var(--line);
+}
+.w11-h3 {
+  font-size: 1.05rem; font-weight: 700;
+  color: var(--text); margin: 1.8em 0 .5em;
+  font-family: var(--font-sans);
+}
+
+/* Architecture cards */
+.w11-arch-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin: 1.6em 0;
+}
+.w11-arch-card {
+  padding: 20px;
+  background: var(--surface-card);
+  border: 1px solid var(--line);
+  border-radius: 0;
+}
+.w11-arch-num {
+  font-family: var(--font-mono);
+  font-size: .7rem; font-weight: 700;
+  color: var(--muted); margin-bottom: 10px;
+}
+.w11-arch-card h3 {
+  font-size: .9rem; font-weight: 700;
+  color: var(--text); margin: 0 0 6px;
+  font-family: var(--font-sans);
+}
+.w11-arch-card p {
+  font-size: .82rem; color: var(--text-soft);
+  line-height: 1.55; margin: 0;
+}
+
+/* Meta pills */
+.w11-meta-pills {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  margin-top: 1.6em;
+}
+.w11-pill {
+  font-family: var(--font-sans);
+  font-size: .72rem; font-weight: 600;
+  letter-spacing: .04em; text-transform: uppercase;
+  padding: 5px 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  color: var(--text-soft);
+}
+
+/* Table */
+.w11-table-wrap {
+  margin: 1.4em 0;
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+.w11-table {
+  width: 100%; border-collapse: collapse;
+  font-family: var(--font-sans); font-size: .88rem;
+  background: var(--surface-card);
+}
+.w11-table th {
+  background: var(--surface-2); color: var(--text);
+  font-weight: 700; padding: 11px 16px; text-align: left;
+  border-bottom: 1px solid var(--line);
+}
+.w11-table td {
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--line-subtle);
+  color: var(--text); font-weight: 500;
+}
+.w11-table tr:last-child td { border-bottom: none }
+
+/* List */
+.w11-list {
+  padding-left: 20px; margin: .8em 0 1em;
+}
+.w11-list li { margin-bottom: 7px; line-height: 1.6 }
+
+/* Note box */
+.w11-note {
+  padding: 16px 20px;
+  background: var(--surface-card);
+  border-left: 3px solid var(--accent);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  font-size: .88rem; line-height: 1.6;
+  color: var(--text-soft);
+  margin: 1.6em 0;
+  font-family: var(--font-sans);
+}
+
+/* Attribution */
+.w11-attr {
+  font-family: var(--font-sans);
+  font-size: .75rem; color: var(--muted);
+  margin-top: 2em; padding-top: 20px;
+  border-top: 1px solid var(--line-subtle);
+  line-height: 1.6;
+}
+
+/* Benchmark chart */
+.w11-bench {
+  margin: 1.4em 0 1.8em;
+  background: var(--surface-card);
+  border: 1px solid var(--line);
+  padding: 20px 24px;
+}
+.w11-bench-legend {
+  display: flex; align-items: center; gap: 16px;
+  font-family: var(--font-sans); font-size: .75rem;
+  font-weight: 600; color: var(--text-soft);
+  margin-bottom: 20px; text-transform: uppercase; letter-spacing: .04em;
+}
+.w11-bench-key {
+  display: inline-block; width: 12px; height: 12px; border-radius: 2px;
+}
+.w11-bench-key--w11  { background: #2a6cf5; }
+.w11-bench-key--gpt2 { background: var(--surface-3); border: 1px solid var(--line-hover); }
+
+.w11-bench-rows { display: flex; flex-direction: column; gap: 16px; }
+.w11-bench-row {
+  display: grid;
+  grid-template-columns: 110px 1fr 72px;
+  align-items: center; gap: 16px;
+}
+.w11-bench-label {
+  font-family: var(--font-sans); font-size: .82rem;
+  font-weight: 600; color: var(--text);
+}
+.w11-bench-bars { display: flex; flex-direction: column; gap: 4px; }
+.w11-bench-bar-wrap {
+  display: flex; align-items: center; gap: 8px;
+  height: 18px;
+}
+.w11-bench-bar {
+  height: 10px; border-radius: 2px;
+  min-width: 4px;
+  transition: width .6s cubic-bezier(0.16,1,0.3,1);
+}
+.w11-bench-bar--w11  { background: #2a6cf5; }
+.w11-bench-bar--gpt2 { background: var(--surface-3); border: 1px solid var(--line-hover); }
+.w11-bench-val {
+  font-family: var(--font-mono); font-size: .72rem;
+  color: var(--text-soft); white-space: nowrap;
+}
+.w11-bench-diff {
+  font-family: var(--font-mono); font-size: .78rem;
+  font-weight: 700; text-align: right; white-space: nowrap;
+}
+.w11-bench-diff--pos { color: #22c55e; }
+.w11-bench-diff--neg { color: #ef4444; }
+
+/* Responsive */
+@media (max-width: 700px) {
+  .w11-arch-grid { grid-template-columns: 1fr 1fr }
+  .w11-toc { max-width: 280px }
+}
+@media (max-width: 480px) {
+  .w11-arch-grid { grid-template-columns: 1fr }
+  .w11-article { max-width: 100% }
+}
+</style>
+
+<script>
+  const vid = document.querySelector('.w11-hero-video')
+  if (vid) vid.play().catch(() => {})
+</script>

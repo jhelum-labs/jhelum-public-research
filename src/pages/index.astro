@@ -51,20 +51,18 @@ const jsonLd = {
 
   <ScrollVelocity mode="logos" logos={stackLogos} />
 
-  <!-- GRADIENT BANNER -->
+  <!-- W-1.1 BANNER -->
   <section class="hi-banner">
-    <a href="/playground" class="hi-banner-link">
-      <div class="hi-banner-bg"></div>
-      <div class="hi-banner-inner shell">
-        <div class="hi-banner-tag">
-          <span class="hi-banner-dot"></span>
-          W-1.1 · Open Weights
-        </div>
-        <h2 class="hi-banner-title">W-1.1</h2>
-        <p class="hi-banner-sub">Our first 123M-parameter language model, trained from scratch.</p>
-        <span class="hi-banner-cta">Read more →</span>
+    <div class="hi-banner-bg"></div>
+    <div class="hi-banner-inner shell">
+      <div class="hi-banner-tag">
+        <span class="hi-banner-dot"></span>
+        W-1.1 · Open Weights
       </div>
-    </a>
+      <h2 class="hi-banner-title">W-1.1</h2>
+      <p class="hi-banner-sub">Our first 123M-parameter language model, trained from scratch.</p>
+      <a class="hi-banner-cta" href="/w-1.1">Read more →</a>
+    </div>
   </section>
 
   <!-- LEARN MORE — 4-card grid with user's covers -->
@@ -139,6 +137,7 @@ const jsonLd = {
   padding: clamp(80px,10vw,130px) 0 clamp(56px,8vw,96px);
   position: relative;
   overflow: hidden;
+  background: transparent;
 }
 .hi-hero::before {
   content: '';
@@ -194,10 +193,10 @@ const jsonLd = {
 .hi-btn-ghost:hover { border-color: var(--text); color: var(--text) }
 
 /* BANNER */
-.hi-banner { width: 100% }
-.hi-banner-link {
-  display: block; position: relative; overflow: hidden;
-  text-decoration: none; height: clamp(280px,40vw,480px);
+.hi-banner {
+  position: relative; width: 100%;
+  height: clamp(320px, 45vw, 520px);
+  overflow: hidden;
 }
 .hi-banner-bg {
   position: absolute; inset: 0;
@@ -213,28 +212,34 @@ const jsonLd = {
   position: relative; z-index: 1; height: 100%;
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
-  text-align: center; gap: 14px; padding: 40px 24px;
+  text-align: center; gap: 16px; padding: 40px 24px;
 }
 .hi-banner-tag {
   display: inline-flex; align-items: center; gap: 8px;
   font-size: .72rem; font-weight: 600; letter-spacing: .1em;
-  text-transform: uppercase; color: rgba(255,255,255,.6);
+  text-transform: uppercase; color: rgba(255,255,255,.7);
+  font-family: var(--font-sans);
 }
-.hi-banner-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.5) }
+.hi-banner-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.6) }
 .hi-banner-title {
-  font-size: clamp(3rem,10vw,8rem); font-weight: 700;
+  font-size: clamp(3.5rem,10vw,8rem); font-weight: 700;
   letter-spacing: -0.04em; color: #fff; margin: 0;
   font-family: 'Playfair Display', Georgia, serif; line-height: 1;
 }
-.hi-banner-sub { font-size: clamp(.88rem,1.5vw,1.05rem); color: rgba(255,255,255,.65); margin: 0; max-width: 460px }
+.hi-banner-sub {
+  font-size: clamp(.88rem,1.5vw,1.05rem); color: rgba(255,255,255,.75);
+  margin: 0; max-width: 460px; font-family: var(--font-sans);
+}
 .hi-banner-cta {
   display: inline-flex; align-items: center; gap: 8px;
-  padding: 9px 24px; border-radius: 9999px;
-  border: 1px solid rgba(255,255,255,.3); background: rgba(255,255,255,.08);
-  color: rgba(255,255,255,.85); font-size: .86rem; font-weight: 600;
-  backdrop-filter: blur(8px); transition: background .2s ease;
+  padding: 10px 26px; border-radius: 9999px;
+  border: 1px solid rgba(255,255,255,.4); background: rgba(255,255,255,.12);
+  color: #fff; font-size: .88rem; font-weight: 600;
+  font-family: var(--font-sans); text-decoration: none;
+  cursor: pointer; backdrop-filter: blur(8px);
+  transition: background .2s ease, transform .2s ease;
 }
-.hi-banner-link:hover .hi-banner-cta { background: rgba(255,255,255,.18) }
+.hi-banner-cta:hover { background: rgba(255,255,255,.24); transform: translateY(-2px) }
 
 /* LEARN MORE CARDS */
 .hi-learn { padding: clamp(56px,8vw,96px) 0; }
@@ -296,9 +301,10 @@ const jsonLd = {
 @media (max-width: 600px) {
   .hi-learn-grid { grid-template-columns: 1fr 1fr }
   .hi-headline { font-size: 1.4rem }
-  .hi-banner-link { height: 240px }
 }
 @media (max-width: 400px) {
   .hi-learn-grid { grid-template-columns: 1fr }
 }
 </style>
+
+

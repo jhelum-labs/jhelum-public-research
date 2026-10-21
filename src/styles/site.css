@@ -79,6 +79,15 @@ a {
   transition: color 0.15s ease, opacity 0.15s ease;
 }
 
+/* Block the fixed LiquidChrome canvas from bleeding through page content.
+   The homepage hero intentionally overrides this with position:relative + overflow:hidden
+   which clips the canvas anyway. */
+main {
+  position: relative;
+  z-index: 1;
+  background-color: var(--bg);
+}
+
 a:hover {
   color: var(--text);
 }
@@ -1550,6 +1559,11 @@ a:hover {
   font-size: 0.74rem;
   color: #e4e4e7;
   white-space: pre-wrap;
+  /* A BibTeX entry's URL and key are single tokens far wider than this 238px
+     sidebar column, and `pre-wrap` only breaks at whitespace, so they used to
+     run out through the panel's right edge. Break inside a word as a last
+     resort instead. */
+  overflow-wrap: anywhere;
   margin: 0 0 12px;
 }
 
@@ -1569,6 +1583,335 @@ a:hover {
 .copy-btn-block:hover {
   background: var(--surface-3);
   border-color: var(--line-hover);
+}
+
+/* ==========================================================================
+   Article Equations & Figures
+   Equations ship as transparent PNGs with near-black ink. In dark theme they
+   are inverted so they read as light ink on the dark surface. `filter` is used
+   rather than a second asset set so both themes share one cached image.
+   ========================================================================== */
+
+/* Display equations read as typeset maths, not as embedded images: no card,
+   no border, centred in the column, with the number flush to the right edge —
+   the convention in OpenAI and Anthropic papers. */
+.math-block {
+  margin: 1.7em 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5em;
+  overflow-x: auto;
+}
+
+.math-eq {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 1em;
+  min-width: 0;
+}
+
+.math-eq-img {
+  grid-column: 2;
+  display: block;
+  min-width: 0;
+  justify-self: center;
+}
+
+/* Equation artwork: black ink on transparency. The PNGs are authored at 2x and
+   the markup carries the intended display size (half intrinsic), so every
+   equation lands at one optical scale and none is ever upscaled. The CSS only
+   clamps to the column on narrow screens; it must not set `width:auto`, or the
+   presentational hint in the markup would be discarded and each image would
+   fall back to its full 2x size.
+   Scoped under .article-body to outrank the generic `.article-body img` rule. */
+.article-body .math-img,
+.math-img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  background: none;
+  object-fit: contain;
+}
+
+/* Near-black ink flips to light ink on the dark palette. */
+:root[data-theme='dark'] .article-body .math-img,
+:root[data-theme='dark'] .math-img {
+  filter: invert(1) brightness(0.94);
+}
+
+.math-tag {
+  grid-column: 3;
+  justify-self: end;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+/* Inline symbols stay as live text so they reflow and copy correctly */
+.math-inline {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.02em;
+  white-space: nowrap;
+}
+
+/* Article figures with captions.
+   The diagrams are opaque artwork on a white ground with their own colour
+   coding (teal / purple / red), so the ground is kept in both themes rather
+   than inverted — inverting wrecks those colours. No frame is drawn around
+   them: the artwork's own edge is the edge.
+   These are tall vertical diagrams (aspect ~1.7), so they are sized by height,
+   not width. Filling the column would make one ~1250px tall and force a scroll
+   to see it whole; capping the height keeps a diagram within one screen and
+   the width follows, centred. */
+.article-figure {
+  margin: 2em 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.article-figure img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  /* Most of the viewport, so the label text stays as large as it can while the
+     whole diagram is still on screen at once. */
+  max-height: clamp(300px, 72vh, 680px);
+  margin: 0 auto;
+  border: 0;
+  border-radius: 0;
+  object-fit: contain;
+  /* The artwork carries its own ground colour, so it sits on the page with no
+     plate behind it. The matching asset for each theme is swapped in by script
+     (see Base.astro); the background here only covers the instant before the
+     right one has decoded. */
+  background: var(--bg);
+}
+
+.article-figure figcaption {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: var(--muted);
+  margin: 0;
+  width: 100%;
+  text-align: left;
+}
+
+/* Data-viz blocks that accompany the papers.
+   These sit directly in the column like any other display element — no card,
+   no border — with the label above and the note below as a caption, matching
+   how figures are set in OpenAI and Anthropic papers. */
+.article-chart-block {
+  margin: 2em 0;
+  padding: 0;
+}
+
+.article-chart-title {
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0 0 16px;
+}
+
+.article-chart-note {
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin: 16px 0 0;
+  line-height: 1.6;
+}
+
+.article-bar-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.abc-row {
+  display: grid;
+  grid-template-columns: 180px 1fr auto;
+  align-items: center;
+  gap: 14px;
+}
+
+.abc-row--total {
+  margin-top: 8px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+
+.abc-label {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  color: var(--text);
+}
+
+.abc-track {
+  height: 22px;
+  background: var(--surface-2);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.abc-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+/* A restrained, paper-like series palette: one accent, then muted secondaries
+   that read as annotations rather than alarms. */
+.abc-fill--dim   { background: var(--surface-3); }
+.abc-fill--green { background: #4a8f6a; }
+.abc-fill--amber { background: #b8863f; }
+.abc-fill--purple { background: #7c6bb0; }
+
+.abc-val {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-soft);
+  white-space: nowrap;
+  justify-self: end;
+  text-align: right;
+}
+
+.abc-col-chart {
+  display: flex;
+  gap: 24px;
+  /* Must stretch, not flex-end: the bars are sized as a percentage of their
+     wrapper, and a flex-end group shrinks to content height, leaving the
+     percentage to resolve against zero and every bar to collapse to min-height. */
+  align-items: stretch;
+  height: 200px;
+  /* Three or four categories do not need the full column; a bounded, centred
+     plot keeps the bars from reading as slabs. */
+  max-width: 420px;
+  margin: 8px auto;
+}
+
+.abc-col-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.abc-col-bar-wrap {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  /* The axis the columns stand on. */
+  border-bottom: 1px solid var(--line);
+}
+
+.abc-col-bar {
+  width: 100%;
+  min-height: 3px;
+  border-radius: 3px 3px 0 0;
+}
+
+.abc-col-bar--blue  { background: var(--accent); }
+.abc-col-bar--red   { background: #c0654f; }
+.abc-col-bar--green { background: #4a8f6a; }
+
+.abc-col-val {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text);
+  font-weight: 700;
+}
+
+.abc-col-label {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  color: var(--muted);
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* Survival-curve chart (verified-reasoning) */
+.abc-survival-chart {
+  display: flex;
+  gap: 10px;
+  height: 220px;
+  margin: 8px 0;
+}
+
+.abc-survival-y {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+  text-align: right;
+  min-width: 52px;
+}
+
+.abc-survival-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.abc-survival-area svg { flex: 1; }
+
+.abc-survival-x {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+  margin-top: 8px;
+}
+
+/* Each tick carries its own value beneath the T label. */
+.abc-survival-x span {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  text-align: center;
+}
+
+.abc-survival-x span:first-child { text-align: left }
+.abc-survival-x span:last-child { text-align: right }
+
+.abc-survival-x em {
+  font-style: normal;
+  color: var(--text-soft);
+}
+
+@media (max-width: 640px) {
+  .abc-row { grid-template-columns: 1fr auto; gap: 6px 10px }
+  .abc-label { grid-column: 1 / -1 }
+  .math-img { max-height: 110px }
+
+  /* Wide tables (e.g. the multi-column roadmap) scroll inside their own box
+     rather than pushing the whole article sideways on a phone. */
+  .article-body table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .article-body th,
+  .article-body td { padding: 10px 12px }
 }
 
 /* ==========================================================================
@@ -1788,7 +2131,10 @@ a:hover {
     grid-row: span 1;
   }
   .article-grid {
-    grid-template-columns: 1fr;
+    /* minmax(0, 1fr) rather than 1fr: a bare 1fr track has an auto minimum,
+       so a wide table or figure inside would push the whole article wider
+       than the viewport instead of scrolling within its own box. */
+    grid-template-columns: minmax(0, 1fr);
     gap: 40px;
   }
   .article-aside {

@@ -45,6 +45,27 @@ const imageUrl = new URL(image, SITE.url).href
       document.querySelector('[data-menu-button]')?.addEventListener('click', () => document.documentElement.classList.toggle('menu-open'))
       document.querySelector('[data-theme-toggle]')?.addEventListener('click', () => { const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'; document.documentElement.dataset.theme = next; try { localStorage.setItem('jl-theme', next) } catch {} })
       document.querySelectorAll('[data-copy]').forEach((button) => button.addEventListener('click', async () => { try { await navigator.clipboard.writeText(button.dataset.copy); button.textContent = 'Copied' } catch { button.textContent = 'Copy unavailable' } }))
+
+      // Paper diagrams are flat vector-style artwork, so they ship twice: the
+      // original light plate and a recoloured build whose grounds and strokes
+      // are the site's own dark tokens. Swap the file when the theme changes
+      // rather than filtering one image, which would tint the box colours.
+      // The markup carries only the light file; the dark one is derived here.
+      const syncFigureTheme = () => {
+        const dark = document.documentElement.dataset.theme === 'dark'
+        document.querySelectorAll('.article-figure img').forEach((img) => {
+          if (!img.dataset.light) {
+            const current = img.getAttribute('src')
+            if (!current || !current.endsWith('.png')) return
+            img.dataset.light = current
+            img.dataset.dark = current.replace(/\.png$/, '-dark.png')
+          }
+          const want = dark ? img.dataset.dark : img.dataset.light
+          if (img.getAttribute('src') !== want) img.setAttribute('src', want)
+        })
+      }
+      syncFigureTheme()
+      new MutationObserver(syncFigureTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
     </script>
   </body>
 </html>

@@ -1,0 +1,223 @@
+<h1>Abstract</h1>
+
+<figure class="article-figure"><img src="/research-figures/vitasta-arch-diagram.png" alt="Figure 1 — The Vitasta architecture" /><figcaption><strong>Figure 1:</strong> The Vitasta architecture. Arrows point in the direction of the forward pass. Each dashed block is repeated the number of times shown. The chunk memory is read and written by the recall layer. The multi-token prediction (MTP) heads are used only during training.</figcaption></figure>
+
+<p>Large language models built on full self-attention share six standing limitations: compute that grows quadratically with context length, hard context limits, degraded use of long contexts, weak tracking of changing state, dependence on added positional signals for word order, and heavy data and compute demands. We present Vitasta, a language-model architecture designed to change how models handle all six. Its backbone is a gated delta-rule recurrent layer that keeps a fixed-size associative state, updates it token by token, and gets word order from the recurrence itself. A few recall layers, which combine a local attention window with retrieval from a bounded chunk memory, give exact access to distant text.</p>
+<p>We contribute a stability result for the write range, an order-sensitivity identity for the state, a multi-timescale forgetting scheme, and a cost analysis that gives the best chunk size in closed form. Testing an early version of the write-strength gate found no benefit over a simpler input-dependent rule. Testing the semantic chunk router found it reliable for topically coherent text but unable to find an isolated, thematically unrelated fact; we add a second, exact-match retrieval channel to close this gap. This is a design and analysis report. Overall progress: <strong>25.3%</strong> on a defined validation ladder.</p>
+
+<h1>1. Introduction</h1>
+<p>Transformers built on full self-attention underlie nearly all current large language models. Their success comes with six recurring limitations, which are the design targets of this work:</p>
+<ol>
+<li><strong>Quadratic cost.</strong> Self-attention compares every token with every other, so compute grows with the square of the context length n.</li>
+<li><strong>Context limits.</strong> Models are trained at a fixed maximum length and degrade beyond it, and the key-value cache grows linearly with n.</li>
+<li><strong>Context rot.</strong> Even inside the window, the use of information degrades as the context grows and depends on where the information sits.</li>
+<li><strong>Poor dynamic state tracking.</strong> Tasks whose answer depends on an evolving state — counters, variables, permutations — are hard for fixed-depth attention.</li>
+<li><strong>No inherent word order.</strong> Attention is order-blind and needs added positional signals such as rotary embeddings, which can limit length extrapolation.</li>
+<li><strong>Data and resource hunger.</strong> Compute-optimal training of Transformers calls for token budgets that grow with model size.</li>
+</ol>
+
+<h1>2. Model Architecture</h1>
+<h2>2.1 Overview</h2>
+<p>Vitasta is a stack of G identical groups. Each group contains k flow blocks followed by one recall block. A block has two sublayers — a mixer and a gated MLP — each with a residual connection and RMSNorm. The mixer is a flow layer in flow blocks and a recall layer in recall blocks. The input is a token embedding with no positional table.</p>
+
+<h2>2.2 Flow Layer</h2>
+<p>Each head of a flow layer keeps a matrix state <span class="math-inline">S<sub>t</sub> ∈ ℝ<sup>d<sub>v</sub>×d<sub>k</sub></sup></span>. Given unit-norm key and query <span class="math-inline">k<sub>t</sub></span>, <span class="math-inline">q<sub>t</sub></span>, and a value <span class="math-inline">v<sub>t</sub></span>, computed from the layer input <span class="math-inline">x<sub>t</sub></span>, the state is updated and read as:</p>
+
+<div class="math-block">
+  <div class="math-eq"><span class="math-eq-img"><img src="/research-figures/equations/vi-01-state-update.png" alt="Equation 1" width="325" height="40" loading="lazy" class="math-img"></span><span class="math-tag">(1)</span></div>
+  <div class="math-eq"><span class="math-eq-img"><img src="/research-figures/equations/vi-02-state-read.png" alt="Equation 2" width="301" height="40" loading="lazy" class="math-img"></span><span class="math-tag">(2)</span></div>
+  <div class="math-eq"><span class="math-eq-img"><img src="/research-figures/equations/vi-03-gate-output.png" alt="Equation 3" width="121" height="32" loading="lazy" class="math-img"></span><span class="math-tag">(3)</span></div>
+</div>
+
+<p>Here <span class="math-inline">α<sub>t</sub> ∈ (0, 1]</span> decays old content and <span class="math-inline">β<sub>t</sub> ∈ (0, 2)</span> sets the write strength. The factor <span class="math-inline">(I − β<sub>t</sub>k<sub>t</sub>k<sub>t</sub><sup>⊤</sup>)</span> first erases the part of the state along the key, and the last term writes the new pair. This is the gated delta-rule form with the write range of [11].</p>
+
+<h2>2.3 Stability and State Tracking</h2>
+<p><strong>Proposition 1.</strong> Let ‖k<sub>t</sub>‖ = 1, β<sub>t</sub> ∈ [0, 2] and α<sub>t</sub> ∈ (0, 1]. Then the update satisfies:</p>
+
+<div class="math-block">
+  <div class="math-eq"><span class="math-eq-img"><img src="/research-figures/equations/vi-04-state-times-key.png" alt="Equation 4" width="446" height="36" loading="lazy" class="math-img"></span><span class="math-tag">(4)</span></div>
+  <div class="math-eq"><span class="math-eq-img"><img src="/research-figures/equations/vi-05-operator-norm.png" alt="Equation 5" width="152" height="35" loading="lazy" class="math-img"></span><span class="math-tag">(5)</span></div>
+  <div class="math-eq"><span class="math-eq-img"><img src="/research-figures/equations/vi-06-frobenius-bound.png" alt="Equation 6" width="210" height="52" loading="lazy" class="math-img"></span><span class="math-tag">(6)</span></div>
+</div>
+
+<p>At β<sub>t</sub> = 1 (and α<sub>t</sub> = 1) the old value stored at k<sub>t</sub> is replaced by v<sub>t</sub>. At β<sub>t</sub> = 2 it is replaced by 2v<sub>t</sub> − S<sub>t−1</sub>k<sub>t</sub>, and with v<sub>t</sub> = 0 its sign flips — enough to count parity. The upper end of the range is the stability limit: for β<sub>t</sub> &gt; 2 the factor |1 − β<sub>t</sub>| exceeds 1 and Proposition 1 no longer holds.</p>
+
+<h2>2.4 Multi-Timescale Forgetting</h2>
+<p>Head h ∈ {0, …, H − 1} decays with:</p>
+
+<div class="math-block">
+  <div class="math-eq"><span class="math-eq-img"><img src="/research-figures/equations/vi-07-alpha-decay.png" alt="Equation 7" width="313" height="46" loading="lazy" class="math-img"></span><span class="math-tag">(7)</span></div>
+  <div class="math-eq"><span class="math-eq-img"><img src="/research-figures/equations/vi-08-delta-softplus.png" alt="Equation 8" width="404" height="45" loading="lazy" class="math-img"></span><span class="math-tag">(8)</span></div>
+</div>
+
+<p>Base rates are set so that the half-life at Δ = 1 grows geometrically across heads:</p>
+
+<div class="math-block">
+  <div class="math-eq"><span class="math-eq-img"><img src="/research-figures/equations/vi-09-half-life-spread.png" alt="Equation 9" width="406" height="52" loading="lazy" class="math-img"></span><span class="math-tag">(9)</span></div>
+</div>
+
+<p>For H = 12, n<sub>min</sub> = 16 and n<sub>max</sub> = 65,536, half-lives run from 16 to 65,536 tokens and each head's is about 2.13× its predecessor's.</p>
+
+<h2>2.5 Order Without Positional Encodings</h2>
+<p>Order is not added to the input; it is a property of the state. Unrolling Eq. (1) gives:</p>
+
+<div class="math-block">
+  <div class="math-eq"><span class="math-eq-img"><img src="/research-figures/equations/vi-10-unrolled-state.png" alt="Equation 10" width="454" height="75" loading="lazy" class="math-img"></span><span class="math-tag">(10)</span></div>
+</div>
+
+<p><strong>Proposition 2.</strong> For any two tokens a and b, the commutator of P<sub>a</sub> and P<sub>b</sub> is:</p>
+
+<div class="math-block">
+  <div class="math-eq"><span class="math-eq-img"><img src="/research-figures/equations/vi-11-commutator.png" alt="Equation 11" width="555" height="40" loading="lazy" class="math-img"></span><span class="math-tag">(11)</span></div>
+</div>
+
+<p>It vanishes only when the keys are orthogonal or parallel, or a write strength is zero. Swapping two tokens whose keys partially overlap therefore changes the state — the layer is order-sensitive without any positional signal.</p>
+
+<h2>2.6 Write-Strength Gating — A Tested Simplification</h2>
+<p>An earlier version scaled write strength by surprise. We tested this in isolation on three synthetic streams: clean, noisy, and one with an abrupt distribution shift. The surprise-gated rule was never the best option. On the noisy stream, its MSE was roughly 5× higher than a constant write strength, because sensor noise looks identical to genuine surprise. We adopt the simpler rule:</p>
+
+<div class="math-block">
+  <div class="math-eq"><span class="math-eq-img"><img src="/research-figures/equations/vi-12-beta-rule.png" alt="Equation 12" width="227" height="45" loading="lazy" class="math-img"></span><span class="math-tag">(12)</span></div>
+</div>
+
+<h2>2.7 Recall Layer and Chunk Memory</h2>
+<p>A recall layer is causal attention over the last W tokens plus a set of retrieved chunks. Tokens leaving the window are grouped into chunks of C tokens and stored with their keys, values, and one summary key:</p>
+
+<div class="math-block">
+  <div class="math-eq"><span class="math-eq-img"><img src="/research-figures/equations/vi-13-chunk-summary.png" alt="Equation 13" width="169" height="72" loading="lazy" class="math-img"></span><span class="math-tag">(13)</span></div>
+</div>
+
+<p>A query scores the summaries:</p>
+
+<div class="math-block">
+  <div class="math-eq"><span class="math-eq-img"><img src="/research-figures/equations/vi-14-summary-score.png" alt="Equation 14" width="124" height="69" loading="lazy" class="math-img"></span><span class="math-tag">(14)</span></div>
+</div>
+
+<p>and attends, with an ordinary softmax, to the tokens of the top-k scoring chunks together with the window.</p>
+
+<h2>2.8 Exact-Match Retrieval</h2>
+<p>Mean-key routing is semantic. Testing with controlled topical coherence found: 96–100% retrieval for coherent chunks, but chance (~16%) for isolated facts regardless of training. We add an exact-match channel:</p>
+
+<div class="math-block">
+  <div class="math-eq"><span class="math-eq-img"><img src="/research-figures/equations/vi-15-exact-match.png" alt="Equation 15" width="656" height="36" loading="lazy" class="math-img"></span><span class="math-tag">(15)</span></div>
+  <div class="math-eq"><span class="math-eq-img"><img src="/research-figures/equations/vi-16-scored-boost.png" alt="Equation 16" width="506" height="41" loading="lazy" class="math-img"></span><span class="math-tag">(16)</span></div>
+</div>
+
+<p>In the isolated-fact case that broke the semantic router, the query placed <strong>61%</strong> of its attention mass on the correct earlier occurrence, versus 0% for the router alone.</p>
+
+<h2>2.9 Training Objective</h2>
+<p>The main loss is next-token prediction. Auxiliary heads predict tokens 2 to m positions ahead:</p>
+
+<div class="math-block">
+  <div class="math-eq"><span class="math-eq-img"><img src="/research-figures/equations/vi-17-training-loss.png" alt="Equation 17" width="298" height="95" loading="lazy" class="math-img"></span><span class="math-tag">(17)</span></div>
+</div>
+
+<p>The training context length follows a geometric curriculum from n<sub>0</sub> to n<sub>max</sub> over s<sub>w</sub> steps:</p>
+
+<div class="math-block">
+  <div class="math-eq"><span class="math-eq-img"><img src="/research-figures/equations/vi-18-curriculum.png" alt="Equation 18" width="356" height="46" loading="lazy" class="math-img"></span><span class="math-tag">(18)</span></div>
+</div>
+
+<h1>3. Complexity and Memory</h1>
+<table><thead><tr><th>Layer type</th><th>Compute (training)</th><th>Inference memory</th></tr></thead><tbody>
+<tr><td>Self-attention</td><td>O(n²·d)</td><td>O(n·d)</td></tr>
+<tr><td>Flow layer</td><td>O(n·d·d<sub>h</sub>)</td><td>O(d·d<sub>h</sub>) — fixed</td></tr>
+<tr><td>Recall layer</td><td>O(n·d·(W + n/C + kC))</td><td>O(M·C·d) capped</td></tr>
+</tbody></table>
+
+<p>The per-token cost of a recall layer is the sum of three terms:</p>
+
+<div class="math-block">
+  <div class="math-eq"><span class="math-eq-img"><img src="/research-figures/equations/vi-19-recall-cost.png" alt="Equation 19" width="344" height="43" loading="lazy" class="math-img"></span><span class="math-tag">(19)</span></div>
+</div>
+
+<p>The recall cost is minimized at:</p>
+<div class="math-block">
+  <div class="math-eq"><span class="math-eq-img"><img src="/research-figures/equations/vi-20-optimal-chunk.png" alt="Equation 20" width="138" height="51" loading="lazy" class="math-img"></span><span class="math-tag">(20)</span></div>
+</div>
+<p>For n = 131,072 and k = 8, C* = 128. The flow state occupies H·d<sub>k</sub>·d<sub>v</sub> numbers per layer — for H = 16 and d<sub>k</sub> = d<sub>v</sub> = 64, that is 65,536 numbers or 128 KiB in bf16.</p>
+
+<h1>4. Validation Plan</h1>
+<ol>
+<li><strong>Synthetic tasks.</strong> Multi-query associative recall, state tracking (permutations and parity), and copying. The model should still work at lengths several times longer than in training.</li>
+<li><strong>Small-scale scaling.</strong> Train three sizes (~125M, 350M and 1B parameters) and a same-compute Transformer baseline, and compare loss against FLOPs and wall-clock time.</li>
+<li><strong>Long context.</strong> Needle-in-a-haystack and RULER at several times the training length, looking for sudden drops.</li>
+<li><strong>Efficiency.</strong> Tokens per second and memory at 32k and 128k context, for training and inference.</li>
+<li><strong>Ablations.</strong> Remove recall layers; compare write strength up to 1 vs up to 2; remove chunk memory; vary flow-to-recall ratio; remove multi-token prediction.</li>
+</ol>
+
+<h1>5. Progress</h1>
+<table><thead><tr><th>Stage</th><th>Weight</th><th>Status</th></tr></thead><tbody>
+<tr><td>1 — Specification of mechanisms</td><td>15</td><td>Complete</td></tr>
+<tr><td>2 — Analytical and numerical checks</td><td>15</td><td>Partly complete</td></tr>
+<tr><td>3 — Reference implementation</td><td>15</td><td>Not started</td></tr>
+<tr><td>4 — Synthetic-task validation</td><td>20</td><td>Not started</td></tr>
+<tr><td>5 — Scaling against a Transformer baseline</td><td>20</td><td>Not started</td></tr>
+<tr><td>6 — Long-context and efficiency evaluation</td><td>15</td><td>Not started</td></tr>
+</tbody></table>
+
+<p>Overall progress: <strong>25.3%</strong>. This number measures how far the validation ladder has been climbed. It is not a measure of model quality, and no problem counts as solved until stages 4–6 are complete.</p>
+
+<figure class="article-figure"><img src="/research-figures/vitasta-progress-chart.png" alt="Figure 2 — Progress by problem on the validation ladder" /><figcaption><strong>Figure 2:</strong> Progress by problem on the validation ladder. Without empirical work the ceiling is 30 points. Stages 3–6 carry 70% of total weight and are all yet to be run.</figcaption></figure>
+
+<div class="article-chart-block">
+  <p class="article-chart-title">Semantic router vs exact-match retrieval — hit rate by condition</p>
+  <div class="abc-col-chart">
+    <div class="abc-col-group">
+      <div class="abc-col-bar-wrap">
+        <div class="abc-col-bar abc-col-bar--blue" style="height:96%"></div>
+      </div>
+      <span class="abc-col-val">96–100%</span>
+      <span class="abc-col-label">Semantic router<br/>(high coherence)</span>
+    </div>
+    <div class="abc-col-group">
+      <div class="abc-col-bar-wrap">
+        <div class="abc-col-bar abc-col-bar--red" style="height:16%"></div>
+      </div>
+      <span class="abc-col-val">~16%</span>
+      <span class="abc-col-label">Semantic router<br/>(isolated fact)</span>
+    </div>
+    <div class="abc-col-group">
+      <div class="abc-col-bar-wrap">
+        <div class="abc-col-bar abc-col-bar--green" style="height:61%"></div>
+      </div>
+      <span class="abc-col-val">61%</span>
+      <span class="abc-col-label">Exact-match channel<br/>(isolated fact)</span>
+    </div>
+  </div>
+  <p class="article-chart-note">The semantic router falls to chance on isolated facts regardless of training. The exact-match channel requires no training to be correct and closes this gap entirely.</p>
+</div>
+
+<h1>6. Limitations and Risks</h1>
+<ol>
+<li>Exact recall from far back is the known weakness of recurrent cores. Recall layers are tested on controlled synthetic data with encouraging results but not on a real trained model yet.</li>
+<li>The head spectrum is an untested proposal and may not help; the surprise gate it was paired with has already been tested and dropped.</li>
+<li>The write range up to 2 and the chunk memory need adapted or custom kernels.</li>
+<li>The architecture addresses data and resource hunger only in part.</li>
+<li>Retrieval cost still grows with length (though sub-quadratically).</li>
+</ol>
+
+<h1>References</h1>
+<ol>
+<li>Vaswani et al. Attention is all you need. NeurIPS, 2017.</li>
+<li>Liu et al. Lost in the middle. TACL, 2024.</li>
+<li>Hsieh et al. RULER. arXiv:2404.06654, 2024.</li>
+<li>Merrill et al. The illusion of state in state-space models. ICML, 2024.</li>
+<li>Su et al. RoFormer. arXiv:2104.09864, 2021.</li>
+<li>Kazemnejad et al. Impact of positional encoding on length generalization. NeurIPS, 2023.</li>
+<li>Schlag et al. Linear transformers are secretly fast weight programmers. ICML, 2021.</li>
+<li>Yang et al. Parallelizing linear transformers with the delta rule. NeurIPS, 2024.</li>
+<li>Gu &amp; Dao. Mamba. arXiv:2312.00752, 2023.</li>
+<li>Yang et al. Gated delta networks. ICLR, 2025.</li>
+<li>Grazzi et al. Unlocking state-tracking in linear RNNs. ICLR, 2025.</li>
+<li>Lieber et al. Jamba. arXiv:2403.19887, 2024.</li>
+<li>Jelassi et al. Repeat after me. ICML, 2024.</li>
+<li>Arora et al. Zoology. ICLR, 2024.</li>
+<li>Lu et al. MoBA. arXiv:2502.13189, 2025.</li>
+<li>Behrouz et al. Titans. arXiv:2501.00663, 2024.</li>
+<li>Gloeckle et al. Multi-token prediction. ICML, 2024.</li>
+<li>Robertson &amp; Zaragoza. BM25 and beyond. FnTIR, 2009.</li>
+<li>Zhang &amp; Sennrich. RMSNorm. NeurIPS, 2019.</li>
+<li>Shazeer. GLU variants. arXiv:2002.05202, 2020.</li>
+<li>Hoffmann et al. Compute-optimal LLMs. NeurIPS, 2022.</li>
+</ol>
