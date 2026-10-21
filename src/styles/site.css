@@ -260,14 +260,20 @@ a:hover {
   line-height: 1;
 }
 
-.brand-svg {
+.brand-mark {
   display: block;
-  height: 32px;
+  height: 28px;
   width: auto;
   color: var(--text);
-  transition: opacity 0.2s ease;
+  flex-shrink: 0;
 }
-.brand:hover .brand-svg { opacity: 0.75; }
+.brand-name {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  white-space: nowrap;
+}
 
 .brand-logo-svg {
   display: block;
