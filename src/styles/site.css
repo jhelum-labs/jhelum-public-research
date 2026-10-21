@@ -260,19 +260,14 @@ a:hover {
   line-height: 1;
 }
 
-.brand-logo-img {
+.brand-svg {
   display: block;
-  height: 36px;
+  height: 32px;
   width: auto;
-  object-fit: contain;
+  color: var(--text);
   transition: opacity 0.2s ease;
 }
-/* In dark mode the logo is black — invert it to white */
-:root[data-theme='dark'] .brand-logo-img,
-:root:not([data-theme='light']) .brand-logo-img {
-  filter: invert(1) brightness(2);
-}
-.brand:hover .brand-logo-img { opacity: 0.8; }
+.brand:hover .brand-svg { opacity: 0.75; }
 
 .brand-logo-svg {
   display: block;
