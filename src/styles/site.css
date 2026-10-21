@@ -1,59 +1,51 @@
 /* ==========================================================================
-   Jhelum Labs Research — Anthropic-Style Design System
+   Jhelum Labs Research
+   Theme: OpenAI dark (near-black bg, white text)
+   Layout: Anthropic-style (generous whitespace, minimal, two-column)
    ========================================================================== */
 
-/* DEFAULT = light (warm cream like Anthropic) */
+/* ── Default = DARK (OpenAI style) ── */
 :root {
-  --bg: #f2ede8;
-  --bg-alt: #ede8e2;
-  --surface: #ede8e2;
-  --surface-2: #e5dfd9;
-  --surface-3: #d9d2cb;
-  --surface-card: #ede8e2;
-  --surface-card-hover: #e5dfd9;
-  --text: #0c0a08;
-  --text-soft: #4a4540;
-  --muted: #8a8278;
-  --line: rgba(12, 10, 8, 0.1);
-  --line-subtle: rgba(12, 10, 8, 0.06);
-  --line-hover: rgba(12, 10, 8, 0.25);
-  --brand: #0c0a08;
-  --brand-glow: rgba(12, 10, 8, 0.08);
-  --mark-j: #0c0a08;
-  --badge-bg: rgba(12, 10, 8, 0.06);
-  --badge-border: rgba(12, 10, 8, 0.12);
-  --badge-text: #0c0a08;
-  --success: #1a7a4a;
-  --warning: #b45309;
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --font-mono: 'JetBrains Mono', SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  color-scheme: light;
+  --bg:               #000000;
+  --bg-alt:           #0a0a0a;
+  --surface:          #0f0f0f;
+  --surface-2:        #161616;
+  --surface-3:        #222222;
+  --surface-card:     #111111;
+  --surface-card-hover: #191919;
+  --text:             #ececec;
+  --text-soft:        #a0a0a0;
+  --muted:            #666666;
+  --line:             rgba(255,255,255,0.08);
+  --line-subtle:      rgba(255,255,255,0.05);
+  --line-hover:       rgba(255,255,255,0.18);
+  --brand:            #ececec;
+  --accent:           #2a6cf5;
+  --mark-j:           #ececec;
+  --font-sans:        'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono:        'JetBrains Mono', SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  color-scheme: dark;
 }
 
-/* Dark mode */
-:root[data-theme='dark'] {
-  --bg: #0c0a08;
-  --bg-alt: #111009;
-  --surface: #131109;
-  --surface-2: #1c1a10;
-  --surface-3: #252218;
-  --surface-card: #141209;
-  --surface-card-hover: #1e1c12;
-  --text: #f2ede8;
-  --text-soft: #b8b0a5;
-  --muted: #7a7268;
-  --line: rgba(242, 237, 232, 0.09);
-  --line-subtle: rgba(242, 237, 232, 0.05);
-  --line-hover: rgba(242, 237, 232, 0.22);
-  --brand: #f2ede8;
-  --brand-glow: rgba(242, 237, 232, 0.1);
-  --mark-j: #f2ede8;
-  --badge-bg: rgba(242, 237, 232, 0.07);
-  --badge-border: rgba(242, 237, 232, 0.13);
-  --badge-text: #f2ede8;
-  --success: #34d399;
-  --warning: #fbbf24;
-  color-scheme: dark;
+/* ── Light mode ── */
+:root[data-theme='light'] {
+  --bg:               #ffffff;
+  --bg-alt:           #fafafa;
+  --surface:          #fafafa;
+  --surface-2:        #f4f4f4;
+  --surface-3:        #ebebeb;
+  --surface-card:     #ffffff;
+  --surface-card-hover: #f7f7f7;
+  --text:             #0a0a0a;
+  --text-soft:        #444444;
+  --muted:            #888888;
+  --line:             rgba(0,0,0,0.08);
+  --line-subtle:      rgba(0,0,0,0.04);
+  --line-hover:       rgba(0,0,0,0.18);
+  --brand:            #0a0a0a;
+  --accent:           #2a6cf5;
+  --mark-j:           #0a0a0a;
+  color-scheme: light;
 }
 
 /* Base resets & typography */
@@ -268,6 +260,14 @@ a:hover {
   line-height: 1;
 }
 
+.brand-svg {
+  display: block;
+  height: 28px;
+  width: auto;
+  transition: opacity 0.2s ease;
+}
+.brand:hover .brand-svg { opacity: 0.8; }
+
 .brand-logo-img {
   display: block;
   width: 34px;
@@ -276,14 +276,8 @@ a:hover {
   border-radius: 6px;
   transition: transform 0.2s ease;
 }
-
-[data-theme='dark'] .brand-logo-img {
-  filter: invert(1);
-}
-
-.brand:hover .brand-logo-img {
-  transform: scale(1.06);
-}
+[data-theme='dark'] .brand-logo-img { filter: invert(1); }
+.brand:hover .brand-logo-img { transform: scale(1.06); }
 
 .brand-wordmark {
   font-size: 1rem;
