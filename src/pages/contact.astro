@@ -1,56 +1,180 @@
 ---
 import Page from '../components/Page.astro'
-import { SITE } from '../lib/site.js'
 ---
-<Page currentPath="/contact" title="Contact & Inquiries — Jhelum Labs" description="Get in touch with Jhelum Labs regarding W-1.1 research, models, and collaboration.">
-  <div class="shell prose-page">
-    <header class="prose-header">
-      <p class="section-eyebrow">Connect</p>
-      <h1 class="page-title">Get in touch.</h1>
-      <p class="page-abstract">
-        We collaborate with researchers, academic institutions, and independent developers working on foundational language models and open AI systems.
-      </p>
+<Page currentPath="/contact" title="Contact — Jhelum Labs" description="Get in touch with Jhelum Labs for research inquiries, technical collaboration, and questions about our AI models.">
+  <div class="ct-page shell">
+
+    <header class="ct-header">
+      <h1 class="ct-title">Contact Jhelum Labs</h1>
+      <p class="ct-tagline">Let's Connect</p>
     </header>
 
-    <div class="prose-content">
-      <div class="inquiry-grid">
-        <a class="inquiry-card" href={`mailto:${SITE.contactEmail}?subject=Research%20Inquiry`}>
-          <span style="font-size: 0.72rem; color: var(--brand); font-weight: 700; text-transform: uppercase;">Direct Line</span>
-          <h3>Research & Academic Inquiries</h3>
-          <p>For research questions, paper citations, collaboration requests, and evaluation benchmarks.</p>
-          <span>{SITE.contactEmail} ↗</span>
-        </a>
+    <div class="ct-body">
 
-        <a class="inquiry-card" href={SITE.githubUrl} target="_blank" rel="noreferrer">
-          <span style="font-size: 0.72rem; color: var(--brand); font-weight: 700; text-transform: uppercase;">Open Source</span>
-          <h3>Code & Model Weights</h3>
-          <p>Report issues, submit pull requests, or inspect training scripts in our public GitHub organization.</p>
-          <span>github.com/jhelum-labs ↗</span>
-        </a>
+      <p class="ct-lead">
+        We welcome inquiries from researchers, developers, organizations, and
+        individuals interested in artificial intelligence, machine learning, and
+        the development of advanced AI systems.
+      </p>
+      <p>
+        Whether you have a question about our models, are interested in our research,
+        wish to discuss a technical collaboration, or want to learn more about
+        Jhelum Labs, we would be glad to hear from you.
+      </p>
 
-        <a class="inquiry-card" href="/models">
-          <span style="font-size: 0.72rem; color: var(--brand); font-weight: 700; text-transform: uppercase;">Architecture</span>
-          <h3>Model Programs & Weights</h3>
-          <p>Inspect specifications, layer dimensions, parameter counts, and download verified SafeTensors files.</p>
-          <span>View Models →</span>
-        </a>
+      <h2>Get in Touch</h2>
 
-        <a class="inquiry-card" href={`mailto:${SITE.contactEmail}?subject=Security%20Disclosure`}>
-          <span style="font-size: 0.72rem; color: var(--brand); font-weight: 700; text-transform: uppercase;">Safety</span>
-          <h3>Security & Disclosures</h3>
-          <p>Report potential security vulnerabilities, adversarial model behavior, or safety observations.</p>
-          <span>security@jhelumlabs.in ↗</span>
-        </a>
+      <div class="ct-cards">
+        <div class="ct-card">
+          <span class="ct-card-label">General Inquiries</span>
+          <p>For questions about Jhelum Labs, our projects, and our work.</p>
+          <a href="mailto:team@jhelumlabs.in">team@jhelumlabs.in →</a>
+        </div>
+        <div class="ct-card">
+          <span class="ct-card-label">Research &amp; Collaboration</span>
+          <p>For research discussions, technical collaboration, and opportunities to exchange ideas.</p>
+          <a href="mailto:team@jhelumlabs.in?subject=Research+Collaboration">team@jhelumlabs.in →</a>
+        </div>
+        <div class="ct-card">
+          <span class="ct-card-label">Models &amp; Technical Support</span>
+          <p>For questions about our AI models, documentation, releases, and technical resources.</p>
+          <a href="mailto:team@jhelumlabs.in?subject=Technical+Support">team@jhelumlabs.in →</a>
+        </div>
       </div>
 
-      <div style="margin-top: 48px; padding: 24px; background: var(--surface-card); border: 1px solid var(--line); border-radius: 14px;">
-        <h3 style="margin-top: 0; font-size: 1.1rem; color: var(--text);">Mailing Address & Laboratory Info</h3>
-        <p style="margin: 0; color: var(--text-soft); font-size: 0.92rem; line-height: 1.6;">
-          Jhelum Labs Research Group<br />
-          Open Foundational AI Research · Kashmir & Global<br />
-          Web: <a href="https://jhelumlabs.in" style="color: var(--brand);">jhelumlabs.in</a>
-        </p>
+      <div class="ct-info">
+        <p><strong>Email:</strong> <a href="mailto:team@jhelumlabs.in">team@jhelumlabs.in</a></p>
+        <p><strong>Website:</strong> <a href="https://jhelumlabs.in">https://jhelumlabs.in</a></p>
       </div>
+
+      <p>
+        We aim to make our work accessible, encourage meaningful technical
+        discussions, and connect with people who share an interest in advancing
+        artificial intelligence.
+      </p>
+
+      <blockquote>
+        <strong>Jhelum Labs</strong> — Building AI. Advancing Research. Exploring What Comes Next.
+      </blockquote>
+
     </div>
   </div>
 </Page>
+
+<style>
+.ct-page {
+  padding: clamp(64px,9vw,108px) 0 clamp(80px,11vw,130px);
+}
+.ct-header {
+  max-width: 780px;
+  margin-bottom: 56px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--line);
+}
+.ct-title {
+  font-size: clamp(2.4rem,6vw,4.8rem);
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 1.05;
+  color: var(--text);
+  margin: 0 0 14px;
+}
+.ct-tagline {
+  font-size: clamp(1rem,1.8vw,1.2rem);
+  color: var(--text-soft);
+  margin: 0;
+  font-weight: 400;
+}
+.ct-body { max-width: 720px }
+.ct-lead {
+  font-size: clamp(1.05rem,1.8vw,1.2rem);
+  line-height: 1.72;
+  color: var(--text-soft);
+  margin: 0 0 1.2em;
+}
+.ct-body p {
+  font-size: 1rem;
+  line-height: 1.78;
+  color: var(--text-soft);
+  margin: 0 0 1.1em;
+}
+.ct-body h2 {
+  font-size: clamp(1.4rem,2.5vw,1.9rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  margin: 2.4em 0 0.9em;
+  padding-top: 1.2em;
+  border-top: 1px solid var(--line-subtle);
+}
+.ct-body strong { color: var(--text); font-weight: 600 }
+.ct-body a {
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: opacity .15s;
+}
+.ct-body a:hover { opacity: .7 }
+.ct-body blockquote {
+  border-left: 3px solid var(--accent);
+  padding: 4px 0 4px 20px;
+  margin: 2.2em 0;
+  font-size: 1.05rem;
+  font-style: italic;
+  color: var(--text-soft);
+  line-height: 1.6;
+}
+
+/* Cards */
+.ct-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px,1fr));
+  gap: 16px;
+  margin: 0 0 2em;
+}
+.ct-card {
+  padding: 22px 24px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface-card);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.ct-card-label {
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.ct-card p {
+  font-size: .88rem !important;
+  color: var(--text-soft);
+  line-height: 1.6;
+  margin: 0 !important;
+}
+.ct-card a {
+  font-size: .84rem;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+/* Info block */
+.ct-info {
+  background: var(--surface-card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 22px 26px;
+  margin-bottom: 1.5em;
+}
+.ct-info p {
+  margin: 0 0 4px !important;
+  font-size: .95rem !important;
+}
+.ct-info p:last-child { margin: 0 !important }
+
+@media (max-width:600px) {
+  .ct-cards { grid-template-columns: 1fr }
+}
+</style>
