@@ -14,48 +14,25 @@ const jsonLd = {
   sameAs: SITE.githubUrl ? [SITE.githubUrl] : [],
 }
 ---
-<Page currentPath="/" title="Jhelum Labs — Research and Deployment" description="Jhelum Labs publishes open foundational AI research and model documentation." jsonLd={jsonLd}>
+<Page currentPath="/" title="Jhelum Labs — Research and Deployment" description="Jhelum Labs is an independent AI research organization building advanced language models." jsonLd={jsonLd}>
 
-  <!-- ══════════════════════════════════════════
-       HERO — Anthropic style
-       Logo on page body + full-width bold headline
-       + description right beside it
-  ══════════════════════════════════════════ -->
+  <!-- HERO -->
   <section class="hi-hero">
     <div class="shell">
 
-      <!-- Logo + wordmark on page (only on homepage) -->
+      <!-- logo.png mark only — clean, no big wordmark SVG -->
       <div class="hi-brand">
-        <svg
-          class="hi-wordmark"
-          viewBox="0 0 1536 1024"
-          xmlns="http://www.w3.org/2000/svg"
-          role="img"
-          aria-label="Jhelum Labs"
-        >
-          <g fill="#2a6cf5">
-            <polygon points="152,310 306,310 335,344 176,344 49,611 82,611 196,372 358,372 394,413 228,413 124,628 0,628"/>
-            <polygon points="396,185 627,472 553,598 497,606 576,473 388,240 370,266 537,477 458,611 402,620 482,485 326,289"/>
-            <polygon points="203,513 295,651 570,614 633,720 236,780 146,640 168,592 258,729 589,683 572,655 275,697 183,559"/>
-          </g>
-          <path d="M322 443H362V538C362 575 340 592 308 592C295 592 290 590 290 590L272 560H322Z" fill="currentColor"/>
-          <g fill="currentColor" font-family="Poppins,'Segoe UI',Arial,sans-serif" font-weight="700">
-            <text x="648" y="525" font-size="140" textLength="518" lengthAdjust="spacingAndGlyphs">Jhelum</text>
-            <polygon points="1189,415 1210,415 1253,527 1232,527"/>
-            <text x="1250" y="525" font-size="140" textLength="246" lengthAdjust="spacingAndGlyphs">abs</text>
-            <text x="648" y="630" font-size="52" font-weight="400" opacity="0.5" textLength="700" lengthAdjust="spacingAndGlyphs">Research and Deployment</text>
-          </g>
-        </svg>
+        <img src="/logo.png" alt="Jhelum Labs" class="hi-logo-mark" />
       </div>
 
-      <!-- Anthropic headline: bold statement left + description right -->
+      <!-- Anthropic-style full-width bold paragraph headline -->
       <div class="hi-headline-wrap">
         <p class="hi-headline">
-          <strong>Open AI research and model weights built in public.</strong>
-          {' '}Jhelum Labs is an independent AI research group dedicated to training
-          language models from scratch, documenting every experiment, and
-          publishing all weights openly — so the world can verify, reproduce
-          and build on our work.
+          <strong>Building advanced AI. Advancing research. Prioritizing safety.</strong>
+          {' '}Jhelum Labs is an independent AI research and development organization
+          focused on building advanced language models and reliable, production-ready
+          systems. Our work spans large language models, AI safety, alignment,
+          evaluation and responsible deployment — making powerful AI more accessible.
         </p>
       </div>
 
@@ -67,9 +44,7 @@ const jsonLd = {
     </div>
   </section>
 
-  <!-- ══════════════════════════════════════════
-       GRADIENT BANNER — like Anthropic's Claude Opus card
-  ══════════════════════════════════════════ -->
+  <!-- GRADIENT BANNER -->
   <section class="hi-banner">
     <a href="/playground" class="hi-banner-link">
       <div class="hi-banner-bg"></div>
@@ -85,50 +60,38 @@ const jsonLd = {
     </a>
   </section>
 
-  <!-- ══════════════════════════════════════════
-       LEARN MORE — Anthropic 4-card image grid
-  ══════════════════════════════════════════ -->
+  <!-- LEARN MORE — 4-card grid like Anthropic -->
   <section class="hi-learn shell">
     <p class="hi-learn-label">Learn more</p>
     <div class="hi-learn-grid">
       <a class="hi-card" href="/research?type=Research+Paper">
-        <div class="hi-card-img hi-card-img--arch">
-          <div class="hi-card-img-inner"></div>
-        </div>
+        <div class="hi-card-img hi-card-img--arch"><div class="hi-card-img-inner"></div></div>
         <div class="hi-card-cat">Architecture</div>
         <h3 class="hi-card-title">W-1.1 Architecture</h3>
         <p class="hi-card-desc">Decoder-only Transformer with RoPE, RMSNorm, SwiGLU and tied embeddings — 123M parameters trained from scratch.</p>
       </a>
       <a class="hi-card" href="/research/w-1.1-project-instruct">
-        <div class="hi-card-img hi-card-img--align">
-          <div class="hi-card-img-inner"></div>
-        </div>
+        <div class="hi-card-img hi-card-img--align"><div class="hi-card-img-inner"></div></div>
         <div class="hi-card-cat">Alignment</div>
         <h3 class="hi-card-title">Project Instruct</h3>
-        <p class="hi-card-desc">Instruction-tuning on 300K Q&A pairs. The W-1.1 model learns to follow instructions across diverse task types.</p>
+        <p class="hi-card-desc">Instruction-tuning on 300K Q&A pairs. W-1.1 learns to follow instructions across diverse task types.</p>
       </a>
       <a class="hi-card" href="/research/w-1.2-architecture">
-        <div class="hi-card-img hi-card-img--w12">
-          <div class="hi-card-img-inner"></div>
-        </div>
+        <div class="hi-card-img hi-card-img--w12"><div class="hi-card-img-inner"></div></div>
         <div class="hi-card-cat">W-1.2 Roadmap</div>
         <h3 class="hi-card-title">Next generation</h3>
         <p class="hi-card-desc">353M parameters, grouped-query attention, 50K vocab, 4,096-token context, 8B token training target.</p>
       </a>
       <a class="hi-card" href="/research/w-1.1-final">
-        <div class="hi-card-img hi-card-img--safety">
-          <div class="hi-card-img-inner"></div>
-        </div>
+        <div class="hi-card-img hi-card-img--safety"><div class="hi-card-img-inner"></div></div>
         <div class="hi-card-cat">Safety</div>
         <h3 class="hi-card-title">Model safety</h3>
-        <p class="hi-card-desc">Every release includes explicit experimental-use warnings, benchmark transparency and open weight verification via SHA-256.</p>
+        <p class="hi-card-desc">Every release includes explicit experimental-use warnings, benchmark transparency and SHA-256 weight verification.</p>
       </a>
     </div>
   </section>
 
-  <!-- ══════════════════════════════════════════
-       LATEST RESEARCH — clean list like OpenAI research index
-  ══════════════════════════════════════════ -->
+  <!-- LATEST RESEARCH -->
   <section class="hi-pubs shell">
     <div class="hi-pubs-head">
       <h2 class="hi-pubs-title">Latest research</h2>
@@ -143,9 +106,9 @@ const jsonLd = {
           </div>
           <div class="hi-pub-center">
             <h3 class="hi-pub-title">{pub.title}</h3>
-            <p class="hi-pub-excerpt">{pub.abstract?.slice(0, 120)}…</p>
+            <p class="hi-pub-excerpt">{pub.abstract?.slice(0, 120)}...</p>
           </div>
-          <span class="hi-pub-arrow" aria-hidden="true">↗</span>
+          <span class="hi-pub-arrow" aria-hidden="true">arrow</span>
         </a>
       ))}
     </div>
@@ -154,31 +117,37 @@ const jsonLd = {
 </Page>
 
 <style>
-/* ══ Hero ══ */
+/* HERO */
 .hi-hero {
   padding: clamp(64px,9vw,110px) 0 clamp(56px,8vw,96px);
   border-bottom: 1px solid var(--line);
 }
 
-/* Logo block */
+/* logo.png — clean mark, centered, not the big SVG wordmark */
 .hi-brand {
-  margin-bottom: clamp(48px,7vw,80px);
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: clamp(40px,6vw,64px);
 }
-.hi-wordmark {
-  width: min(100%, 560px);
-  height: auto;
-  color: var(--text);
+.hi-logo-mark {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
   display: block;
 }
+/* Invert in dark mode since logo.png is black on white */
+:root:not([data-theme='light']) .hi-logo-mark {
+  filter: invert(1) brightness(1.5);
+}
 
-/* Anthropic-style full-width headline paragraph */
+/* Anthropic full-width bold paragraph */
 .hi-headline-wrap {
-  max-width: 900px;
+  max-width: 860px;
   margin-bottom: 36px;
 }
 .hi-headline {
-  font-size: clamp(1.5rem, 3.5vw, 2.6rem);
-  line-height: 1.35;
+  font-size: clamp(1.45rem, 3.2vw, 2.5rem);
+  line-height: 1.38;
   color: var(--text);
   margin: 0;
   letter-spacing: -0.02em;
@@ -186,14 +155,9 @@ const jsonLd = {
 }
 .hi-headline strong {
   font-weight: 800;
-  color: var(--text);
 }
 
-.hi-actions {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-}
+.hi-actions { display: flex; gap: 12px; flex-wrap: wrap }
 .hi-btn-primary {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 11px 24px; border-radius: 9999px;
@@ -213,29 +177,22 @@ const jsonLd = {
 }
 .hi-btn-ghost:hover { border-color: var(--text); color: var(--text) }
 
-/* ══ Banner ══ */
+/* BANNER */
 .hi-banner { width: 100% }
 .hi-banner-link {
-  display: block; position: relative;
-  overflow: hidden; text-decoration: none;
-  height: clamp(280px, 40vw, 480px);
+  display: block; position: relative; overflow: hidden;
+  text-decoration: none; height: clamp(280px,40vw,480px);
 }
 .hi-banner-bg {
   position: absolute; inset: 0;
-  background: linear-gradient(180deg,
-    #050d1a 0%, #0b1f3a 18%, #163660 40%,
-    #bf5c18 72%, #080808 100%);
+  background: linear-gradient(180deg, #050d1a 0%, #0b1f3a 18%, #163660 40%, #bf5c18 72%, #080808 100%);
 }
 .hi-banner-bg::after {
   content: ''; position: absolute; inset: 0;
-  background: radial-gradient(ellipse 80% 50% at 50% 68%,
-    rgba(185,88,24,.45) 0%, transparent 65%);
+  background: radial-gradient(ellipse 80% 50% at 50% 68%, rgba(185,88,24,.45) 0%, transparent 65%);
   animation: banner-glow 8s ease-in-out infinite;
 }
-@keyframes banner-glow {
-  0%,100% { opacity: .7 }
-  50% { opacity: 1 }
-}
+@keyframes banner-glow { 0%,100% { opacity: .7 } 50% { opacity: 1 } }
 .hi-banner-inner {
   position: relative; z-index: 1; height: 100%;
   display: flex; flex-direction: column;
@@ -247,61 +204,33 @@ const jsonLd = {
   font-size: .72rem; font-weight: 600; letter-spacing: .1em;
   text-transform: uppercase; color: rgba(255,255,255,.6);
 }
-.hi-banner-dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: rgba(255,255,255,.5); flex-shrink: 0;
-}
+.hi-banner-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.5) }
 .hi-banner-title {
-  font-size: clamp(3rem, 10vw, 8rem);
-  font-weight: 700; letter-spacing: -0.04em; color: #fff; margin: 0;
+  font-size: clamp(3rem,10vw,8rem); font-weight: 700;
+  letter-spacing: -0.04em; color: #fff; margin: 0;
   font-family: 'Playfair Display', Georgia, serif; line-height: 1;
 }
-.hi-banner-sub {
-  font-size: clamp(.88rem,1.5vw,1.05rem);
-  color: rgba(255,255,255,.65); margin: 0; max-width: 460px;
-}
+.hi-banner-sub { font-size: clamp(.88rem,1.5vw,1.05rem); color: rgba(255,255,255,.65); margin: 0; max-width: 460px }
 .hi-banner-cta {
   display: inline-flex; align-items: center; gap: 8px;
   padding: 9px 24px; border-radius: 9999px;
-  border: 1px solid rgba(255,255,255,.3);
-  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.3); background: rgba(255,255,255,.08);
   color: rgba(255,255,255,.85); font-size: .86rem; font-weight: 600;
-  backdrop-filter: blur(8px);
-  transition: background .2s ease;
+  backdrop-filter: blur(8px); transition: background .2s ease;
 }
 .hi-banner-link:hover .hi-banner-cta { background: rgba(255,255,255,.18) }
 
-/* ══ Learn more cards ══ */
-.hi-learn {
-  padding: clamp(56px,8vw,96px) 0;
-  border-bottom: 1px solid var(--line);
-}
+/* LEARN MORE CARDS */
+.hi-learn { padding: clamp(56px,8vw,96px) 0; border-bottom: 1px solid var(--line) }
 .hi-learn-label {
   font-size: .78rem; font-weight: 700; letter-spacing: .1em;
-  text-transform: uppercase; color: var(--muted);
-  margin: 0 0 24px;
+  text-transform: uppercase; color: var(--muted); margin: 0 0 24px;
 }
-.hi-learn-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-}
-.hi-card {
-  display: flex; flex-direction: column;
-  text-decoration: none;
-  transition: opacity .15s ease;
-}
+.hi-learn-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 20px }
+.hi-card { display: flex; flex-direction: column; text-decoration: none; transition: opacity .15s }
 .hi-card:hover { opacity: .85 }
-.hi-card-img {
-  width: 100%; aspect-ratio: 4/3;
-  border-radius: 10px; overflow: hidden; margin-bottom: 14px;
-  position: relative;
-}
-.hi-card-img-inner {
-  position: absolute; inset: 0;
-  background-size: cover; background-position: center;
-}
-/* Card visual backgrounds */
+.hi-card-img { width: 100%; aspect-ratio: 4/3; border-radius: 10px; overflow: hidden; margin-bottom: 14px; position: relative }
+.hi-card-img-inner { position: absolute; inset: 0 }
 .hi-card-img--arch .hi-card-img-inner {
   background: linear-gradient(135deg,#0d1f40 0%,#1a3a6a 50%,#2a5c9a 100%);
 }
@@ -330,80 +259,42 @@ const jsonLd = {
   content: ''; position: absolute; inset: 0;
   background: radial-gradient(circle at 40% 60%, rgba(234,179,8,.35) 0%, transparent 55%);
 }
-.hi-card-cat {
-  font-size: .72rem; font-weight: 700; letter-spacing: .08em;
-  text-transform: uppercase; color: var(--muted); margin-bottom: 6px;
-}
-.hi-card-title {
-  font-size: 1.05rem; font-weight: 700; color: var(--text);
-  margin: 0 0 8px; letter-spacing: -.02em; line-height: 1.3;
-}
-.hi-card-desc {
-  font-size: .84rem; color: var(--text-soft);
-  line-height: 1.6; margin: 0;
-}
+.hi-card-cat { font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px }
+.hi-card-title { font-size: 1.05rem; font-weight: 700; color: var(--text); margin: 0 0 8px; letter-spacing: -.02em; line-height: 1.3 }
+.hi-card-desc { font-size: .84rem; color: var(--text-soft); line-height: 1.6; margin: 0 }
 
-/* ══ Latest research ══ */
-.hi-pubs {
-  padding: clamp(56px,8vw,96px) 0 clamp(72px,10vw,120px);
-}
+/* PUBLICATIONS */
+.hi-pubs { padding: clamp(56px,8vw,96px) 0 clamp(72px,10vw,120px) }
 .hi-pubs-head {
-  display: flex; align-items: baseline;
-  justify-content: space-between; gap: 16px;
-  margin-bottom: 0; padding-bottom: 16px;
-  border-bottom: 1px solid var(--line);
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: 16px; margin-bottom: 0; padding-bottom: 16px; border-bottom: 1px solid var(--line);
 }
-.hi-pubs-title {
-  font-size: clamp(1.4rem,2.5vw,2rem);
-  font-weight: 700; letter-spacing: -.04em; color: var(--text); margin: 0;
-}
-.hi-pubs-more {
-  font-size: .88rem; font-weight: 600; color: var(--text-soft);
-  text-decoration: none; white-space: nowrap; transition: color .15s;
-}
+.hi-pubs-title { font-size: clamp(1.4rem,2.5vw,2rem); font-weight: 700; letter-spacing: -.04em; color: var(--text); margin: 0 }
+.hi-pubs-more { font-size: .88rem; font-weight: 600; color: var(--text-soft); text-decoration: none; white-space: nowrap; transition: color .15s }
 .hi-pubs-more:hover { color: var(--text) }
 .hi-pubs-list { display: flex; flex-direction: column }
 .hi-pub-row {
   display: grid; grid-template-columns: 200px 1fr 24px;
   gap: 28px; align-items: start; padding: 24px 0;
-  border-bottom: 1px solid var(--line);
-  text-decoration: none;
-  transition: opacity .15s ease;
+  border-bottom: 1px solid var(--line); text-decoration: none;
 }
-.hi-pub-row:hover { opacity: 1 }
 .hi-pub-row:hover .hi-pub-title { color: #2a6cf5 }
-.hi-pub-row:hover .hi-pub-arrow { transform: translate(2px,-2px); color: var(--text) }
-.hi-pub-left {
-  display: flex; flex-direction: column; gap: 4px; padding-top: 2px;
-}
-.hi-pub-type {
-  font-size: .74rem; font-weight: 700; letter-spacing: .04em;
-  text-transform: uppercase; color: var(--text-soft);
-}
+.hi-pub-row:hover .hi-pub-arrow { color: var(--text) }
+.hi-pub-left { display: flex; flex-direction: column; gap: 4px; padding-top: 2px }
+.hi-pub-type { font-size: .74rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--text-soft) }
 .hi-pub-date { font-size: .76rem; color: var(--muted) }
-.hi-pub-title {
-  font-size: 1rem; font-weight: 700; letter-spacing: -.015em;
-  color: var(--text); margin: 0 0 5px; line-height: 1.35;
-  transition: color .15s;
-}
-.hi-pub-excerpt {
-  font-size: .82rem; color: var(--text-soft); line-height: 1.55; margin: 0;
-  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-}
-.hi-pub-arrow {
-  color: var(--muted); font-size: 1rem; padding-top: 2px;
-  transition: transform .2s ease, color .2s ease;
-}
+.hi-pub-title { font-size: 1rem; font-weight: 700; letter-spacing: -.015em; color: var(--text); margin: 0 0 5px; line-height: 1.35; transition: color .15s }
+.hi-pub-excerpt { font-size: .82rem; color: var(--text-soft); line-height: 1.55; margin: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden }
+.hi-pub-arrow { font-size: .85rem; color: var(--muted); padding-top: 2px; transition: color .2s }
 
-/* ══ Responsive ══ */
+/* RESPONSIVE */
 @media (max-width: 900px) {
-  .hi-learn-grid { grid-template-columns: repeat(2, 1fr) }
+  .hi-learn-grid { grid-template-columns: repeat(2,1fr) }
   .hi-pub-row { grid-template-columns: 1fr 24px; gap: 16px }
   .hi-pub-left { display: none }
 }
 @media (max-width: 600px) {
   .hi-learn-grid { grid-template-columns: 1fr 1fr }
-  .hi-wordmark { width: 100% }
   .hi-headline { font-size: 1.4rem }
   .hi-banner-link { height: 240px }
 }
