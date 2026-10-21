@@ -4,6 +4,17 @@ import ScrollVelocity from '../components/ScrollVelocity.astro'
 import { SITE } from '../lib/site.js'
 import { allPublications, formatDate } from '../lib/research.js'
 
+const stackLogos = [
+  { name: 'PyTorch',     slug: 'pytorch',     lightColor: 'EE4C2C', darkColor: 'EE4C2C' },
+  { name: 'Python',      slug: 'python',      lightColor: '3776AB', darkColor: '3776AB' },
+  { name: 'HuggingFace', slug: 'huggingface', lightColor: 'FF9A00', darkColor: 'FFD21E' },
+  { name: 'GitHub',      slug: 'github',      lightColor: '181717', darkColor: 'ffffff' },
+  { name: 'Vercel',      slug: 'vercel',      lightColor: '000000', darkColor: 'ffffff' },
+  { name: 'NumPy',       slug: 'numpy',       lightColor: '013243', darkColor: '4DABCF' },
+  { name: 'Nvidia',      slug: 'nvidia',      lightColor: '76B900', darkColor: '76B900' },
+  { name: 'Anaconda',    slug: 'anaconda',    lightColor: '44A833', darkColor: '44A833' },
+]
+
 const recent = allPublications.slice(0, 5)
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -38,7 +49,7 @@ const jsonLd = {
     </div>
   </section>
 
-  <ScrollVelocity text="Open Research · Jhelum Labs · W-1.1 · W-1.2 · " />
+  <ScrollVelocity mode="logos" logos={stackLogos} />
 
   <!-- GRADIENT BANNER -->
   <section class="hi-banner">
@@ -95,7 +106,7 @@ const jsonLd = {
     </div>
   </section>
 
-  <ScrollVelocity text="Architecture · Alignment · Safety · Open Weights · W-1.1 · " />
+  <ScrollVelocity mode="logos" logos={stackLogos} />
 
   <!-- LATEST RESEARCH -->
   <section class="hi-pubs shell">
@@ -235,7 +246,7 @@ const jsonLd = {
 .hi-card { display: flex; flex-direction: column; text-decoration: none; transition: opacity .15s }
 .hi-card:hover { opacity: .85 }
 .hi-card-img {
-  width: 100%; aspect-ratio: 4/3; border-radius: 10px; overflow: hidden;
+  width: 100%; aspect-ratio: 4/3; border-radius: 0px; overflow: hidden;
   margin-bottom: 14px; position: relative; background: #0f172a;
 }
 .hi-card-cover {

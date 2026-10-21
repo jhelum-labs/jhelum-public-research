@@ -1,32 +1,107 @@
 ---
+interface Logo {
+  name: string
+  slug: string      // simple-icons slug
+  lightColor: string
+  darkColor: string
+}
+
 interface Props {
   text?: string
+  logos?: Logo[]
+  mode?: 'text' | 'logos'
 }
-const { text = 'Open Research · Jhelum Labs · W-1.1 · W-1.2 · ' } = Astro.props
-// Repeat enough copies to always fill the viewport width
-const copies = Array.from({ length: 10 })
+
+const {
+  text = 'Open Research · Jhelum Labs · W-1.1 · W-1.2 · ',
+  logos = [],
+  mode = 'text',
+} = Astro.props
+
+const copies = Array.from({ length: 8 })
 ---
 
-<section class="sv" aria-label={text.trim()}>
-  <div class="sv-line">
-    <div class="sv-track sv-track--fwd" data-direction="1">
-      {copies.map(() => <span>{text}</span>)}
-    </div>
-  </div>
-  <div class="sv-line">
-    <div class="sv-track sv-track--rev" data-direction="-1">
-      {copies.map(() => <span>{text}</span>)}
-    </div>
-  </div>
+<section class="sv" aria-label="scrolling marquee" data-mode={mode}>
+
+  {mode === 'logos' ? (
+    /* ── Logo strip — two rows scrolling opposite directions ── */
+    <>
+      <div class="sv-line">
+        <div class="sv-track sv-track--fwd" data-direction="1">
+          {copies.map(() => logos.map((logo) => (
+            <span class="sv-logo-item">
+              <img
+                class="sv-logo-img sv-logo-light"
+                src={`https://cdn.simpleicons.org/${logo.slug}/${logo.lightColor}`}
+                alt={logo.name}
+                width="48"
+                height="48"
+                loading="lazy"
+              />
+              <img
+                class="sv-logo-img sv-logo-dark"
+                src={`https://cdn.simpleicons.org/${logo.slug}/${logo.darkColor}`}
+                alt={logo.name}
+                width="48"
+                height="48"
+                loading="lazy"
+              />
+              <span class="sv-logo-name">{logo.name}</span>
+            </span>
+          )))}
+        </div>
+      </div>
+      <div class="sv-line">
+        <div class="sv-track sv-track--rev" data-direction="-1">
+          {copies.map(() => logos.map((logo) => (
+            <span class="sv-logo-item">
+              <img
+                class="sv-logo-img sv-logo-light"
+                src={`https://cdn.simpleicons.org/${logo.slug}/${logo.lightColor}`}
+                alt={logo.name}
+                width="48"
+                height="48"
+                loading="lazy"
+              />
+              <img
+                class="sv-logo-img sv-logo-dark"
+                src={`https://cdn.simpleicons.org/${logo.slug}/${logo.darkColor}`}
+                alt={logo.name}
+                width="48"
+                height="48"
+                loading="lazy"
+              />
+              <span class="sv-logo-name">{logo.name}</span>
+            </span>
+          )))}
+        </div>
+      </div>
+    </>
+  ) : (
+    /* ── Text strip — two rows scrolling opposite directions ── */
+    <>
+      <div class="sv-line">
+        <div class="sv-track sv-track--fwd" data-direction="1">
+          {copies.map(() => <span class="sv-text-item">{text}</span>)}
+        </div>
+      </div>
+      <div class="sv-line">
+        <div class="sv-track sv-track--rev" data-direction="-1">
+          {copies.map(() => <span class="sv-text-item">{text}</span>)}
+        </div>
+      </div>
+    </>
+  )}
+
 </section>
 
 <style>
 .sv {
   overflow: hidden;
-  padding: 16px 0;
+  padding: 22px 0;
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
-  background: color-mix(in srgb, var(--surface) 60%, transparent);
+  background: color-mix(in srgb, var(--surface) 55%, transparent);
   user-select: none;
 }
 
@@ -37,22 +112,64 @@ const copies = Array.from({ length: 10 })
 
 .sv-track {
   display: inline-flex;
+  align-items: center;
   width: max-content;
   will-change: transform;
-  gap: 0;
 }
 
-.sv-track span {
+/* ── Text mode ── */
+.sv-text-item {
   display: block;
-  padding-right: 2.5rem;
+  padding-right: 2rem;
   color: var(--text-soft);
   font-family: var(--font-sans);
-  font-size: clamp(0.9rem, 1.8vw, 1.35rem);
+  font-size: clamp(0.78rem, 1.4vw, 1.05rem);
   font-weight: 600;
-  letter-spacing: -0.02em;
+  letter-spacing: 0.04em;
   line-height: 1.6;
   text-transform: uppercase;
 }
+
+/* ── Logo mode ── */
+.sv-logo-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 3.6rem 0 0;
+}
+
+.sv-logo-img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  flex-shrink: 0;
+  opacity: 1;
+}
+
+/* Show correct logo per theme */
+.sv-logo-light { display: block; }
+.sv-logo-dark  { display: none;  }
+
+:root[data-theme='dark'] .sv-logo-light { display: none;  }
+:root[data-theme='dark'] .sv-logo-dark  { display: block; }
+
+.sv-logo-name {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+/* Separator dot between items */
+.sv-logo-item::after {
+  content: '·';
+  padding-left: 3.6rem;
+  color: var(--muted);
+  font-size: 1.2rem;
+}
+.sv-logo-item:last-child::after { display: none; }
 
 @media (prefers-reduced-motion: reduce) {
   .sv-line:nth-child(2) { display: none; }
@@ -60,7 +177,6 @@ const copies = Array.from({ length: 10 })
 </style>
 
 <script>
-  // One instance per .sv on the page
   document.querySelectorAll<HTMLElement>('.sv').forEach((section) => {
     const tracks = section.querySelectorAll<HTMLElement>('.sv-track')
 
@@ -70,7 +186,7 @@ const copies = Array.from({ length: 10 })
       let lastScroll = window.scrollY
       let velocity = 0
       let lastTime = performance.now()
-      let frame: number
+      let raf: number
 
       const onScroll = () => {
         velocity = window.scrollY - lastScroll
@@ -82,23 +198,21 @@ const copies = Array.from({ length: 10 })
         const delta = Math.min((time - lastTime) / 1000, 0.05)
         lastTime = time
         velocity *= 0.9
-        pos += dir * (28 + Math.abs(velocity) * 9) * delta
+        pos += dir * (72 + Math.abs(velocity) * 12) * delta
 
-        // Wrap using half the track width so the loop is seamless
         const halfWidth = track.scrollWidth / 2
-        if (pos > halfWidth) pos -= halfWidth
+        if (pos > halfWidth)  pos -= halfWidth
         if (pos < -halfWidth) pos += halfWidth
 
-        track.style.transform = `translate3d(${-Math.abs(pos) * dir}px, 0, 0)`
-        frame = requestAnimationFrame(animate)
+        track.style.transform = `translate3d(${pos}px, 0, 0)`
+        raf = requestAnimationFrame(animate)
       }
 
-      frame = requestAnimationFrame(animate)
+      raf = requestAnimationFrame(animate)
 
-      // Cleanup if the element is ever removed (e.g. SPA navigation)
       new MutationObserver(() => {
         if (!document.contains(section)) {
-          cancelAnimationFrame(frame)
+          cancelAnimationFrame(raf)
           window.removeEventListener('scroll', onScroll)
         }
       }).observe(document.body, { childList: true, subtree: true })
