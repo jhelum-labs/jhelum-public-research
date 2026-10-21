@@ -1,0 +1,107 @@
+---
+interface Props {
+  text?: string
+}
+const { text = 'Open Research · Jhelum Labs · W-1.1 · W-1.2 · ' } = Astro.props
+// Repeat enough copies to always fill the viewport width
+const copies = Array.from({ length: 10 })
+---
+
+<section class="sv" aria-label={text.trim()}>
+  <div class="sv-line">
+    <div class="sv-track sv-track--fwd" data-direction="1">
+      {copies.map(() => <span>{text}</span>)}
+    </div>
+  </div>
+  <div class="sv-line">
+    <div class="sv-track sv-track--rev" data-direction="-1">
+      {copies.map(() => <span>{text}</span>)}
+    </div>
+  </div>
+</section>
+
+<style>
+.sv {
+  overflow: hidden;
+  padding: 16px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--surface) 60%, transparent);
+  user-select: none;
+}
+
+.sv-line {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.sv-track {
+  display: inline-flex;
+  width: max-content;
+  will-change: transform;
+  gap: 0;
+}
+
+.sv-track span {
+  display: block;
+  padding-right: 2.5rem;
+  color: var(--text-soft);
+  font-family: var(--font-sans);
+  font-size: clamp(0.9rem, 1.8vw, 1.35rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.6;
+  text-transform: uppercase;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sv-line:nth-child(2) { display: none; }
+}
+</style>
+
+<script>
+  // One instance per .sv on the page
+  document.querySelectorAll<HTMLElement>('.sv').forEach((section) => {
+    const tracks = section.querySelectorAll<HTMLElement>('.sv-track')
+
+    tracks.forEach((track) => {
+      const dir = Number(track.dataset.direction ?? 1)
+      let pos = 0
+      let lastScroll = window.scrollY
+      let velocity = 0
+      let lastTime = performance.now()
+      let frame: number
+
+      const onScroll = () => {
+        velocity = window.scrollY - lastScroll
+        lastScroll = window.scrollY
+      }
+      window.addEventListener('scroll', onScroll, { passive: true })
+
+      const animate = (time: number) => {
+        const delta = Math.min((time - lastTime) / 1000, 0.05)
+        lastTime = time
+        velocity *= 0.9
+        pos += dir * (28 + Math.abs(velocity) * 9) * delta
+
+        // Wrap using half the track width so the loop is seamless
+        const halfWidth = track.scrollWidth / 2
+        if (pos > halfWidth) pos -= halfWidth
+        if (pos < -halfWidth) pos += halfWidth
+
+        track.style.transform = `translate3d(${-Math.abs(pos) * dir}px, 0, 0)`
+        frame = requestAnimationFrame(animate)
+      }
+
+      frame = requestAnimationFrame(animate)
+
+      // Cleanup if the element is ever removed (e.g. SPA navigation)
+      new MutationObserver(() => {
+        if (!document.contains(section)) {
+          cancelAnimationFrame(frame)
+          window.removeEventListener('scroll', onScroll)
+        }
+      }).observe(document.body, { childList: true, subtree: true })
+    })
+  })
+</script>

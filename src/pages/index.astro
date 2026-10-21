@@ -1,5 +1,6 @@
 ---
 import Page from '../components/Page.astro'
+import ScrollVelocity from '../components/ScrollVelocity.astro'
 import { SITE } from '../lib/site.js'
 import { allPublications, formatDate } from '../lib/research.js'
 
@@ -36,6 +37,8 @@ const jsonLd = {
 
     </div>
   </section>
+
+  <ScrollVelocity text="Open Research · Jhelum Labs · W-1.1 · W-1.2 · " />
 
   <!-- GRADIENT BANNER -->
   <section class="hi-banner">
@@ -92,6 +95,8 @@ const jsonLd = {
     </div>
   </section>
 
+  <ScrollVelocity text="Architecture · Alignment · Safety · Open Weights · W-1.1 · " />
+
   <!-- LATEST RESEARCH -->
   <section class="hi-pubs shell">
     <div class="hi-pubs-head">
@@ -121,7 +126,6 @@ const jsonLd = {
 /* HERO */
 .hi-hero {
   padding: clamp(80px,10vw,130px) 0 clamp(56px,8vw,96px);
-  border-bottom: 1px solid var(--line);
   position: relative;
   overflow: hidden;
 }
@@ -222,7 +226,7 @@ const jsonLd = {
 .hi-banner-link:hover .hi-banner-cta { background: rgba(255,255,255,.18) }
 
 /* LEARN MORE CARDS */
-.hi-learn { padding: clamp(56px,8vw,96px) 0; border-bottom: 1px solid var(--line) }
+.hi-learn { padding: clamp(56px,8vw,96px) 0; }
 .hi-learn-label {
   font-size: .78rem; font-weight: 700; letter-spacing: .1em;
   text-transform: uppercase; color: var(--muted); margin: 0 0 24px;
