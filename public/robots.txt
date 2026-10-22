@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://jhelumlabs.in/sitemap.xml
+# Point at the generated sitemap index, not a hand-written sitemap.xml: this
+# one is rebuilt from the pages that actually exist on every `npm run build`,
+# so new papers are picked up automatically.
+Sitemap: https://jhelumlabs.in/sitemap-index.xml
