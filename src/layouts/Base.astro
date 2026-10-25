@@ -1,6 +1,7 @@
 ---
 import { SITE, pageDescription } from '../lib/site.js'
 import '../styles/site.css'
+import '../styles/auth.css'
 
 const { title = SITE.name, description = pageDescription, image = '/social-card.png', canonical, jsonLd } = Astro.props
 const canonicalUrl = new URL(canonical || Astro.url.pathname, SITE.url).href

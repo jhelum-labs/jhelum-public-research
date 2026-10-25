@@ -1,0 +1,271 @@
+---
+import Page from '../components/Page.astro'
+---
+<Page currentPath="/signup" title="Create Account — Jhelum Labs" description="Join Jhelum Labs to access foundational language model papers, datasets, and checkpoint releases.">
+  <section class="auth-page">
+    <div class="auth-container">
+      
+      <div class="auth-card">
+        <div class="auth-header">
+          <div class="auth-hero-badge">Research Portal</div>
+          <h1 class="auth-title">Create account</h1>
+          <p class="auth-subtitle">Join Jhelum Labs to access research weights and resources</p>
+        </div>
+
+        <!-- Alert messages container -->
+        <div id="authAlert" class="auth-alert" style="display: none;" role="alert">
+          <span id="alertIcon"></span>
+          <span id="alertText"></span>
+        </div>
+
+        <!-- Configuration helper banner (shown when .env is not yet configured) -->
+        <div id="configNotice" class="auth-alert auth-alert-info" style="display: none;">
+          <div>
+            <strong>Setup Notice:</strong> Firebase credentials not detected in <code>.env</code>.
+            <button type="button" id="openSetupModal">Click here for setup instructions</button>
+          </div>
+        </div>
+
+        <!-- Real Google OAuth Sign Up Button -->
+        <button type="button" class="btn-google-auth" id="btnGoogleSignup">
+          <svg class="google-icon-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/>
+          </svg>
+          <span id="googleBtnText">Sign up with Google</span>
+        </button>
+
+        <div class="auth-divider">or register with email</div>
+
+        <!-- Email & Password Registration Form -->
+        <form class="auth-form" id="signupForm" novalidate>
+          <div class="form-group">
+            <label class="form-label" for="signupName">Full name</label>
+            <input
+              type="text"
+              id="signupName"
+              name="name"
+              class="form-input"
+              placeholder="Ada Lovelace"
+              autocomplete="name"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="signupEmail">Email address</label>
+            <input
+              type="email"
+              id="signupEmail"
+              name="email"
+              class="form-input"
+              placeholder="name@organization.com"
+              required
+              autocomplete="email"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="signupPassword">Password</label>
+            <input
+              type="password"
+              id="signupPassword"
+              name="password"
+              class="form-input"
+              placeholder="At least 6 characters"
+              required
+              minlength="6"
+              autocomplete="new-password"
+            />
+          </div>
+
+          <!-- Exact Button Styled After the User's Reference Image -->
+          <button type="submit" class="btn-pill-signup btn-pill-block" id="btnSignupSubmit">
+            <span id="submitBtnText">Sign up</span>
+          </button>
+        </form>
+
+        <div class="auth-footer">
+          Already have an account? <a href="/login">Log in</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Setup modal if Firebase is not configured in .env -->
+  <div id="setupModal" class="config-modal-backdrop" style="display: none;">
+    <div class="config-modal">
+      <h3>Firebase Authentication Setup</h3>
+      <p style="font-size: 0.9rem; color: var(--text-soft); line-height: 1.5;">
+        To activate real Google Sign-In and Email signup, create a <code>.env</code> file in your project root (ignored by Git) with your Firebase credentials:
+      </p>
+      <pre class="config-code-block"><code>PUBLIC_FIREBASE_API_KEY="AIzaSy..."
+PUBLIC_FIREBASE_AUTH_DOMAIN="your-app.firebaseapp.com"
+PUBLIC_FIREBASE_PROJECT_ID="your-app-id"
+PUBLIC_FIREBASE_STORAGE_BUCKET="your-app.firebasestorage.app"
+PUBLIC_FIREBASE_MESSAGING_SENDER_ID="1234567890"
+PUBLIC_FIREBASE_APP_ID="1:1234567890:web:abcdef"</code></pre>
+      <p style="font-size: 0.85rem; color: var(--muted);">
+        A ready-to-copy template is provided in <code>.env.example</code>.
+      </p>
+      <div style="text-align: right; margin-top: 18px;">
+        <button type="button" id="closeSetupModal" class="btn-pill-dark" style="font-size: 0.95rem; padding: 8px 22px;">Got it</button>
+      </div>
+    </div>
+  </div>
+</Page>
+
+<script>
+  import {
+    isFirebaseConfigured,
+    signInWithGoogle,
+    signUpWithEmail,
+    getCachedUser
+  } from '../lib/auth.js'
+
+  const alertEl = document.getElementById('authAlert')
+  const alertText = document.getElementById('alertText')
+  const configNotice = document.getElementById('configNotice')
+  const setupModal = document.getElementById('setupModal')
+  const openSetupModal = document.getElementById('openSetupModal')
+  const closeSetupModal = document.getElementById('closeSetupModal')
+
+  const signupForm = document.getElementById('signupForm') as HTMLFormElement
+  const signupName = document.getElementById('signupName') as HTMLInputElement
+  const signupEmail = document.getElementById('signupEmail') as HTMLInputElement
+  const signupPassword = document.getElementById('signupPassword') as HTMLInputElement
+  const btnGoogleSignup = document.getElementById('btnGoogleSignup') as HTMLButtonElement
+  const btnSignupSubmit = document.getElementById('btnSignupSubmit') as HTMLButtonElement
+  const submitBtnText = document.getElementById('submitBtnText')
+  const googleBtnText = document.getElementById('googleBtnText')
+
+  // Check Firebase configuration
+  const configured = isFirebaseConfigured()
+  if (!configured && configNotice) {
+    configNotice.style.display = 'flex'
+  }
+
+  // If already logged in, redirect
+  const currentUser = getCachedUser()
+  if (currentUser) {
+    showAlert('info', `You are already signed in as ${currentUser.email}. Redirecting...`)
+    setTimeout(() => {
+      window.location.href = '/'
+    }, 1500)
+  }
+
+  function showAlert(type: 'error' | 'success' | 'info', message: string) {
+    if (!alertEl || !alertText) return
+    alertEl.style.display = 'flex'
+    alertEl.className = `auth-alert auth-alert-${type}`
+    alertText.textContent = message
+  }
+
+  function hideAlert() {
+    if (alertEl) alertEl.style.display = 'none'
+  }
+
+  function setSubmitting(loading: boolean, text: string = 'Creating account...') {
+    if (btnSignupSubmit && submitBtnText) {
+      btnSignupSubmit.disabled = loading
+      submitBtnText.innerHTML = loading ? `<span class="spinner"></span> ${text}` : 'Sign up'
+    }
+    if (btnGoogleSignup) {
+      btnGoogleSignup.disabled = loading
+    }
+  }
+
+  // Setup modal handlers
+  openSetupModal?.addEventListener('click', () => {
+    if (setupModal) setupModal.style.display = 'flex'
+  })
+  closeSetupModal?.addEventListener('click', () => {
+    if (setupModal) setupModal.style.display = 'none'
+  })
+  setupModal?.addEventListener('click', (e) => {
+    if (e.target === setupModal) setupModal.style.display = 'none'
+  })
+
+  // Google OAuth Signup
+  btnGoogleSignup?.addEventListener('click', async () => {
+    hideAlert()
+    if (!isFirebaseConfigured()) {
+      if (setupModal) setupModal.style.display = 'flex'
+      showAlert('info', 'Please add your Firebase credentials to .env to enable real Google Sign-Up.')
+      return
+    }
+
+    try {
+      if (googleBtnText) googleBtnText.innerHTML = '<span class="spinner"></span> Connecting to Google...'
+      btnGoogleSignup.disabled = true
+      await signInWithGoogle()
+      showAlert('success', 'Account created and verified with Google! Redirecting...')
+      setTimeout(() => {
+        const params = new URLSearchParams(window.location.search)
+        window.location.href = params.get('redirect') || '/'
+      }, 700)
+    } catch (err: any) {
+      console.error('Google Sign-Up Error:', err)
+      if (googleBtnText) googleBtnText.textContent = 'Sign up with Google'
+      btnGoogleSignup.disabled = false
+
+      if (err.code === 'auth/popup-closed-by-user') {
+        showAlert('error', 'Google popup was closed before completing signup.')
+      } else if (err.code === 'auth/unauthorized-domain') {
+        showAlert('error', 'This domain is not authorized in your Firebase Console.')
+      } else {
+        showAlert('error', err.message || 'Failed to sign up with Google.')
+      }
+    }
+  })
+
+  // Email & Password Signup
+  signupForm?.addEventListener('submit', async (e) => {
+    e.preventDefault()
+    hideAlert()
+
+    const name = signupName.value.trim()
+    const email = signupEmail.value.trim()
+    const password = signupPassword.value
+
+    if (!email || !password) {
+      showAlert('error', 'Please provide both email and password.')
+      return
+    }
+
+    if (password.length < 6) {
+      showAlert('error', 'Password must be at least 6 characters long.')
+      return
+    }
+
+    if (!isFirebaseConfigured()) {
+      if (setupModal) setupModal.style.display = 'flex'
+      showAlert('info', 'Please configure your Firebase credentials in .env to enable authentication.')
+      return
+    }
+
+    try {
+      setSubmitting(true, 'Creating account...')
+      await signUpWithEmail(email, password, name)
+      showAlert('success', 'Account created successfully! Redirecting...')
+      setTimeout(() => {
+        const params = new URLSearchParams(window.location.search)
+        window.location.href = params.get('redirect') || '/'
+      }, 700)
+    } catch (err: any) {
+      setSubmitting(false)
+      console.error('Signup error:', err)
+      if (err.code === 'auth/email-already-in-use') {
+        showAlert('error', 'An account with this email address already exists. Please log in instead.')
+      } else if (err.code === 'auth/weak-password') {
+        showAlert('error', 'Password is too weak. Please use a stronger combination.')
+      } else if (err.code === 'auth/invalid-email') {
+        showAlert('error', 'Please enter a valid email address.')
+      } else {
+        showAlert('error', err.message || 'Failed to create account. Please try again.')
+      }
+    }
+  })
+</script>

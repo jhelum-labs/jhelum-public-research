@@ -9,6 +9,10 @@ dist-ssr
 *.local
 .DS_Store
 *.log
+.env
+.env*
+!.env.example
+
 
 # Copied source docx files (keep the originals on the D: drive)
 d_drive_copy/
