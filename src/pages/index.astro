@@ -2,38 +2,83 @@
 import Page from '../components/Page.astro'
 import ScrollVelocity from '../components/ScrollVelocity.astro'
 import { SITE } from '../lib/site.js'
-import { allPublications, formatDate } from '../lib/research.js'
+import { allPublications, formatDate, getPublication } from '../lib/research.js'
 
+// Marquee marks — official assets pulled from each company's own site into
+// public/logos/. Sarvam's glyph is white in the source file, so the light
+// theme shows it inverted to black.
 const stackLogos = [
-  { name: 'PyTorch',     slug: 'pytorch',     lightColor: 'EE4C2C', darkColor: 'EE4C2C' },
-  { name: 'Python',      slug: 'python',      lightColor: '3776AB', darkColor: '3776AB' },
-  { name: 'HuggingFace', slug: 'huggingface', lightColor: 'FF9A00', darkColor: 'FFD21E' },
-  { name: 'GitHub',      slug: 'github',      lightColor: '181717', darkColor: 'ffffff' },
-  { name: 'Vercel',      slug: 'vercel',      lightColor: '000000', darkColor: 'ffffff' },
-  { name: 'NumPy',       slug: 'numpy',       lightColor: '013243', darkColor: '4DABCF' },
-  { name: 'Nvidia',      slug: 'nvidia',      lightColor: '76B900', darkColor: '76B900' },
-  { name: 'Anaconda',    slug: 'anaconda',    lightColor: '44A833', darkColor: '44A833' },
+  { name: 'Sarvam AI', imgLight: '/logos/sarvam.svg',      imgDark: '/logos/sarvam-white.svg' },
+  { name: 'Krutrim',   imgLight: '/logos/krutrim.ico',     imgDark: '/logos/krutrim.ico' },
+  { name: 'Yellow.ai', imgLight: '/logos/yellow.png',      imgDark: '/logos/yellow.png' },
+  { name: 'Uniphore',  imgLight: '/logos/uniphore.webp',   imgDark: '/logos/uniphore.webp' },
+  { name: 'Haptik',    imgLight: '/logos/haptik.png',      imgDark: '/logos/haptik.png' },
+  { name: 'Locus',     imgLight: '/logos/locus.ico',       imgDark: '/logos/locus.ico' },
+  { name: 'Upheld AI', imgLight: '/logos/upheld-192.png',  imgDark: '/logos/upheld-192.png' },
+  { name: 'Lagnever',  imgLight: '/logos/lagnever.png',     imgDark: '/logos/lagnever.png' },
 ]
 
 const recent = allPublications.slice(0, 5)
+
+// "Learn more" — Case Study Flip Stack: editorial cards that fold upward on
+// scroll to reveal the next story. Titles/dates come from the publication
+// record; each item carries its own card colour pair like the reference.
+const railItems = [
+  { slug: 'w-1.1-final-architecture', cover: '/covers/cover-architecture.png', cat: 'Architecture', title: 'W-1.1 Architecture', bg: '#2a6cf5', fg: '#f3f6ff' },
+  { slug: 'w-1.1-project-instruct', cover: '/covers/cover-alignment.png', cat: 'Alignment', title: 'Project Instruct', bg: '#c2410c', fg: '#fff7ed' },
+  { slug: 'w-1.2-architecture', cover: '/covers/cover-roadmap.png', cat: 'W-1.2 Roadmap', title: 'Next generation', bg: '#0e7490', fg: '#ecfeff' },
+  { slug: 'w-1.1-final', cover: '/covers/cover-safety.png', cat: 'Safety', title: 'Model safety', bg: '#be185d', fg: '#fff1f7' },
+  { slug: 'vitasta-architecture', cover: '/research-covers/architecture.svg', cat: 'Research paper', title: 'Vitasta: A Recurrent-Core Hybrid Architecture', bg: '#6d28d9', fg: '#f5f3ff' },
+  { slug: 'verified-reasoning', cover: '/research-covers/instruct.svg', cat: 'Research paper', title: 'Verified Steps, Not Faster Guesses', bg: '#15803d', fg: '#f0fdf4' },
+  { slug: 'w-1.1-project-spectrum', cover: '/research-covers/final-report.svg', cat: 'Research', title: 'Project Spectrum', bg: '#a16207', fg: '#fefce8' },
+]
+
+const stackItems = railItems.map((item) => {
+  const pub = getPublication(item.slug)
+  return {
+    ...item,
+    href: `/research/${item.slug}`,
+    desc: pub?.abstract?.slice(0, 220) ?? '',
+  }
+})
+const flipCardCount = Math.max(stackItems.length, 1)
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
   name: SITE.name,
   url: SITE.url,
-  logo: `${SITE.url}/logo.png`,
+  logo: SITE.logoUrl,
   email: SITE.contactEmail,
   sameAs: SITE.githubUrl ? [SITE.githubUrl] : [],
 }
 ---
-<Page currentPath="/" title="Jhelum Labs — Research and Deployment" description="Jhelum Labs is an independent AI research organization building advanced language models." jsonLd={jsonLd}>
+<Page currentPath="/" title="Jhelum Labs | Research and Development" description="Jhelum Labs is an independent AI research organization building advanced language models." jsonLd={jsonLd}>
 
   <!-- HERO — Anthropic-style editorial paragraph -->
-  <section class="hi-hero">
+  <section class="hi-hero" data-home-hero>
     <div class="shell">
 
       <!-- Anthropic-style full-width bold paragraph headline -->
-      <div class="hi-headline-wrap">
+      <div class="hi-headline-wrap hero-copy-animate">
+        <!-- Scroll ornament above the headline, Sarvam-style -->
+        <div class="hi-ornament" aria-hidden="true">
+          <svg viewBox="0 0 260 40" xmlns="http://www.w3.org/2000/svg" fill="none">
+            <!-- centre hairline -->
+            <line x1="6" y1="33" x2="254" y2="33" stroke="#2a6cf5" stroke-width="1.4" stroke-opacity=".32"/>
+            <!-- centre diamond -->
+            <rect x="126.6" y="29.6" width="7" height="7" transform="rotate(45 130 33)" fill="#2a6cf5" fill-opacity=".55"/>
+            <!-- right curl + leaves -->
+            <g stroke="#2a6cf5" stroke-width="2.4" stroke-linecap="round" opacity=".72">
+              <path d="M134 29 C141 15 152 9 158 14 C163 18.5 159 26 151.5 24.5 C146 23.4 147 16.5 153 17"/>
+              <path d="M166 25 C174 18 182 18 188 23 C180 26.5 172 27 166 25"/>
+            </g>
+            <!-- left curl + leaves (mirror) -->
+            <g stroke="#2a6cf5" stroke-width="2.4" stroke-linecap="round" opacity=".72" transform="scale(-1,1) translate(-260,0)">
+              <path d="M134 29 C141 15 152 9 158 14 C163 18.5 159 26 151.5 24.5 C146 23.4 147 16.5 153 17"/>
+              <path d="M166 25 C174 18 182 18 188 23 C180 26.5 172 27 166 25"/>
+            </g>
+          </svg>
+        </div>
         <p class="hi-headline">
           <strong>Building advanced AI. Advancing research. Prioritizing safety.</strong>
           {' '}Jhelum Labs is an independent AI research organization building advanced
@@ -41,9 +86,11 @@ const jsonLd = {
         </p>
       </div>
 
-      <div class="hi-actions">
-        <a class="hi-btn-primary" href="/research">Explore research</a>
-        <a class="hi-btn-ghost" href="/playground">Try W-1.1 →</a>
+      <!-- Log in / Sign up, centred in the hero like the reference pages. The
+           auth script toggles this row off once a visitor is signed in. -->
+      <div class="hi-hero-auth hero-copy-animate" data-auth-guest style="animation-delay: 0.24s;">
+        <a class="hi-auth-login" href="/login">Log in</a>
+        <a class="btn-pill-signup" href="/signup">Sign up</a>
       </div>
 
     </div>
@@ -52,7 +99,7 @@ const jsonLd = {
   <ScrollVelocity mode="logos" logos={stackLogos} />
 
   <!-- W-1.1 BANNER -->
-  <section class="hi-banner">
+  <section class="hi-banner" data-scroll-reveal data-band="#e8f0fb">
     <div class="hi-banner-bg"></div>
     <div class="hi-banner-inner shell">
       <div class="hi-banner-tag">
@@ -65,49 +112,135 @@ const jsonLd = {
     </div>
   </section>
 
-  <!-- LEARN MORE — 4-card grid with user's covers -->
-  <section class="hi-learn shell">
-    <p class="hi-learn-label">Learn more</p>
-    <div class="hi-learn-grid">
-      <a class="hi-card" href="/research?type=Research+Paper">
-        <div class="hi-card-img">
-          <img src="/covers/cover-architecture.png" alt="W-1.1 Architecture" class="hi-card-cover" />
-        </div>
-        <div class="hi-card-cat">Architecture</div>
-        <h3 class="hi-card-title">W-1.1 Architecture</h3>
-        <p class="hi-card-desc">Decoder-only Transformer with RoPE, RMSNorm, SwiGLU and tied embeddings — 123M parameters trained from scratch.</p>
-      </a>
-      <a class="hi-card" href="/research/w-1.1-project-instruct">
-        <div class="hi-card-img">
-          <img src="/covers/cover-alignment.png" alt="Project Instruct" class="hi-card-cover" />
-        </div>
-        <div class="hi-card-cat">Alignment</div>
-        <h3 class="hi-card-title">Project Instruct</h3>
-        <p class="hi-card-desc">Instruction-tuning on 300K Q&A pairs. W-1.1 learns to follow instructions across diverse task types.</p>
-      </a>
-      <a class="hi-card" href="/research/w-1.2-architecture">
-        <div class="hi-card-img">
-          <img src="/covers/cover-roadmap.png" alt="Next generation" class="hi-card-cover" />
-        </div>
-        <div class="hi-card-cat">W-1.2 Roadmap</div>
-        <h3 class="hi-card-title">Next generation</h3>
-        <p class="hi-card-desc">353M parameters, grouped-query attention, 50K vocab, 4,096-token context, 8B token training target.</p>
-      </a>
-      <a class="hi-card" href="/research/w-1.1-final">
-        <div class="hi-card-img">
-          <img src="/covers/cover-safety.png" alt="Model safety" class="hi-card-cover" />
-        </div>
-        <div class="hi-card-cat">Safety</div>
-        <h3 class="hi-card-title">Model safety</h3>
-        <p class="hi-card-desc">Every release includes explicit experimental-use warnings, benchmark transparency and SHA-256 weight verification.</p>
-      </a>
+  <!-- LEARN MORE — case-study flip stack: cards fold upward on scroll.
+       data-band turns the page sky blue for this whole portion in light
+       mode, like the reflection.ai colour-blocked sections. -->
+  <section aria-label="Case studies" data-band="#b8def7" data-band-name="sky">
+    <div class="flip-hero">
+      <p class="flip-label">Case studies</p>
+      <h2 class="flip-heading">Research you can <em>build on</em>.</h2>
+    </div>
+
+    <div class="flip-track" data-flip-track style={`height:${(flipCardCount + 1) * 100}vh`}>
+      <div class="flip-stage-outer">
+          <div class="flip-deck" data-flip-deck>
+            {[...stackItems].reverse().map((item, revIdx) => {
+              const i = stackItems.length - revIdx - 1;
+              return (
+                <a
+                  class="flip-card"
+                  data-flip-card
+                  data-flip-index={i}
+                  href={item.href}
+                  style={`z-index:${stackItems.length - i};`}
+                >
+                  <div
+                    class="flip-panel"
+                    style={`background-color:${item.bg};color:${item.fg};`}
+                  >
+                    <div class="flip-panel-copy">
+                      <div class="flip-main-num">
+                        <span class="flip-num">{String(i + 1).padStart(2, '0')}</span>
+                      </div>
+                      <div class="flip-main">
+                        <p class="flip-eyebrow">{item.cat}</p>
+                        <h3 class="flip-title">{item.title}</h3>
+                        {item.desc && <p class="flip-desc">{item.desc}</p>}
+                        <span class="flip-cta">Read the story →</span>
+                      </div>
+                    </div>
+                    <div class="flip-panel-img">
+                      <img
+                        src={item.cover}
+                        alt={`${item.title} cover artwork`}
+                        width="800"
+                        height="800"
+                        loading={i < 2 ? 'eager' : 'lazy'}
+                        decoding="async"
+                      />
+                    </div>
+                  </div>
+                </a>
+              );
+            })}
+          </div>
+      </div>
     </div>
   </section>
 
-  <ScrollVelocity mode="logos" logos={stackLogos} />
+  <!-- WHAT WE DO / EXPLORE — its own dark-green zone in light mode
+       (reflection style), off the sky-blue card band. -->
+  <section class="flip-end-zone" aria-label="What we do" data-band="#1c5b40" data-band-name="forest">
+    <div class="flip-end">
+      <!-- What we do — Perplexity-style mission lines that surface as you scroll -->
+      <div class="flip-what">
+        <p class="flip-label">What we do</p>
+        <div class="flip-what-stack">
+          <p class="flip-what-line" data-band="#1c5b40" data-band-name="forest">Make frontier intelligence and research open source</p>
+          <p class="flip-what-line" data-band="#1c5b40" data-band-name="forest">Provide privacy and safety to users from models</p>
+          <p class="flip-what-line" data-band="#1c5b40" data-band-name="forest">Make compute cost very low</p>
+        </div>
+      </div>
+      <a class="flip-end-label" href="/research">Explore the library</a>
+    </div>
+  </section>
+
+  <!-- SCROLL SPLIT CARD — one wide image that separates into three panels and
+       flips to the mission statements (adapted from componentry.dev's
+       Scroll Split Card, rebuilt in plain HTML/CSS/JS). -->
+  <section class="split" aria-label="Our mission">
+    <div class="split-track" data-split-track style="height:500vh">
+      <div class="split-stage">
+        <div class="split-row" data-split-row>
+          {[0, 1, 2].map((i) => {
+            const backs = [
+              { title: 'Open source frontier intelligence', desc: 'Make frontier intelligence and research open source.', bg: '#2a6cf5', fg: '#f3f6ff' },
+              { title: 'Private by default', desc: 'Provide privacy and safety to users from models.', bg: '#0e7490', fg: '#ecfeff' },
+              { title: 'Compute for everyone', desc: 'Make compute cost very low.', bg: '#15803d', fg: '#f0fdf4' },
+            ];
+            const b = backs[i];
+            return (
+              <div class="split-panel" data-split-panel data-split-index={i}>
+                <div class="split-face split-front">
+                  <img
+                    src="/research-covers/our-mission.svg"
+                    alt="Our Mission signboard artwork split across three panels"
+                    width="1500"
+                    height="900"
+                    loading="eager"
+                    decoding="async"
+                  />
+                </div>
+                <div class="split-face split-back" style={`background-color:${b.bg};color:${b.fg};`}>
+                  <h3 class="split-back-title">{b.title}</h3>
+                  <p class="split-back-desc">{b.desc}</p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <p class="split-endline" data-split-endline>That's the mission.</p>
+      </div>
+    </div>
+  </section>
+
+  <noscript>
+    <style>
+      /* No-JS: the split scene becomes a plain static row of mission cards. */
+      .split-track { height: auto !important }
+      .split-stage {
+        position: static; height: auto; min-height: 0;
+        flex-direction: column; padding: 16vh 24px;
+      }
+      .split-row { transform: none }
+      .split-front { display: none }
+      .split-back { transform: none; z-index: 2 }
+      .split-endline { opacity: 1; position: static; margin-top: 28px }
+    </style>
+  </noscript>
 
   <!-- LATEST RESEARCH -->
-  <section class="hi-pubs shell">
+  <section class="hi-pubs shell" data-scroll-reveal data-band="#f6f8fb">
     <div class="hi-pubs-head">
       <h2 class="hi-pubs-title">Latest research</h2>
       <a href="/research" class="hi-pubs-more">View all →</a>
@@ -129,18 +262,267 @@ const jsonLd = {
     </div>
   </section>
 
-  <!-- RESEARCH COMMUNITY CTA -->
-  <section class="shell" style="padding: 20px 0 80px;">
-    <div style="background: var(--surface-card); border: 1px solid var(--line); border-radius: 20px; padding: 48px 32px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;">
-      <div class="auth-hero-badge">Research Membership</div>
-      <h2 style="font-family: var(--font-serif); font-size: clamp(1.8rem, 3.2vw, 2.4rem); margin: 0; color: var(--text); font-weight: 600;">Join Jhelum Labs</h2>
-      <p style="max-width: 520px; margin: 0; color: var(--text-soft); font-size: 0.95rem; line-height: 1.6;">Create an account to access model checkpoints, research logs, and experimental AI tooling.</p>
-      <div style="display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; margin-top: 8px;">
-        <a href="/signup" class="btn-pill-signup">Sign up</a>
-        <a href="/login" class="btn-google-auth" style="width: auto; padding: 11px 26px;">Log in</a>
-      </div>
-    </div>
-  </section>
+  <script>
+    // Scroll-driven page colour (light mode only, homepage only): as each
+    // banded section reaches the middle of the viewport, the page background
+    // eases to that section's wash — like reflection.ai / sarvam.ai. The wash
+    // is painted on <main> (the topmost opaque wrapper that hides a fixed
+    // canvas behind content) so it is actually visible.
+    const bands = Array.from(document.querySelectorAll('[data-band]'));
+    if (bands.length) {
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const washTarget = document.querySelector('main') || document.body;
+      if (reducedMotion) washTarget.style.transition = 'none';
+      else washTarget.style.transition = 'background-color .55s ease, color .2s ease';
+
+      const isDark = () => document.documentElement.getAttribute('data-theme') === 'dark';
+
+      let ticking = false;
+      const applyBand = () => {
+        ticking = false;
+        if (isDark()) {
+          // dark theme has its own palette — drop the inline override
+          washTarget.style.removeProperty('background-color');
+          document.body.removeAttribute('data-band-token');
+          return;
+        }
+        const centre = window.innerHeight * 0.5;
+        let color = ''; // default (no wash) above the first band
+        let token = '';
+        for (const b of bands) {
+          const r = b.getBoundingClientRect();
+          if (r.top <= centre) {
+            color = b.getAttribute('data-band');
+            token = b.getAttribute('data-band-name') || '';
+          }
+        }
+        washTarget.style.setProperty('background-color', color || '');
+        // token lets CSS adapt text colours to each wash (navy heading on the
+        // sky band, pale ink on the forest band)
+        if (token) document.body.setAttribute('data-band-token', token);
+        else document.body.removeAttribute('data-band-token');
+      };
+      // Direct (no rAF): the band math is trivial and rAF-starved windows
+      // could otherwise stick with a stale page colour.
+      const onScroll = () => { if (!ticking) { ticking = true; applyBand(); } };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll);
+      // keep colours right when the theme toggles light/dark
+      new MutationObserver(onScroll).observe(
+        document.documentElement, { attributes: true, attributeFilter: ['data-theme'] }
+      );
+      applyBand();
+    }
+
+    // Case-study flip stack — cards fold upward on scroll. Same maths as the
+    // framer-motion original, driven by one spring-smoothed progress value:
+    // each card folds (translateY -118% + rotateX 22deg) across its own slice
+    // of the track, while the next rises from a small resting offset/scale.
+    const flipTrack = document.querySelector('[data-flip-track]');
+    const reducedMotionFlip = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (flipTrack && !reducedMotionFlip) {
+      const flipCards = Array.from(flipTrack.querySelectorAll('[data-flip-card]'));
+      const n = flipCards.length;
+      if (n) {
+        const clamp01 = (v) => Math.max(0, Math.min(1, v));
+        const segment = 1 / n;
+        const stackedGap = Math.min(24, 72 / Math.max(n - 1, 1));
+
+        let target = 0;
+        let current = 0;
+        let running = false;
+        let rafId = 0;
+        let lastT = 0;
+        let lastFrameAt = 0;
+        let settled = false;
+
+        const computeTarget = () => {
+          const rect = flipTrack.getBoundingClientRect();
+          const total = rect.height - window.innerHeight;
+          target = clamp01(-rect.top / Math.max(total, 1));
+        };
+
+        const frame = (now) => {
+          computeTarget();
+          const dt = Math.min(50, (lastT ? now - lastT : 16)) / 1000;
+          lastT = now;
+          lastFrameAt = now;
+          current += (target - current) * Math.min(1, dt * 9); // spring-ish easing
+          if (Math.abs(target - current) < 0.0004) current = target;
+          applyFlip(current);
+          if (running) {
+            rafId = requestAnimationFrame(frame);
+            if (current === target) settled = true;
+          }
+        };
+
+        const applyFlip = (p) => {
+          for (const card of flipCards) {
+            const i = parseInt(card.dataset.flipIndex, 10);
+            const panel = card.firstElementChild;
+            if (!panel) continue;
+            // Exit: fold this card up onto the stack behind the stage top.
+            const exitT = clamp01((p - i * segment) / segment);
+            const yPct = exitT * -118;
+            const stackOff = exitT * i * stackedGap;
+            const rot = exitT * 22;
+            // Entry: the coming card rises from its resting offset/scale.
+            let entryT = 0;
+            if (i > 0) {
+              const entryStart = i * segment - segment;
+              const entryEnd = Math.min(i * segment, entryStart + segment * 0.7);
+              entryT = clamp01((p - entryStart) / Math.max(entryEnd - entryStart, 0.0001));
+            }
+            const restY = Math.min(i * 12, 34);
+            const restScale = 1 - Math.min(i * 0.012, 0.035);
+            const entryY = i === 0 ? 0 : restY * (1 - entryT);
+            const entryScale = i === 0 ? 1 : restScale + entryT * (1 - restScale);
+            card.style.transform = `translate3d(0, calc(${yPct.toFixed(3)}% + ${stackOff.toFixed(2)}px), 0) rotateX(${rot.toFixed(3)}deg)`;
+            panel.style.transform = `translate3d(0, ${entryY.toFixed(2)}px, 0) scale(${entryScale.toFixed(4)})`;
+          }
+        };
+
+        const startLoop = () => {
+          if (running || document.hidden) return;
+          running = true;
+          settled = false;
+          lastT = 0;
+          rafId = requestAnimationFrame(frame);
+        };
+        const stopLoop = () => {
+          running = false;
+          cancelAnimationFrame(rafId);
+        };
+
+        // Only animate while the track (± a viewport) is on screen. The IO
+        // handles entering/leaving; a scroll listener guarantees the loop is
+        // always running while the section is in play (IO change events can
+        // be missed after tab switches).
+        new IntersectionObserver((entries) => {
+          entries.forEach((e) => { e.isIntersecting ? startLoop() : stopLoop(); });
+        }, { rootMargin: '120px 0px 120px 0px' }).observe(flipTrack);
+        let flipTick = false;
+        const ensureFlip = () => {
+          const r = flipTrack.getBoundingClientRect();
+          if (r.bottom > -240 && r.top < window.innerHeight + 240) {
+            startLoop();
+            // rAF can be starved (hidden windows): if the loop hasn't ticked
+            // recently, paint the target state synchronously so scroll never
+            // stalls on it
+            if (performance.now() - lastFrameAt > 300) {
+              computeTarget();
+              current = target;
+              applyFlip(target);
+            }
+          } else stopLoop();
+        };
+        window.addEventListener('scroll', ensureFlip, { passive: true });
+        ensureFlip();
+        document.addEventListener('visibilitychange', () => {
+          if (document.hidden) stopLoop();
+        });
+      }
+    }
+
+    // "What we do" ghost lines — fallback reveal for browsers without
+    // scroll-driven animations: transparent until a line nears the middle
+    // of the viewport, full ink at the centre, back to ghost past it.
+    const whatLines = Array.from(document.querySelectorAll('.flip-what-line'));
+    if (whatLines.length) {
+      const supportsViewTimeline = CSS.supports('animation-timeline', 'view()');
+      if (!supportsViewTimeline) {
+        // hide them now that JS is live (before this they stay visible)
+        document.documentElement.setAttribute('data-what-ghost', '');
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          const GHOST = 0.15;
+          const updateWhat = () => {
+            const centre = window.innerHeight * 0.5;
+            const ramp = window.innerHeight * 0.55; // px of approach to full ink
+            for (const line of whatLines) {
+              const r = line.getBoundingClientRect();
+              const d = Math.abs(r.top + r.height / 2 - centre);
+              const t = Math.min(1, Math.max(0, 1 - d / ramp));
+              const ease = t * t * (3 - 2 * t); // smoothstep
+              line.style.opacity = (GHOST + (1 - GHOST) * ease).toFixed(3);
+            }
+          };
+          let whatTick = false;
+          const onWhatScroll = () => {
+            if (whatTick) return;
+            whatTick = true;
+            requestAnimationFrame(() => { whatTick = false; updateWhat(); });
+          };
+          window.addEventListener('scroll', onWhatScroll, { passive: true });
+          window.addEventListener('resize', onWhatScroll, { passive: true });
+          updateWhat();
+        }
+      }
+    }
+    // Scroll Split Card — the wide image separates into three panels and
+    // flips to the mission cards as you scroll. One spring-smoothed progress
+    // value drives the stages: 0-0.4 separation, 0.4-0.8 flip, 0.8-1 finale.
+    const splitTrack = document.querySelector('[data-split-track]');
+    const reducedMotionSplit = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (splitTrack && !reducedMotionSplit) {
+      const splitPanels = Array.from(splitTrack.querySelectorAll('[data-split-panel]'));
+      const splitRow = splitTrack.querySelector('[data-split-row]');
+      const splitEndline = splitTrack.querySelector('[data-split-endline]');
+      if (splitRow && splitPanels.length) {
+        const clamp01 = (v) => Math.max(0, Math.min(1, v));
+        const lerp = (a, b, t) => a + (b - a) * t;
+        const seg = (p, a, b) => clamp01((p - a) / (b - a));
+        const RAD = 16;
+
+        const applySplit = (p) => {
+          const sep = seg(p, 0, 0.4);
+          const clos = seg(p, 0.4, 0.8);
+          const fin = seg(p, 0.8, 1);
+          const settle = seg(p, 0, 0.2);
+
+          const lx = sep * -48 + clos * 24;
+          const rx = sep * 48 - clos * 24;
+          const scale = lerp(1, 0.9, sep);
+          const rotY = clos * 180;
+          const shadowOp = 0.4 * settle;
+          const shadow = `inset 0 1px 1px rgba(255,255,255,${(0.2 * settle).toFixed(3)}), inset 0 -24px 48px rgba(0,0,0,${shadowOp.toFixed(3)}), 0 25px 50px -12px rgba(0,0,0,${shadowOp.toFixed(3)})`;
+          const rad = (RAD * settle).toFixed(1);
+
+          splitRow.style.transform = `translate3d(0,${(fin * -200).toFixed(1)}px,0) scale(${scale.toFixed(4)})`;
+          if (splitEndline) {
+            splitEndline.style.opacity = fin.toFixed(3);
+            splitEndline.style.transform = `translate3d(0,${(40 - fin * 40).toFixed(1)}px,0)`;
+          }
+
+          for (const panel of splitPanels) {
+            const i = parseInt(panel.dataset.splitIndex, 10);
+            const face = panel.querySelector('.split-front');
+            const back = panel.querySelector('.split-back');
+            const x = i === 0 ? lx : i === 2 ? rx : 0;
+            const rz = i === 0 ? clos * 6 : i === 2 ? clos * -6 : 0;
+            panel.style.transform = `translate3d(${x.toFixed(2)}px,0,0) rotateY(${rotY.toFixed(2)}deg) rotateZ(${rz.toFixed(2)}deg)`;
+            let radius;
+            if (i === 0) radius = `${RAD}px ${rad}px ${rad}px ${RAD}px`;
+            else if (i === 2) radius = `${rad}px ${RAD}px ${RAD}px ${rad}px`;
+            else radius = `${rad}px`;
+            if (face) { face.style.borderRadius = radius; face.style.boxShadow = shadow; }
+            if (back) back.style.borderRadius = radius;
+          }
+        };
+
+        const updateSplit = () => {
+          const rect = splitTrack.getBoundingClientRect();
+          const total = rect.height - window.innerHeight;
+          applySplit(clamp01(-rect.top / Math.max(total, 1)));
+        };
+
+        // Direct scroll mapping — no animation loop: the transform is a pure
+        // function of scroll position, so it can never stall on rAF.
+        window.addEventListener('scroll', updateSplit, { passive: true });
+        window.addEventListener('resize', updateSplit);
+        updateSplit();
+      }
+    }
+  </script>
 
 </Page>
 
@@ -152,6 +534,7 @@ const jsonLd = {
   overflow: hidden;
   background: transparent;
 }
+.hi-hero .shell { position: relative; z-index: 1; }
 .hi-hero::before {
   content: '';
   position: absolute;
@@ -165,11 +548,75 @@ const jsonLd = {
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* Reflection-style hero entrance: plays on its own from page load. */
+@keyframes heroCopyIn {
+  0% { opacity: 0; transform: translateY(2.5rem); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes heroFadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+
+/* Hero ornament — mirrored scroll flourish above the headline. Fades in
+   together with the headline (the wrap's entrance animation carries it). */
+.hi-ornament {
+  display: flex;
+  justify-content: center;
+  margin: 0 auto clamp(18px, 3vh, 30px);
+}
+.hi-ornament svg {
+  width: min(300px, 62vw);
+  height: auto;
+  display: block;
+}
+
+/* Hero headline + auth row entrance (reflection-style). Pure CSS: the
+   animation starts and finishes on its own at page load — no JS gate — so the
+   copy can never get stuck invisible (no paused/intro-ready/fail-open glue). */
+.hi-headline-wrap.hero-copy-animate {
+  animation: heroCopyIn 1s cubic-bezier(0.05, 0.9, 0.1, 1) 0.5s 1 normal both;
+}
+.hi-hero-auth.hero-copy-animate {
+  animation: heroCopyIn 1s cubic-bezier(0.05, 0.9, 0.1, 1) 0.74s 1 normal both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hi-headline-wrap.hero-copy-animate,
+  .hi-hero-auth.hero-copy-animate { animation: none; }
+}
+
+/* Scroll-reveal: sections fade/slide in when they enter the viewport. */
+[data-scroll-reveal] {
+  opacity: 0;
+  transform: translateY(2rem);
+  transition: opacity 0.6s cubic-bezier(0, 0, 0.2, 1),
+              transform 0.6s cubic-bezier(0, 0, 0.2, 1);
+  will-change: opacity, transform;
+}
+[data-scroll-reveal].is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
 /* Anthropic editorial serif headline — fits in 2-3 lines */
-.hi-headline-wrap {
-  max-width: 1140px;
-  margin-bottom: 36px;
-  animation: heroFadeUp 0.8s ease-out both;
+.hi-headline {
+  font-family: 'Newsreader', 'Lora', Georgia, 'Times New Roman', serif;
+  font-size: clamp(1.75rem, 3.1vw, 2.75rem);
+  line-height: 1.32;
+  color: var(--text);
+  margin: 0;
+  letter-spacing: -0.015em;
+  font-weight: 400;
+}
+.hi-headline strong {
+  font-family: 'Newsreader', 'Lora', Georgia, 'Times New Roman', serif;
+  font-weight: 600;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-copy-animate { animation: none !important; opacity: 1 !important; transform: none !important; }
+  [data-scroll-reveal] { opacity: 1 !important; transform: none !important; transition: none !important; }
 }
 .hi-headline {
   font-family: 'Newsreader', 'Lora', Georgia, 'Times New Roman', serif;
@@ -185,25 +632,39 @@ const jsonLd = {
   font-weight: 600;
 }
 
-.hi-actions { display: flex; gap: 12px; flex-wrap: wrap; animation: heroFadeUp 0.8s ease-out 0.24s both }
-.hi-btn-primary {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 11px 24px; border-radius: 9999px;
-  background: var(--text); color: var(--bg);
-  font-size: .9rem; font-weight: 600;
-  text-decoration: none; white-space: nowrap;
-  transition: opacity .15s ease, transform .15s ease;
+/* Log in / Sign up — centred in the hero, Sarvam-style pill pair:
+   outlined "Log in" beside the filled "Sign up" pill. Hidden by the auth
+   script through [data-auth-guest] once a visitor is signed in. */
+.hi-hero-auth {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 44px;
+  animation: heroFadeUp 0.8s ease-out 0.24s both;
 }
-.hi-btn-primary:hover { opacity: .85; transform: translateY(-1px) }
-.hi-btn-ghost {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 10px 22px; border-radius: 9999px;
+.hi-auth-login {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 11px 30px;
+  border-radius: 9999px;
   border: 1px solid var(--line-hover);
-  color: var(--text-soft); font-size: .9rem; font-weight: 500;
-  text-decoration: none; white-space: nowrap;
-  transition: border-color .15s ease, color .15s ease;
+  color: var(--text);
+  font-family: var(--font-serif);
+  font-size: 1.12rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
 }
-.hi-btn-ghost:hover { border-color: var(--text); color: var(--text) }
+.hi-auth-login:hover {
+  border-color: var(--text);
+  transform: translateY(-1.5px) scale(1.02);
+}
 
 /* BANNER */
 .hi-banner {
@@ -254,32 +715,314 @@ const jsonLd = {
 }
 .hi-banner-cta:hover { background: rgba(255,255,255,.24); transform: translateY(-2px) }
 
-/* LEARN MORE CARDS */
-.hi-learn { padding: clamp(56px,8vw,96px) 0; }
-.hi-learn-label {
-  font-size: .78rem; font-weight: 700; letter-spacing: .1em;
-  text-transform: uppercase; color: var(--muted); margin: 0 0 24px;
+/* LEARN MORE — case-study flip stack (adapted from componentry.dev's
+   Case Study Flip Stack, rebuilt in plain HTML/CSS/JS): cards fold upward
+   on scroll to reveal the next story beneath. */
+.flip-hero {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+  height: 62vh; min-height: 420px;
+  padding: 24px clamp(24px,6vw,48px);
 }
-.hi-learn-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 20px }
-.hi-card { display: flex; flex-direction: column; text-decoration: none; transition: opacity .15s }
-.hi-card:hover { opacity: .85 }
-.hi-card-img {
-  width: 100%; aspect-ratio: 4/3; border-radius: 0px; overflow: hidden;
-  margin-bottom: 14px; position: relative; background: #0f172a;
+.flip-label {
+  margin: 0 0 18px;
+  font-family: var(--font-sans);
+  font-size: .78rem; font-weight: 700; letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
-.hi-card-cover {
-  width: 100%;
+.flip-heading {
+  margin: 0;
+  max-width: 16ch;
+  font-family: var(--font-serif);
+  font-size: clamp(30px,4.6vw,64px); font-weight: 500;
+  line-height: 1.08; letter-spacing: -.03em;
+  color: var(--text);
+}
+.flip-heading em { font-style: italic; color: #2a6cf5 }
+
+/* The scroll track — its height is set inline as (cards + 1) x 100vh so the
+   sticky stage below holds one viewport-screen of scroll per card. */
+.flip-stage-outer {
+  position: sticky; top: 0;
+  height: 100vh;
+  display: flex; flex-direction: column; justify-content: center;
+  overflow: hidden;
+  padding: clamp(14px,4vh,40px) clamp(14px,4vw,64px);
+}
+.flip-deck {
+  position: relative;
+  margin: 0 auto;
+  width: 100%; max-width: 980px;
+  aspect-ratio: 3 / 4;
+  perspective: 800px;
+}
+@media (min-width: 640px) {
+  .flip-deck { aspect-ratio: 1.75 / 1 }
+}
+
+.flip-card {
+  position: absolute; left: 0; right: 0; top: 0;
+  aspect-ratio: 3 / 4;
+  will-change: transform;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  display: block;
+  text-decoration: none;
+}
+@media (min-width: 640px) {
+  .flip-card { aspect-ratio: 1.75 / 1 }
+}
+
+.flip-panel {
+  display: grid; grid-template-columns: 1fr;
   height: 100%;
+  overflow: hidden;
+  border-radius: clamp(18px,2vw,30px);
+  box-shadow: 0 16px 50px rgba(10,15,25,.22);
+  transform-origin: 50% 100%;
+  will-change: transform;
+}
+@media (min-width: 720px) {
+  .flip-panel { grid-template-columns: 1.15fr .85fr }
+}
+
+.flip-panel-copy {
+  display: flex; flex-direction: column;
+  min-width: 0;
+  padding: clamp(20px,3vw,44px);
+}
+.flip-num {
+  font-family: var(--font-sans);
+  font-size: clamp(20px,2.2vw,32px);
+  font-weight: 500; line-height: 1; letter-spacing: -.06em;
+  opacity: .9;
+}
+.flip-main { margin-top: auto }
+.flip-eyebrow {
+  font-family: var(--font-sans);
+  font-size: clamp(9px,1vw,12px);
+  font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
+  opacity: .7;
+  margin: 0 0 clamp(8px,1.4vw,20px);
+}
+.flip-title {
+  font-family: var(--font-sans);
+  font-size: clamp(24px,3vw,44px);
+  font-weight: 600; line-height: 1; letter-spacing: -.05em;
+  max-width: 18ch; text-wrap: balance;
+  margin: 0 0 clamp(10px,1.6vw,22px);
+}
+.flip-desc {
+  font-family: var(--font-sans);
+  font-size: clamp(12px,1vw,15px);
+  line-height: 1.5;
+  opacity: .82;
+  max-width: 46rem;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.flip-cta {
+  display: inline-block;
+  margin-top: clamp(14px,2.2vh,22px);
+  font-family: var(--font-sans);
+  font-size: clamp(12px,1vw,15px);
+  font-weight: 600;
+  opacity: .95;
+}
+.flip-card:hover .flip-cta { text-decoration: underline }
+
+.flip-panel-img {
+  position: relative;
+  margin: clamp(10px,1.2vw,18px);
+  min-height: 170px;
+  overflow: hidden;
+  border-radius: clamp(12px,1.4vw,22px);
+}
+@media (min-width: 720px) {
+  .flip-panel-img { margin-left: 0 }
+}
+.flip-panel-img img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+}
+
+/* End plate — ghost mission lines fill the tall plate, the one nearest the
+   viewport centre lights up (Perplexity-style), then the library link. */
+.flip-end {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: clamp(48px,6vh,80px);
+  min-height: 150vh;
+  padding: 0 clamp(24px,6vw,48px);
+}
+
+/* "What we do" — huge ghost serif lines spaced a screen apart; scroll-driven
+   animation dims everything to a whisper and lights the line as it crosses
+   the middle of the viewport. Without scroll timelines (or with reduced
+   motion) the lines simply sit fully visible. */
+.flip-what { max-width: 84rem; }
+.flip-what .flip-label { text-align: center; margin-bottom: clamp(28px,4vh,44px); }
+.flip-what-stack { display: flex; flex-direction: column; gap: clamp(60px,14vh,160px); }
+.flip-what-line {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(34px,6.5vw,92px);
+  font-weight: 500; line-height: 1.04; letter-spacing: -.04em;
+  text-align: center; text-wrap: balance;
+  max-width: 22ch;
+  margin-inline: auto;
+  color: var(--text);
+}
+/* Transparent by default (set via JS so the page never hides content when
+   scripts are off); the scroll-driven animation or the JS fallback below
+   lights each line as it crosses the middle of the viewport. Ghost level is
+   high enough to read as faint ink on a white page (Perplexity-style). */
+html[data-what-ghost] .flip-what-line { opacity: .15 }
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .flip-what-line {
+      animation: flip-what-glow linear both;
+      animation-timeline: view();
+      animation-range: cover 5% cover 90%;
+    }
+  }
+}
+/* Ghost on approach -> full ink while centred -> back to ghost on exit. */
+@keyframes flip-what-glow {
+  0% { opacity: .15 }
+  38% { opacity: 1 }
+  62% { opacity: 1 }
+  100% { opacity: .15 }
+}
+@media (prefers-reduced-motion: reduce) {
+  .flip-what-line { opacity: 1 !important; transform: none; animation: none }
+}
+
+.flip-end-label {
+  font-family: var(--font-serif);
+  font-size: clamp(40px,7.5vw,116px);
+  font-weight: 600; line-height: 1; letter-spacing: -.06em;
+  color: var(--text);
+  text-decoration: none;
+  text-align: center;
+  transition: color .2s ease;
+}
+.flip-end-label:hover { color: #2a6cf5 }
+
+/* Reduced motion: the stack becomes a plain vertical list of cards. */
+@media (prefers-reduced-motion: reduce) {
+  .flip-track { height: auto !important }
+  .flip-stage-outer { position: static; height: auto; overflow: visible; padding: 24px clamp(14px,4vw,64px) }
+  .flip-deck { aspect-ratio: auto; display: grid; gap: 24px }
+  .flip-card { position: static; aspect-ratio: auto; z-index: auto !important }
+  .flip-panel { min-height: 340px }
+  .flip-hero { height: auto; min-height: 0; padding: 40px clamp(24px,6vw,48px) }
+  .flip-end { min-height: 40vh }
+}
+
+/* SCROLL SPLIT CARD — one wide image split across three touching panels
+   that reads as a single flat card, separates, then 3D-flips to reveal the
+   mission statements. The section carries its own dark stage so it works in
+   every theme and band. */
+.split {
+  background: #0a0e1a;
+  color: #f4f6fa;
+}
+.split-track { position: relative; }
+.split-stage {
+  position: sticky; top: 0;
+  height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+  perspective: 1200px;
+}
+.split-row {
+  display: flex;
+  height: clamp(300px, 52vh, 420px);
+  width: 100%; max-width: 56rem;
+  padding: 0 16px;
+  position: relative;
+  transform-style: preserve-3d;
+}
+.split-panel {
+  position: relative; flex: 1;
+  transform-style: preserve-3d;
+}
+.split-panel[data-split-index='0'] { z-index: 0 }
+.split-panel[data-split-index='1'] { z-index: 1 }
+.split-panel[data-split-index='2'] { z-index: 2 }
+
+.split-face {
+  position: absolute; inset: 0;
+  overflow: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 16px;
+  will-change: transform;
+}
+/* Front: one shared image — each panel shows its exact third. */
+.split-front { z-index: 2 }
+.split-front img {
+  position: absolute; top: 0; left: 0;
+  width: 300%; height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 0.3s ease;
 }
-.hi-card:hover .hi-card-cover {
-  transform: scale(1.04);
+.split-panel[data-split-index='1'] .split-front img { margin-left: -100% }
+.split-panel[data-split-index='2'] .split-front img { margin-left: -200% }
+/* Back: content card, pre-rotated so the 180deg flip brings it forward. */
+.split-back {
+  z-index: 1;
+  transform: rotateY(180deg);
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: clamp(18px,2.6vw,32px);
+  background-image: linear-gradient(145deg, rgba(255,255,255,.12), transparent 60%);
+  box-shadow: inset 0 1px 1px rgba(255,255,255,.1), inset 0 -24px 48px rgba(0,0,0,.2);
 }
-.hi-card-cat { font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px }
-.hi-card-title { font-size: 1.05rem; font-weight: 700; color: var(--text); margin: 0 0 8px; letter-spacing: -.02em; line-height: 1.3 }
-.hi-card-desc { font-size: .84rem; color: var(--text-soft); line-height: 1.6; margin: 0 }
+.split-back-title {
+  margin: 0 0 clamp(8px,1.2vw,16px);
+  font-family: var(--font-sans);
+  font-size: clamp(17px,2vw,26px);
+  font-weight: 500; line-height: 1.15; letter-spacing: -.03em;
+}
+.split-back-desc {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: clamp(12px,1vw,14px);
+  line-height: 1.5;
+  opacity: .82;
+}
+.split-endline {
+  position: absolute; bottom: 16%; left: 0; right: 0;
+  margin: 0; text-align: center;
+  opacity: 0;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(22px,2.6vw,34px);
+  font-weight: 500; letter-spacing: -.02em;
+  color: rgba(244,246,250,.85);
+}
+
+/* Reduced motion / no-JS: show the trio already separated with the mission
+   cards facing forward — a plain static row, fully readable. */
+.split-static .split-row { transform: none !important }
+.split-static .split-front { display: none }
+.split-static .split-back { transform: none; z-index: 2 }
+.split-static .split-endline { opacity: 1; position: static; margin-top: 28px }
+.split-static .split-stage { flex-direction: column; height: auto; min-height: 100vh; padding: 18vh 24px }
+.split-static .split-track { height: auto !important }
+@media (prefers-reduced-motion: reduce) {
+  .split-track { height: auto !important }
+  .split-stage { position: static; flex-direction: column; height: auto; min-height: 0; padding: 16vh 24px }
+  .split-row { transform: none }
+  .split-front { display: none }
+  .split-back { transform: none; z-index: 2 }
+  .split-endline { opacity: 1; position: static; margin-top: 28px }
+}
 
 /* PUBLICATIONS */
 .hi-pubs { padding: clamp(56px,8vw,96px) 0 clamp(72px,10vw,120px) }
@@ -307,16 +1050,18 @@ const jsonLd = {
 
 /* RESPONSIVE */
 @media (max-width: 900px) {
-  .hi-learn-grid { grid-template-columns: repeat(2,1fr) }
   .hi-pub-row { grid-template-columns: 1fr 24px; gap: 16px }
   .hi-pub-left { display: none }
 }
-@media (max-width: 600px) {
-  .hi-learn-grid { grid-template-columns: 1fr 1fr }
-  .hi-headline { font-size: 1.4rem }
+/* Below the header's mobile breakpoint: the deck stays a fold-on-scroll
+   story on phones too (cards are 3/4 so the copy and photo fit one panel). */
+@media (max-width: 768px) {
+  .flip-title { font-size: clamp(21px,6vw,30px) }
+  .flip-desc { -webkit-line-clamp: 2 }
+  .flip-panel-img { min-height: 150px }
 }
-@media (max-width: 400px) {
-  .hi-learn-grid { grid-template-columns: 1fr }
+@media (max-width: 600px) {
+  .hi-headline { font-size: 1.4rem }
 }
 </style>
 

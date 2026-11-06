@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro'
 import Header from './Header.astro'
 import Footer from './Footer.astro'
+import Search from './Search.astro'
 const { currentPath, ...meta } = Astro.props
 ---
-<Base {...meta}><Header currentPath={currentPath} /><main><slot /></main><Footer /></Base>
+<Base {...meta}><Header currentPath={currentPath} /><Search /><main><slot /></main><Footer /></Base>

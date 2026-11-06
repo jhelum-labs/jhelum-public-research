@@ -49,6 +49,26 @@
   color-scheme: light;
 }
 
+/* ── Absolute dark (pure black, on top of the dark slate base) ──
+   Applied as data-theme='dark' + .theme-absolute so every dark-mode rule,
+   swapped asset and colour-scheme keeps working unchanged. */
+:root.theme-absolute {
+  --bg:          #000000;
+  --bg-alt:      #060607;
+  --surface:     #0a0a0b;
+  --surface-2:   #101011;
+  --surface-3:   #17171a;
+  --surface-card:#08080a;
+  --surface-card-hover: #0f0f11;
+  --text:        #f2f2f4;
+  --text-soft:   #b9bac2;
+  --muted:       #7a7a85;
+  --line:        rgba(255,255,255,0.15);
+  --line-subtle: rgba(255,255,255,0.10);
+  --line-hover:  rgba(255,255,255,0.25);
+  --brand:       #f5f5f7;
+}
+
 /* Base resets & typography */
 *, *::before, *::after {
   box-sizing: border-box;
@@ -76,7 +96,7 @@ body {
 a {
   color: inherit;
   text-decoration: none;
-  transition: color 0.15s ease, opacity 0.15s ease;
+  transition: color 0.2s cubic-bezier(0, 0, 0.2, 1), opacity 0.2s cubic-bezier(0, 0, 0.2, 1);
 }
 
 /* Block the fixed LiquidChrome canvas from bleeding through page content.
@@ -99,7 +119,7 @@ a:hover {
 }
 
 .shell {
-  width: min(1200px, calc(100% - 48px));
+  width: min(1280px, calc(100% - 48px));
   margin-inline: auto;
 }
 
@@ -252,9 +272,9 @@ a:hover {
 .header-inner {
   position: relative;
   min-height: 64px;
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
-  justify-content: space-between;
   gap: 24px;
 }
 
@@ -263,6 +283,8 @@ a:hover {
   display: flex;
   align-items: center;
   gap: 20px;
+  justify-self: start;
+  min-width: 0;
 }
 .header-mark {
   display: inline-flex;
@@ -285,6 +307,93 @@ a:hover {
   gap: 24px;
 }
 
+/* Stretch the left cluster and the nav to the header's full height so the
+   Research item can reach the header's bottom edge and hand the pointer
+   straight into its panel, like openai.com. */
+.header-left { align-self: stretch; }
+.header-nav-left { align-self: stretch; }
+.header-nav-left > a { display: flex; align-items: center; }
+
+/* ── Research hover panel — the OpenAI-style mega menu ──────────────────
+   Fixed against the header (the header's backdrop-filter makes it the
+   containing block): full-bleed white band hanging from the bar's bottom
+   edge, two link columns, opens on hover and on keyboard focus. */
+.has-mega {
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.header-mega {
+  position: fixed;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.2s cubic-bezier(0.05, 0.9, 0.1, 1), transform 0.2s cubic-bezier(0.05, 0.9, 0.1, 1), visibility 0.2s cubic-bezier(0.05, 0.9, 0.1, 1);
+  transform: translateY(6px);
+}
+
+.has-mega:hover .header-mega,
+.has-mega:focus-within .header-mega {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.header-mega-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: 36px 8vw;
+  padding-top: 34px;
+  padding-bottom: 40px;
+}
+
+.mega-col { min-width: 0 }
+
+.mega-eyebrow {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+
+/* The big section links, like the reference's "Research Index" column. */
+.mega-link-xl {
+  display: block;
+  width: fit-content;
+  font-size: clamp(1.3rem, 1.7vw, 1.7rem);
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  text-decoration: none;
+  margin-bottom: 12px;
+  transition: color 0.2s cubic-bezier(0, 0, 0.2, 1), opacity 0.2s cubic-bezier(0, 0, 0.2, 1);
+}
+.mega-link-xl:hover { color: var(--muted) }
+
+/* The compact list of recent items, like the reference's model list. */
+.mega-link-sm {
+  display: block;
+  width: fit-content;
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.45;
+  color: var(--text);
+  text-decoration: none;
+  margin-bottom: 10px;
+  transition: color 0.2s cubic-bezier(0, 0, 0.2, 1);
+}
+.mega-link-sm:hover { color: var(--muted) }
+
 /* Footer brand mark — smaller */
 .brand-mark {
   display: block;
@@ -293,24 +402,148 @@ a:hover {
   flex-shrink: 0;
 }
 
-/* Center: brand wordmark — Anthropic style */
+/* Center: mark + wordmark lockup — Anthropic style.
+   At the top of the page the blue mark sits beside the full "Jhelum \abs"
+   wordmark. Once the page scrolls the mark collapses and the wordmark
+   compresses into the "J\" monogram, then expands again at the top. */
 .brand-center {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+  position: relative;
+  justify-self: center;
+  display: inline-flex;
+  align-items: center;
   text-decoration: none;
   line-height: 1;
   z-index: 1;
+  color: var(--text);
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.brand-mark-svg {
+  display: block;
+  width: 32px;
+  height: 32px;
+  margin-right: 12px;
+  flex-shrink: 0;
+  transition: width 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+              height 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+              margin-right 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.3s ease;
+}
+.brand-center:hover .brand-mark-svg {
+  opacity: 0.8;
+}
+
+/* The wordmark box is clipped, so shrinking it from 195px to 44px literally
+   squeezes "Jhelum \abs" down onto its first letters while the monogram
+   fades in over the top. */
+.brand-word {
+  position: relative;
+  display: block;
+  width: 195px;
+  height: 38px;
+  overflow: hidden;
+  transition: width 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 .brand-center-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
   display: block;
-  height: 30px;
+  height: 38px;
   width: auto;
   color: var(--text);
-  transition: opacity 0.15s ease;
+  transition: opacity 0.3s ease;
 }
-.brand-center:hover .brand-center-svg {
-  opacity: 0.7;
+.brand-full {
+  opacity: 1;
+}
+.brand-compact {
+  opacity: 0;
+}
+
+/* Scrolled state */
+.site-header.is-scrolled .brand-mark-svg {
+  width: 0;
+  height: 0;
+  margin-right: 0;
+  opacity: 0;
+}
+.site-header.is-scrolled .brand-word {
+  width: 44px;
+}
+.site-header.is-scrolled .brand-full {
+  opacity: 0;
+}
+.site-header.is-scrolled .brand-compact {
+  opacity: 1;
+  transition-delay: 0.14s;
+}
+
+/* Narrow desktops: the full wordmark (195px) collides with the right-hand
+   action pills + logged-in profile. Collapse to the compact "J\\" monogram in
+   that band so the pills keep clear space on the right side of the header. */
+@media (min-width: 769px) and (max-width: 1280px) {
+  .brand-mark-svg {
+    width: 0;
+    height: 0;
+    margin-right: 0;
+    opacity: 0;
+  }
+  .brand-word {
+    width: 44px;
+  }
+  .brand-full {
+    opacity: 0;
+  }
+  .brand-compact {
+    opacity: 1;
+  }
+  /* Logged-in profile: keep just the avatar on narrow desktops so the
+     pills + profile never crowd the centred title. */
+  .user-name-label {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-mark-svg,
+  .brand-word,
+  .brand-center-svg {
+    transition: none;
+  }
+}
+
+/* Narrower viewports step the lockup down so the centred brand never crowds
+   the navigation it sits between. */
+@media (max-width: 940px) {
+  .brand-mark-svg {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+  }
+  .brand-word {
+    width: 185px;
+    height: 36px;
+  }
+  .brand-center-svg {
+    height: 36px;
+  }
+  .site-header.is-scrolled .brand-word {
+    width: 42px;
+  }
+}
+
+/* Between the desktop nav and the mobile menu the centred lockup needs the
+   room the duplicate left-hand mark was using, so that one steps aside. */
+@media (min-width: 769px) and (max-width: 940px) {
+  .header-mark {
+    display: none;
+  }
+  .header-nav-left {
+    gap: 12px;
+  }
 }
 
 .nav-link {
@@ -318,9 +551,11 @@ a:hover {
   text-decoration: none;
   font-size: 0.88rem;
   font-weight: 500;
-  transition: color 0.15s ease;
+  transition: color 0.2s cubic-bezier(0, 0, 0.2, 1);
   padding: 4px 0;
   position: relative;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .nav-link:hover {
@@ -346,13 +581,18 @@ a:hover {
   display: flex;
   align-items: center;
   gap: 12px;
+  justify-self: end;
+  min-width: 0;
 }
 
+/* Primary dark capsule, like the reference "Try ChatGPT ↗" — near-black pill,
+   white label, thin ↗ arrow lifted slightly. */
 .header-cta {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 8px 18px;
+  height: 40px;
+  padding: 0 16px;
   border-radius: 9999px;
   background: var(--text);
   color: var(--bg) !important;
@@ -360,24 +600,73 @@ a:hover {
   font-weight: 600;
   text-decoration: none;
   white-space: nowrap;
-  transition: opacity 0.15s ease, transform 0.15s ease;
+  flex-shrink: 0;
+  transition: opacity 0.2s cubic-bezier(0, 0, 0.2, 1), transform 0.2s cubic-bezier(0, 0, 0.2, 1);
 }
 .header-cta:hover {
   opacity: 0.88;
   transform: translateY(-1px);
 }
 
+/* Second pill shares the capsule treatment so the pair reads as two dark
+   actions from the reference header. */
+.header-cta-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 9999px;
+  background: var(--text);
+  color: var(--bg) !important;
+  font-size: 0.84rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: opacity 0.2s cubic-bezier(0, 0, 0.2, 1), transform 0.2s cubic-bezier(0, 0, 0.2, 1);
+}
+.header-cta-ghost:hover {
+  opacity: 0.88;
+  transform: translateY(-1px);
+}
+
+/* The ↗ arrow rides a touch high, like the reference glyph. */
+.header-cta svg,
+.header-cta-ghost svg {
+  margin-top: -1px;
+}
+
+/* Up to 1024px the nav collapses into the hamburger menu and the header
+   pills step aside, so the centred wordmark keeps its room. */
+@media (max-width: 1024px) {
+  .desktop-nav {
+    display: none !important;
+  }
+  .header-cta,
+  .header-cta-ghost {
+    display: none !important;
+  }
+  .menu-button {
+    display: inline-flex !important;
+  }
+  .theme-toggle-btn {
+    display: none !important;
+  }
+}
+
 .theme-toggle-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   border-radius: 9999px;
   border: 1px solid var(--line);
   background: var(--surface-2);
   color: var(--text-soft);
   cursor: pointer;
+  flex-shrink: 0;
   transition: all 0.15s ease;
 }
 
@@ -392,17 +681,113 @@ a:hover {
 :root[data-theme='dark'] .sun-icon { display: block; }
 :root[data-theme='dark'] .moon-icon { display: none; }
 
+/* Theme menu — opens from the header's theme button. */
+.theme-menu { position: relative }
+.theme-menu-list {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 60;
+  min-width: 186px;
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface-card);
+  box-shadow: 0 12px 34px rgba(0,0,0,.22);
+}
+.theme-menu-item {
+  display: grid;
+  grid-template-columns: 16px 1fr 14px;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  font-family: var(--font-sans);
+  font-size: .88rem;
+  font-weight: 500;
+  color: var(--text-soft);
+  text-align: left;
+  cursor: pointer;
+}
+.theme-menu-item:hover { background: var(--surface-2); color: var(--text) }
+.theme-menu-item span { white-space: nowrap }
+.theme-check { opacity: 0; color: var(--text) }
+.theme-menu-item.is-active .theme-check { opacity: 1 }
+.theme-menu-item.is-active { color: var(--text) }
+
+/* Mobile panel: segmented three-option row */
+.panel-theme-label {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 12px 0 8px;
+}
+.panel-theme-options { display: flex; gap: 8px; flex-wrap: wrap }
+.panel-theme-option {
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  border-radius: 9999px;
+  background: var(--surface-2);
+  font-family: var(--font-sans);
+  font-size: .84rem;
+  font-weight: 500;
+  color: var(--text-soft);
+  cursor: pointer;
+}
+.panel-theme-option:hover { color: var(--text); border-color: var(--line-hover) }
+.panel-theme-option.is-active {
+  background: var(--text);
+  border-color: var(--text);
+  color: var(--bg);
+  font-weight: 600;
+}
+
+/* Scroll-band text adaptation (light mode, homepage): the band engine sets
+   data-band-token as each wash engages — navy type on the sky band, pale ink
+   on the dark-green band, plain black against the light washes. */
+body[data-band-token="sky"] .flip-heading {
+  color: #0e3a66;
+}
+body[data-band-token="sky"] .flip-heading em {
+  color: #1a6fbd;
+}
+body[data-band-token="sky"] .flip-label {
+  color: #38597f;
+}
+body[data-band-token="forest"] .flip-what-line {
+  color: #eef7ef;
+}
+body[data-band-token="forest"] .flip-label {
+  color: #cfe6d6;
+}
+body[data-band-token="forest"] .flip-end-label {
+  color: #f0f7ef;
+}
+.flip-heading,
+.flip-label,
+.flip-what-line {
+  transition: color .55s ease;
+}
+
 .menu-button {
   display: none;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   border-radius: 9999px;
   border: 1px solid var(--line);
   background: var(--surface-2);
   color: var(--text);
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 .mobile-nav-panel {
@@ -428,6 +813,224 @@ a:hover {
 .mobile-nav-link.active {
   color: var(--text);
   font-weight: 600;
+}
+
+/* Search — a 36px round trigger beside the other header buttons, and a
+   full-screen overlay in the shape of the search on openai.com: one large
+   query line with a submit button, then a "Sources" stack of result rows. */
+/* Search — a bare magnifier that sits right after the nav links, the way
+   openai.com places it. No pill, no border: just the icon in the nav colour
+   with a hover shade, inside a comfortable hit area. */
+.search-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  flex-shrink: 0;
+  white-space: nowrap;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: var(--text-soft);
+  cursor: pointer;
+  transition: color 0.2s cubic-bezier(0, 0, 0.2, 1);
+}
+.search-btn:hover {
+  color: var(--text);
+}
+
+/* Phones: the bar keeps search + menu, and the theme switch moves into the
+   mobile menu panel so the centred wordmark still has its space. */
+@media (max-width: 768px) {
+  .theme-toggle-btn { display: none }
+}
+
+html.search-open { overflow: hidden }
+
+.search-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  background: color-mix(in srgb, var(--bg) 93%, transparent);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  overflow-y: auto;
+  opacity: 0;
+  transition: opacity 0.18s ease;
+}
+.search-overlay.is-open { opacity: 1 }
+.search-overlay[hidden] { display: none }
+
+.search-shell {
+  width: min(720px, calc(100% - 48px));
+  margin-inline: auto;
+  padding: clamp(20px, 5vh, 64px) 0 72px;
+}
+.search-top { display: flex; justify-content: flex-end; margin-bottom: clamp(8px, 2.5vh, 24px) }
+.search-close-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+  color: var(--text-soft);
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.search-close-btn:hover {
+  background: var(--surface-3);
+  color: var(--text);
+  border-color: var(--line-hover);
+}
+
+.search-input-row {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 12px;
+}
+/* Scoped to the overlay so the class can't collide with the filter bar's
+   .search-input rules further down the file. */
+.search-overlay .search-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: none;
+  border-radius: 0;
+  padding: 6px 0;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+.search-overlay .search-input::placeholder { color: var(--muted) }
+.search-overlay .search-input:focus {
+  outline: none;
+  box-shadow: none;
+  border-color: transparent;
+  background: none;
+}
+.search-overlay .search-input::-webkit-search-decoration,
+.search-overlay .search-input::-webkit-search-cancel-button { -webkit-appearance: none }
+.search-go {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  border-radius: 9999px;
+  border: 0;
+  background: var(--text);
+  color: var(--bg);
+  cursor: pointer;
+  transition: opacity 0.2s cubic-bezier(0, 0, 0.2, 1), transform 0.2s cubic-bezier(0, 0, 0.2, 1);
+}
+.search-go:hover { opacity: 0.85 }
+.search-go:active { transform: translateY(1px) }
+
+.search-label {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 28px 0 6px;
+}
+.search-hit {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 116px;
+  gap: 20px;
+  align-items: start;
+  padding: 18px 14px;
+  margin-inline: -14px;
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+}
+.search-hit.is-selected { background: var(--surface-2) }
+.search-hit-body { display: block; min-width: 0 }
+.search-hit-kicker {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.search-hit-title {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: 1.02rem;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  margin: 0 0 6px;
+}
+.search-hit:hover .search-hit-title,
+.search-hit:focus-visible .search-hit-title { color: #2a6cf5 }
+.search-hit-excerpt {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: var(--text-soft);
+}
+.search-hit-img {
+  width: 116px;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: var(--surface-2);
+}
+.search-hit-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.search-none {
+  padding: 26px 0 6px;
+  font-family: var(--font-sans);
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+.search-none strong { color: var(--text); font-weight: 600 }
+.search-foot { padding: 18px 14px 0; margin-inline: -14px }
+.search-foot a {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  color: var(--text-soft);
+  text-decoration: none;
+  transition: color 0.2s cubic-bezier(0, 0, 0.2, 1);
+}
+.search-foot a:hover { color: var(--text) }
+
+/* Mobile search sizes — kept after the base rules so they win the cascade. */
+@media (max-width: 768px) {
+  .search-shell { width: calc(100% - 32px); padding-bottom: 56px }
+  .search-overlay .search-input { font-size: 1.45rem }
+  .search-go { width: 38px; height: 38px }
+  .search-hit {
+    grid-template-columns: minmax(0, 1fr) 88px;
+    gap: 14px;
+    padding: 16px 10px;
+    margin-inline: -10px;
+  }
+  .search-hit-img { width: 88px }
+  .search-hit-title { font-size: 0.95rem }
+  .search-hit-excerpt { font-size: 0.8rem }
 }
 
 .mobile-cta {
@@ -680,7 +1283,7 @@ a:hover {
   letter-spacing: -0.025em;
   margin: 0 0 10px;
   color: var(--text);
-  transition: color 0.15s ease;
+  transition: color 0.2s cubic-bezier(0, 0, 0.2, 1);
 }
 
 .card-lead h3 {
@@ -2018,8 +2621,21 @@ a:hover {
 
 .site-footer {
   border-top: 1px solid var(--line);
-  padding: 72px 0 40px;
+  padding: 72px 0 0;
   background: var(--surface);
+  position: relative;
+  z-index: 2;
+  border-radius: 0 0 40px 40px;
+  overflow: hidden;
+}
+
+.footer-reveal-band {
+  height: clamp(120px, 18vw, 260px);
+  background:
+    radial-gradient(ellipse at 50% 100%, rgba(42, 108, 245, 0.16) 0%, transparent 60%),
+    linear-gradient(180deg, transparent 0%, color-mix(in srgb, var(--surface-2) 70%, transparent) 100%);
+  pointer-events: none;
+  border-top: 1px solid var(--line);
 }
 
 .footer-grid {
@@ -2086,7 +2702,7 @@ a:hover {
   font-size: 0.88rem;
   color: var(--text-soft);
   margin-bottom: 10px;
-  transition: color 0.15s ease;
+  transition: color 0.2s cubic-bezier(0, 0, 0.2, 1);
 }
 
 .footer-col a:hover {
@@ -2098,8 +2714,6 @@ a:hover {
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  padding-top: 28px;
-  border-top: 1px solid var(--line);
   font-size: 0.82rem;
   color: var(--muted);
   flex-wrap: wrap;
@@ -2117,6 +2731,169 @@ a:hover {
 
 .dot-sep {
   opacity: 0.5;
+}
+
+/* ==========================================================================
+   Footer ending — Mistral-style open zone + the river
+   Real links up top; the big brand mark drifts in a small circle above the
+   evergreen bottom row; then a full-bleed blue river band with fish.
+   ========================================================================== */
+
+.footer-open { padding-top: 14px }
+
+.footer-social {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 36px;
+}
+.footer-social a {
+  display: inline-flex;
+  color: var(--text-soft);
+  transition: color 0.2s cubic-bezier(0, 0, 0.2, 1);
+}
+.footer-social a:hover { color: var(--text) }
+.footer-social svg { width: 20px; height: 20px }
+
+/* The orbit: an invisible point spins at the centre of the slot while the
+   mark rides ~13px off it, and the mark's own counter-spin keeps it upright —
+   a continuous circular drift, openai-preloader style, nothing tips over. */
+.footer-logo-slot {
+  --orbit-w: 138px;
+  position: relative;
+  height: calc(var(--orbit-w) * 0.97 + 32px);
+  margin-bottom: 34px;
+}
+.footer-logo-orbit {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  animation: jl-orbit 7s linear infinite;
+}
+.footer-logo-big {
+  position: absolute;
+  width: var(--orbit-w);
+  height: auto;
+  left: calc(var(--orbit-w) * -0.5);
+  top: calc(var(--orbit-w) * -0.485 - 13px);
+  animation: jl-orbit-counter 7s linear infinite;
+}
+
+/* The river: brand blue, deepening toward the bottom edge of the page. */
+.footer-river {
+  position: relative;
+  height: 185px;
+  margin-top: 10px;
+  overflow: hidden;
+  background: linear-gradient(180deg, #2a6cf5 0%, #2158cf 40%, #18459f 74%, #123579 100%);
+}
+
+/* Two Directions: fish anchored to the left edge cruise right and stay
+   right-facing; fish anchored to the right edge cruise left and face left,
+   so the shoal criss-crosses the river. */
+.fish {
+  position: absolute;
+  left: 0;
+  width: var(--sz, 44px);
+  color: var(--tint, rgba(255, 255, 255, 0.38));
+  animation: jl-swim-right var(--swim, 18s) linear infinite;
+  animation-delay: var(--dly, 0s);
+}
+.fish-l {
+  left: auto;
+  right: 0;
+  animation-name: jl-swim-left;
+}
+.fish-bob {
+  display: block;
+  animation: jl-bob var(--bob, 2.9s) ease-in-out infinite alternate;
+}
+.fish-svg { display: block; width: 100%; height: auto }
+.fish-l .fish-svg { transform: scaleX(-1) }
+
+/* Leapers: a quick rising arc toward the surface with a nose-up flick,
+   then a dive back down and a pause before the next jump. */
+.fish-jump .fish-bob {
+  animation: jl-leap var(--jmp, 4.8s) ease-in-out infinite;
+  animation-delay: var(--jdl, 0s);
+}
+.fish-l.fish-jump .fish-bob { animation-name: jl-leap-left }
+
+/* Depth, size, tint, speed — negative delays spread the shoal around the
+   loop so the water is alive the moment the page loads. */
+.f1 { --sz: 46px; top: 16%; --swim: 21s; --dly: -4s;  --tint: rgba(255, 255, 255, 0.5);  --leap: -20px; --jmp: 4.8s; --jdl: -2.2s }
+.f2 { --sz: 30px; top: 42%; --swim: 26s; --dly: -15s; --tint: rgba(255, 255, 255, 0.3) }
+.f3 { --sz: 56px; top: 60%; --swim: 17s; --dly: -9s;  --tint: rgba(255, 255, 255, 0.42); --leap: -34px; --jmp: 5.6s; --jdl: -0.8s }
+.f4 { --sz: 24px; top: 82%; --swim: 30s; --dly: -21s; --tint: rgba(255, 255, 255, 0.24) }
+.f5 { --sz: 38px; top: 70%; --swim: 24s; --dly: -2s;  --tint: rgba(255, 255, 255, 0.34) }
+.f6 { --sz: 34px; top: 30%; --swim: 23s; --dly: -12s; --tint: rgba(255, 255, 255, 0.45); --leap: -26px; --jmp: 4.2s; --jdl: -3.4s }
+
+@keyframes jl-orbit {
+  from { transform: rotate(0deg) }
+  to   { transform: rotate(360deg) }
+}
+@keyframes jl-orbit-counter {
+  from { transform: rotate(0deg) }
+  to   { transform: rotate(-360deg) }
+}
+@keyframes jl-swim-right {
+  from { transform: translateX(-140px) }
+  to   { transform: translateX(calc(100vw + 140px)) }
+}
+@keyframes jl-swim-left {
+  from { transform: translateX(140px) }
+  to   { transform: translateX(calc(-100vw - 140px)) }
+}
+@keyframes jl-bob {
+  from { transform: translateY(-4px) rotate(-2.5deg) }
+  to   { transform: translateY(4px) rotate(2.5deg) }
+}
+@keyframes jl-leap {
+  0%         { transform: translateY(0) rotate(0deg) }
+  14%        { transform: translateY(var(--leap, -30px)) rotate(-36deg) }
+  34%        { transform: translateY(calc(var(--leap, -30px) * 1.12)) rotate(12deg) }
+  52%        { transform: translateY(2px) rotate(26deg) }
+  66%, 100%  { transform: translateY(0) rotate(0deg) }
+}
+@keyframes jl-leap-left {
+  0%         { transform: translateY(0) rotate(0deg) }
+  14%        { transform: translateY(var(--leap, -30px)) rotate(36deg) }
+  34%        { transform: translateY(calc(var(--leap, -30px) * 1.12)) rotate(-12deg) }
+  52%        { transform: translateY(2px) rotate(-26deg) }
+  66%, 100%  { transform: translateY(0) rotate(0deg) }
+}
+
+/* Hairline separators between the link columns, like the reference. */
+@media (min-width: 769px) {
+  .footer-grid { gap: 0 }
+  .footer-brand-col { padding-right: 44px }
+  .footer-col { border-left: 1px solid var(--line); padding-left: 44px }
+}
+
+/* On wide screens the bottom row flanks the drifting mark at its height
+   (copyright left, legal right) instead of stacking underneath it. */
+@media (min-width: 961px) {
+  .footer-open .shell { position: relative }
+  .footer-bottom { position: absolute; left: 0; right: 0; bottom: 102px }
+  .footer-logo-slot { margin-bottom: 70px }
+}
+
+@media (max-width: 768px) {
+  .footer-logo-slot { --orbit-w: 104px }
+  /* The taller river band steps down on phones; fish leap amplitudes from
+     the f-classes stay within it. */
+  .footer-river { height: 140px }
+  .f1 { --sz: 32px } .f2 { --sz: 22px } .f3 { --sz: 40px }
+  .f4 { --sz: 18px } .f5 { --sz: 27px } .f6 { --sz: 24px }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer-logo-orbit,
+  .footer-logo-big,
+  .fish-bob { animation: none }
+  .fish { display: none }
 }
 
 /* ==========================================================================
@@ -2172,9 +2949,45 @@ a:hover {
   .desktop-nav {
     display: none;
   }
+  /* Keep the wordmark optically centred exactly like the desktop header:
+     pin it to the middle of the bar instead of letting space-between drift
+     it left of centre. Log in / Sign up already exist in the mobile menu
+     panel, so the bar version steps aside to leave the centre free. */
   .brand-center {
-    position: static;
-    transform: none;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  /* Explicit placement: with the wordmark out of flow the auto-placement
+     algorithm slides header-actions into the middle (zero-width) column,
+     parking the hamburger on top of the wordmark. Pin the columns so the
+     actions stay flush right like the desktop header. */
+  .header-left {
+    grid-column: 1;
+  }
+  .header-actions {
+    grid-column: 3;
+    justify-self: end;
+  }
+  .header-auth-group {
+    /* The auth script writes an inline display:flex, so this needs !important
+       to win; Log in / Sign up remain in the mobile menu panel below. */
+    display: none !important;
+  }
+  /* The left-hand mark is the logo on phones; keep the centre lockup at the
+     width it had before the mark was added so the header still fits. */
+  .brand-mark-svg {
+    display: none;
+  }
+  .brand-word {
+    width: 154px;
+    height: 30px;
+  }
+  .brand-center-svg {
+    height: 30px;
+  }
+  .site-header.is-scrolled .brand-word {
+    width: 35px;
   }
   .header-cta {
     display: none;
@@ -2206,6 +3019,42 @@ a:hover {
   }
   .inquiry-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+/* Small phones: the centred lockup steps down and the two action buttons
+   tighten so the wordmark still clears them on both sides. */
+@media (max-width: 420px) {
+  .brand-word {
+    width: 133px;
+    height: 26px;
+  }
+  .brand-center-svg {
+    height: 26px;
+  }
+  .site-header.is-scrolled .brand-word {
+    width: 30px;
+  }
+  .header-actions {
+    gap: 8px;
+  }
+  .search-btn,
+  .menu-button {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+@media (max-width: 340px) {
+  .brand-word {
+    width: 108px;
+    height: 21px;
+  }
+  .brand-center-svg {
+    height: 21px;
+  }
+  .site-header.is-scrolled .brand-word {
+    width: 24px;
   }
 }
 
@@ -2263,3 +3112,48 @@ a:hover {
 .publication-list { border-top: 1px solid var(--line); }.publication-row { display: grid; grid-template-columns: 170px minmax(0, 1fr) 24px; gap: 30px; padding: 31px 0; border-bottom: 1px solid var(--line); color: inherit; text-decoration: none; }.publication-meta { color: var(--muted); font-size: .88rem; }.publication-meta strong { display: block; color: var(--text-soft); margin-bottom: 9px; }.publication-row h2 { margin: 0 0 8px; font-size: clamp(1.35rem, 2.6vw, 1.9rem); line-height: 1.2; }.publication-row p { margin: 0; color: var(--text-soft); }.publication-authors { margin-top: 10px !important; color: var(--muted) !important; font-size: .86rem; }.publication-arrow { color: var(--text-soft); font-size: 1.25rem; }
 .models-page { padding: clamp(72px, 11vw, 150px) 0; }.models-intro { max-width: 720px; margin-bottom: 48px; }.models-intro h1 { margin: 7px 0 16px; font-size: clamp(2rem, 4.5vw, 3rem); line-height: 1.1; letter-spacing: -.04em; }.models-intro > p { color: var(--text-soft); font-size: 1.12rem; }.model-feature { display: grid; grid-template-columns: minmax(220px, 380px) minmax(280px, 640px); justify-content: space-between; align-items: center; gap: clamp(32px, 7vw, 100px); }.model-visual { width: min(100%, 380px); aspect-ratio: 1; overflow: hidden; border-radius: 12px; background: var(--surface-2); }.model-visual img { display: block; width: 100%; height: 100%; object-fit: cover; }.model-copy h2 { margin: 5px 0 16px; font-size: clamp(2.5rem, 5vw, 4.5rem); line-height: 1; letter-spacing: -.06em; }.model-copy > p:not(.section-eyebrow) { color: var(--text-soft); }.model-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }.model-actions .button { min-height: 52px; padding-inline: 25px; font-size: 1rem; }.model-details { display: flex; justify-content: space-between; align-items: end; gap: 28px; margin-top: clamp(72px, 11vw, 140px); padding-top: 30px; border-top: 1px solid var(--line); }.model-details h2 { margin: 0 0 8px; }.model-details p { margin: 0; color: var(--text-soft); }
 @media (max-width: 760px) { .shell { width: min(100% - 32px, 1200px); }.card-grid { grid-template-columns: 1fr; }.w11-inner, .section-head, .model-details { align-items: flex-start; flex-direction: column; }.hero-actions { flex-wrap: wrap; }.publication-row { grid-template-columns: 1fr 22px; gap: 12px; }.publication-meta { grid-column: 1 / -1; display: flex; gap: 14px; }.publication-meta strong { margin: 0; }.research-summary { flex-direction: column; gap: 5px; }.research-summary span + span::before { display: none; }.model-feature { grid-template-columns: 1fr; } }
+
+/* Image lightbox � opens on click, scale 0.98 -> 1 + fade. */
+.lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.82);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  opacity: 0;
+  transition: opacity 0.3s cubic-bezier(0, 0, 0.2, 1);
+  cursor: zoom-out;
+}
+.lightbox-overlay.is-open { opacity: 1; }
+.lightbox-overlay img {
+  max-width: 92vw;
+  max-height: 88vh;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+  transform: scale(0.98);
+  transition: transform 0.3s cubic-bezier(0, 0, 0.2, 1);
+}
+.lightbox-overlay.is-open img { transform: scale(1); }
+.lightbox-overlay .lightbox-close {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

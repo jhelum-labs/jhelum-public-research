@@ -1,9 +1,11 @@
 export const SITE = {
   name: 'Jhelum Labs',
   url: 'https://jhelumlabs.in',
-  tagline: 'Research and Deployment',
+  tagline: 'Research and Development',
   contactEmail: 'research@jhelumlabs.in',
   githubUrl: 'https://github.com/jhelum-labs',
+  xUrl: 'https://x.com/jhelum_labs',
+  logoUrl: 'https://jhelumlabs.in/icon-512.png',
   cta: {
     label: 'View Research',
     url: '/research',

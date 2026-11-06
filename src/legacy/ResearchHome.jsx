@@ -67,12 +67,12 @@ export default function ResearchHome() {
           <h1 className="hero__title">
             <TextRepel text={'Jhelum \\abs'} />
           </h1>
-          <p className="hero__tagline">Research and Deployment</p>
+          <p className="hero__tagline">Research and Development</p>
           <p className="hero__intro">Open experimental AI research, systems, and publications.</p>
         </div>
       </section>
 
-      <ScrollVelocity text="Jhelum Labs · Research and Deployment · " />
+      <ScrollVelocity text="Jhelum Labs · Research and Development · " />
 
       <section className="stats-section">
         <div className="container">

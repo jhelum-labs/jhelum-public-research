@@ -1,6 +1,19 @@
 ---
 import { SITE } from '../lib/site.js'
 const year = new Date().getFullYear()
+
+// A small shoal — each fish gets its own depth, size, tint, speed and start
+// offset through the f1–f6 classes in site.css. fish-l ones swim leftward
+// (right-side fish), the rest swim rightward (left-side fish); fish-jump
+// ones periodically leap for the surface.
+const fish = [
+  { cls: 'f1', flip: false, jump: true },
+  { cls: 'f2', flip: true },
+  { cls: 'f3', flip: false, jump: true },
+  { cls: 'f4', flip: true },
+  { cls: 'f5', flip: false },
+  { cls: 'f6', flip: true, jump: true },
+]
 ---
 <footer class="site-footer">
   <div class="shell footer-grid">
@@ -46,16 +59,283 @@ const year = new Date().getFullYear()
       <a href="/terms">Terms of Service</a>
     </div>
   </div>
-  <div class="shell footer-bottom">
-    <div class="footer-copy">
-      © {year} {SITE.name}. Open research and model documentation.
-    </div>
-    <div class="footer-legal">
-      <span>{SITE.license} Open Source License</span>
-      <span class="dot-sep">·</span>
-      <a href="/privacy">Privacy</a>
-      <span class="dot-sep">·</span>
-      <a href="/terms">Terms</a>
+
+  <!-- Open ending zone like the reference footer: real links up top, the big
+       brand mark drifting in a small circle, then the evergreen bottom row. -->
+  <div class="footer-open">
+    <div class="shell">
+      <div class="footer-social">
+        <a href={SITE.xUrl} target="_blank" rel="noreferrer" aria-label="Jhelum Labs on X (Twitter)">
+          <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M18.9 1.15h3.68l-8.04 9.19L24 22.85h-7.41l-5.8-7.59-6.64 7.59H.47l8.6-9.83L0 1.15h7.59l5.24 6.93 6.07-6.93Zm-1.29 19.5h2.04L6.48 3.24H4.3l13.31 17.41Z"/>
+          </svg>
+        </a>
+        <a href={SITE.githubUrl} target="_blank" rel="noreferrer" aria-label="Jhelum Labs on GitHub">
+          <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56 0-.27-.01-1.17-.02-2.12-3.2.7-3.88-1.36-3.88-1.36-.52-1.33-1.28-1.68-1.28-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.72-1.54-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.18-3.09-.12-.29-.51-1.46.11-3.05 0 0 .96-.31 3.15 1.18a10.9 10.9 0 0 1 5.74 0c2.19-1.49 3.15-1.18 3.15-1.18.62 1.59.23 2.76.11 3.05.74.81 1.18 1.83 1.18 3.09 0 4.41-2.69 5.38-5.26 5.66.41.36.78 1.06.78 2.14 0 1.54-.01 2.78-.01 3.16 0 .31.21.68.8.56A11.52 11.52 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/>
+          </svg>
+        </a>
+        <a href={`mailto:${SITE.contactEmail}`} aria-label="Email the Jhelum Labs research team">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/>
+            <path d="m3.5 7.5 8.5 5.9 8.5-5.9"/>
+          </svg>
+        </a>
+      </div>
+
+      <div class="footer-logo-slot" aria-hidden="true">
+        <div class="footer-logo-orbit">
+          <img class="footer-logo-big" src="/jhelum-labs-mark.svg" alt="" loading="lazy" />
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="footer-copy">
+          © {year} {SITE.name}. Open research and model documentation.
+        </div>
+        <div class="footer-legal">
+          <span>{SITE.license} Open Source License</span>
+          <span class="dot-sep">·</span>
+          <a href="/privacy">Privacy</a>
+          <span class="dot-sep">·</span>
+          <a href="/terms">Terms</a>
+        </div>
+      </div>
     </div>
   </div>
+
+  <!-- The river — the Jhelum in the name; blue water with fish drifting through. -->
+  <div class="footer-river" aria-hidden="true">
+    {fish.map((f) => (
+      <span class={`fish ${f.cls}${f.flip ? ' fish-l' : ''}${f.jump ? ' fish-jump' : ''}`}>
+        <span class="fish-bob">
+          <svg class="fish-svg" viewBox="0 0 40 24" xmlns="http://www.w3.org/2000/svg">
+            <path fill="currentColor" d="M0.5 12C6.5 5.2 15.5 3.2 21.5 5.8C26 7.7 29.3 10.2 31 12C29.3 13.8 26 16.3 21.5 18.2C15.5 20.8 6.5 18.8 0.5 12Z"/>
+            <path fill="currentColor" d="M30.6 12L39.4 6.6V17.4Z"/>
+            <path fill="currentColor" d="M14.4 5C15.4 3.2 18.4 2.7 20.2 3.5C18.2 4.6 16.4 5.1 14.4 5Z"/>
+            <circle cx="7.2" cy="10.6" r="1.1" fill="rgba(12, 40, 96, 0.8)"/>
+          </svg>
+        </span>
+      </span>
+    ))}
+  <!-- Decorative reveal band — fades in as the footer enters view. -->
+  <div class="footer-reveal-band" data-scroll-reveal aria-hidden="true"></div>
 </footer>
+
+<!-- Giant wordmark over painted-confetti canvas. Fixed behind the page; the
+     final spacer scroll lifts the footer card up like a book page turning. -->
+<section class="footer-wordmark-section" aria-label="Jhelum Labs">
+  <canvas class="footer-confetti-canvas" aria-hidden="true"></canvas>
+  <!-- Same wordmark lockup as the header logo: Jhelum + the diagonal-L glyph + abs -->
+  <svg class="footer-wordmark" viewBox="638 378 870 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Jhelum Labs">
+    <g fill="#f4f6fa" font-family="Poppins, 'Segoe UI', Arial, sans-serif" font-weight="700">
+      <text x="648" y="525" font-size="140" textLength="518" lengthAdjust="spacingAndGlyphs">Jhelum</text>
+      <polygon points="1189,415 1210,415 1253,527 1232,527"/>
+      <text x="1250" y="525" font-size="140" textLength="246" lengthAdjust="spacingAndGlyphs">abs</text>
+    </g>
+  </svg>
+</section>
+<div class="footer-wordmark-space" aria-hidden="true"></div>
+
+<style>
+  .footer-wordmark-section {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: -1;
+    height: 70vh;
+    min-height: 420px;
+    background: #0a1a1a;
+    overflow: hidden;
+  }
+  .footer-wordmark-space {
+    height: 70vh;
+    min-height: 420px;
+    pointer-events: none;
+  }
+  .footer-confetti-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .footer-wordmark {
+    position: absolute;
+    left: 50%;
+    bottom: -2%;
+    transform: translateX(-50%);
+    width: min(1480px, 97vw);
+    height: auto;
+    z-index: 1;
+    pointer-events: none;
+    user-select: none;
+  }
+</style>
+
+<script>
+    // Static painted-confetti background behind the giant wordmark.
+    // Flecks never move: a one-time reveal wave fades/scales them in from the
+    // centre outward as the page's final scroll (page-turn) exposes the panel.
+    const confettiCanvas = document.querySelector('.footer-confetti-canvas') as HTMLCanvasElement | null;
+    if (confettiCanvas) {
+      const CONFIG = {
+        fleckCountDesktop: 4000,
+        fleckCountMobile: 1200,
+        fleckSize: [6, 22],
+        darkColors: ['#0a0f0f', '#141a1a', '#1a2420', '#121816', '#1f2a26'],
+        coloredColors: ['#2a6cf5', '#8fb0ff', '#35d0e8', '#7be0a8', '#d6f04a'],
+        coloredRatio: 0.35,
+        revealDuration: 1200,
+        revealFadeMs: 300,
+      };
+
+      const ctx = confettiCanvas.getContext('2d');
+      if (ctx) {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const section = confettiCanvas.parentElement as HTMLElement;
+        const spacer = document.querySelector('.footer-wordmark-space') as HTMLElement | null;
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        let cssW = 0, cssH = 0;
+        let flecks: any[] = [];
+        let revealState: 'idle' | 'revealing' | 'done' = 'idle';
+        let revealStart = 0;
+        let running = false;
+        let rafId = 0;
+        let lastT = 0;
+
+        const isMobile = () => window.innerWidth < 768;
+
+        const buildFlecks = () => {
+          flecks = [];
+          const cx = cssW / 2, cy = cssH / 2;
+          const maxD = Math.hypot(cx, cy);
+          const n = isMobile() ? CONFIG.fleckCountMobile : CONFIG.fleckCountDesktop;
+          for (let i = 0; i < n; i++) {
+            const x = Math.random() * cssW;
+            const y = Math.random() * cssH;
+            // coloured and dark flecks are MIXED across the whole panel, with a
+            // few diagonal streaks crossing it, like the reference site.
+            const cn = Math.random();
+            const streak = Math.abs(Math.sin((x + y * 0.6) * 0.0045 + Math.sin(x * 0.0011) * 2));
+            const isColored = cn < 0.30 || streak < 0.10;
+            const color = isColored
+              ? CONFIG.coloredColors[Math.floor(Math.random() * CONFIG.coloredColors.length)]
+              : CONFIG.darkColors[Math.floor(Math.random() * CONFIG.darkColors.length)];
+            const r = CONFIG.fleckSize[0] + Math.random() * (CONFIG.fleckSize[1] - CONFIG.fleckSize[0]);
+            const vcount = 6 + Math.floor(Math.random() * 4);
+            const verts = [];
+            for (let v = 0; v < vcount; v++) {
+              const ang = (v / vcount) * Math.PI * 2;
+              const rad = r * (0.55 + Math.random() * 0.75);
+              verts.push({ x: Math.cos(ang) * rad, y: Math.sin(ang) * rad });
+            }
+            flecks.push({
+              x, y, rot: Math.random() * Math.PI * 2,
+              verts, color, isColored,
+              revealDelay: (Math.hypot(x - cx, y - cy) / maxD) * CONFIG.revealDuration,
+            });
+          }
+        };
+
+        const resize = () => {
+          cssW = section.clientWidth;
+          cssH = section.clientHeight;
+          confettiCanvas.width = Math.floor(cssW * dpr);
+          confettiCanvas.height = Math.floor(cssH * dpr);
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          buildFlecks();
+          if (reducedMotion || revealState === 'done') {
+            // one fully-revealed static frame
+            drawFrame(performance.now());
+          }
+        };
+
+        const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
+
+        const drawFrame = (time: number) => {
+          ctx.fillStyle = '#0a1a1a';
+          ctx.fillRect(0, 0, cssW, cssH);
+          const elapsed = revealState === 'done' || reducedMotion
+            ? CONFIG.revealDuration
+            : (revealState === 'revealing' ? time - revealStart : 0);
+          for (const f of flecks) {
+            const localT = Math.max(0, Math.min(1, (elapsed - f.revealDelay) / CONFIG.revealFadeMs));
+            if (localT <= 0) continue;
+            const s = 0.5 + 0.5 * easeOut(localT);
+            ctx.save();
+            ctx.translate(f.x, f.y);
+            ctx.rotate(f.rot);
+            ctx.scale(s, s);
+            ctx.globalAlpha = easeOut(localT) * (f.isColored ? 0.95 : 0.85);
+            ctx.fillStyle = f.color;
+            ctx.beginPath();
+            ctx.moveTo(f.verts[0].x, f.verts[0].y);
+            for (let v = 1; v < f.verts.length; v++) ctx.lineTo(f.verts[v].x, f.verts[v].y);
+            ctx.closePath();
+            ctx.fill();
+            ctx.restore();
+          }
+          ctx.globalAlpha = 1;
+        };
+
+        const loop = (now: number) => {
+          if (!running) return;
+          const dt = Math.min(40, now - lastT);
+          lastT = now;
+          drawFrame(now);
+          if (revealState === 'revealing' && now - revealStart > CONFIG.revealDuration + 250) {
+            revealState = 'done';
+            drawFrame(performance.now());
+            stop();
+            return;
+          }
+          rafId = requestAnimationFrame(loop);
+        };
+
+        const start = () => {
+          if (running || document.hidden) return;
+          running = true;
+          lastT = performance.now();
+          rafId = requestAnimationFrame(loop);
+        };
+        const stop = () => {
+          running = false;
+          if (rafId) { cancelAnimationFrame(rafId); rafId = 0; }
+        };
+
+        document.addEventListener('visibilitychange', () => {
+          if (document.hidden) stop(); else if (revealState === 'revealing') start();
+        });
+
+        // The page-turn: the final spacer scrolls the footer card up and off,
+        // exposing this fixed panel; the reveal wave fires as that happens.
+        const target = spacer || section;
+        if (reducedMotion) {
+          revealState = 'done';
+          resize();
+        } else {
+          const io = new IntersectionObserver((entries) => {
+            const hit = entries[0].isIntersecting;
+            if (hit && revealState === 'idle') {
+              revealState = 'revealing';
+              revealStart = performance.now();
+              start();
+            }
+          }, { threshold: 0.05 });
+          io.observe(target);
+        }
+
+        let resizeTimer: any;
+        const ro = new ResizeObserver(() => {
+          clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(resize, 150);
+        });
+        ro.observe(section);
+
+        resize();
+      }
+    }
+  </script>

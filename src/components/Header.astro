@@ -1,5 +1,6 @@
 ---
 import { SITE } from '../lib/site.js'
+import { allPublications } from '../lib/research.js'
 const { currentPath = '/' } = Astro.props
 const links = [
   { href: '/research', label: 'Research' },
@@ -7,52 +8,148 @@ const links = [
   { href: '/about', label: 'About' },
   { href: '/contact', label: 'Contact' },
 ]
+// Live titles for the panel's second column — straight from the publication
+// record, never typed by hand.
+const recent = allPublications.slice(0, 4)
 ---
 <header class="site-header">
   <div class="shell header-inner">
-    <!-- Left: icon + navigation links -->
+    <!-- Left: navigation links (wordmark in centre carries the logo) -->
     <div class="header-left">
-      <a class="header-mark" href="/" aria-label="Jhelum Labs home">
-        <svg class="header-mark-svg" viewBox="0 170 650 630" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <g fill="#2a6cf5">
-            <polygon points="152,310 306,310 335,344 176,344 49,611 82,611 196,372 358,372 394,413 228,413 124,628 0,628"/>
-            <polygon points="396,185 627,472 553,598 497,606 576,473 388,240 370,266 537,477 458,611 402,620 482,485 326,289"/>
-            <polygon points="203,513 295,651 570,614 633,720 236,780 146,640 168,592 258,729 589,683 572,655 275,697 183,559"/>
-          </g>
-          <path d="M322 443H362V538C362 575 340 592 308 592C295 592 290 590 290 590L272 560H322Z" fill="currentColor"/>
-        </svg>
-      </a>
       <nav class="header-nav-left desktop-nav" aria-label="Primary navigation">
-        {links.map((link) => (
+        <!-- Research — the OpenAI-style panel opens right under this link. -->
+        <div class="has-mega">
           <a
-            href={link.href}
-            class={currentPath === link.href ? 'nav-link active' : 'nav-link'}
-            aria-current={currentPath === link.href ? 'page' : undefined}
+            href="/research"
+            class={currentPath === '/research' ? 'nav-link active' : 'nav-link'}
+            aria-haspopup="true"
+            aria-current={currentPath === '/research' ? 'page' : undefined}
           >
-            {link.label}
+            Research
           </a>
-        ))}
+          <div class="header-mega" aria-label="Research navigation">
+            <div class="shell header-mega-grid">
+              <div class="mega-col">
+                <span class="mega-eyebrow">Explore Research</span>
+                <a class="mega-link-xl" href="/research">Research Index</a>
+                <a class="mega-link-xl" href="/research/w-1.1-final-architecture">W-1.1 Architecture</a>
+                <a class="mega-link-xl" href="/research/w-1.1-project-instruct">Project Instruct</a>
+                <a class="mega-link-xl" href="/research/w-1.2-architecture">W-1.2 Roadmap</a>
+                <a class="mega-link-xl" href="/about#safety">Safety &amp; Reliability</a>
+              </div>
+              <div class="mega-col">
+                <span class="mega-eyebrow">Latest Research</span>
+                {recent.map((pub) => (
+                  <a class="mega-link-sm" href={pub.articlePath}>{pub.title}</a>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Models -->
+        <div class="has-mega">
+          <a href="/models" class={currentPath === '/models' ? 'nav-link active' : 'nav-link'} aria-haspopup="true" aria-current={currentPath === '/models' ? 'page' : undefined}>Models</a>
+          <div class="header-mega" aria-label="Models navigation">
+            <div class="shell header-mega-grid">
+              <div class="mega-col">
+                <span class="mega-eyebrow">Explore Models</span>
+                <a class="mega-link-xl" href="/models">Models Index</a>
+                <a class="mega-link-xl" href="/w-1.1">W-1.1 Model Card</a>
+                <a class="mega-link-xl" href="/playground">Try W-1.1</a>
+              </div>
+              <div class="mega-col">
+                <span class="mega-eyebrow">Weights &amp; Papers</span>
+                <a class="mega-link-sm" href={SITE.weightsUrl} target="_blank" rel="noreferrer">Download model weights</a>
+                <a class="mega-link-sm" href="/research?type=Research%20Paper">Browse research papers</a>
+                <a class="mega-link-sm" href="/research/w-1.1-final">W-1.1 Final Report</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- About -->
+        <div class="has-mega">
+          <a href="/about" class={currentPath === '/about' ? 'nav-link active' : 'nav-link'} aria-haspopup="true" aria-current={currentPath === '/about' ? 'page' : undefined}>About</a>
+          <div class="header-mega" aria-label="About navigation">
+            <div class="shell header-mega-grid">
+              <div class="mega-col">
+                <span class="mega-eyebrow">About Jhelum Labs</span>
+                <a class="mega-link-xl" href="/about">About Index</a>
+                <a class="mega-link-xl" href="/about#mission">Our Mission</a>
+                <a class="mega-link-xl" href="/about#approach">Our Approach</a>
+              </div>
+              <div class="mega-col">
+                <span class="mega-eyebrow">Work With Us</span>
+                <a class="mega-link-sm" href="/contact">Contact the lab</a>
+                <a class="mega-link-sm" href="mailto:team@jhelumlabs.in?subject=Research+Collaboration">Research collaboration</a>
+                <a class="mega-link-sm" href="mailto:team@jhelumlabs.in?subject=Technical+Support">Technical support</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Contact -->
+        <div class="has-mega">
+          <a href="/contact" class={currentPath === '/contact' ? 'nav-link active' : 'nav-link'} aria-haspopup="true" aria-current={currentPath === '/contact' ? 'page' : undefined}>Contact</a>
+          <div class="header-mega" aria-label="Contact navigation">
+            <div class="shell header-mega-grid">
+              <div class="mega-col">
+                <span class="mega-eyebrow">Get in Touch</span>
+                <a class="mega-link-xl" href="/contact">Contact Page</a>
+                <a class="mega-link-xl" href="mailto:team@jhelumlabs.in">team@jhelumlabs.in</a>
+              </div>
+              <div class="mega-col">
+                <span class="mega-eyebrow">Elsewhere</span>
+                <a class="mega-link-sm" href={SITE.xUrl} target="_blank" rel="noreferrer">X (@jhelum_labs)</a>
+                <a class="mega-link-sm" href={SITE.githubUrl} target="_blank" rel="noreferrer">GitHub</a>
+                <a class="mega-link-sm" href="https://jhelumlabs.in">jhelumlabs.in</a>
+              </div>
+            </div>
+          </div>
+        </div>
       </nav>
+      <!-- Bare magnifier after the links, the way openai.com places search. -->
+      <button class="search-btn" data-search-open type="button" aria-label="Search research" aria-haspopup="dialog">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20.5 20.5-4.2-4.2"/></svg>
+      </button>
     </div>
 
-    <!-- Center: Jhelum Labs wordmark text — Anthropic style -->
+    <!-- Center: blue mark + wordmark lockup. On scroll it compresses into a J\ monogram. -->
     <a class="brand-center" href="/" aria-label="Jhelum Labs home">
-      <svg class="brand-center-svg" viewBox="638 378 870 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Jhelum Labs">
-        <g fill="currentColor" font-family="Poppins, 'Segoe UI', Arial, sans-serif" font-weight="700">
-          <text x="648" y="525" font-size="140" textLength="518" lengthAdjust="spacingAndGlyphs">Jhelum</text>
-          <polygon points="1189,415 1210,415 1253,527 1232,527"/>
-          <text x="1250" y="525" font-size="140" textLength="246" lengthAdjust="spacingAndGlyphs">abs</text>
+      <svg class="brand-mark-svg" viewBox="0 170 650 630" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <g fill="#2a6cf5">
+          <polygon points="152,310 306,310 335,344 176,344 49,611 82,611 196,372 358,372 394,413 228,413 124,628 0,628"/>
+          <polygon points="396,185 627,472 553,598 497,606 576,473 388,240 370,266 537,477 458,611 402,620 482,485 326,289"/>
+          <polygon points="203,513 295,651 570,614 633,720 236,780 146,640 168,592 258,729 589,683 572,655 275,697 183,559"/>
         </g>
+        <path d="M322 443H362V538C362 575 340 592 308 592C295 592 290 590 290 590L272 560H322Z" fill="currentColor"/>
       </svg>
+
+      <span class="brand-word">
+        <svg class="brand-center-svg brand-full" viewBox="638 378 870 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Jhelum Labs">
+          <g fill="currentColor" font-family="Poppins, 'Segoe UI', Arial, sans-serif" font-weight="700">
+            <text x="648" y="525" font-size="140" textLength="518" lengthAdjust="spacingAndGlyphs">Jhelum</text>
+            <polygon points="1189,415 1210,415 1253,527 1232,527"/>
+            <text x="1250" y="525" font-size="140" textLength="246" lengthAdjust="spacingAndGlyphs">abs</text>
+          </g>
+        </svg>
+
+        <svg class="brand-center-svg brand-compact" viewBox="0 0 194 170" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <g fill="currentColor" font-family="Poppins, 'Segoe UI', Arial, sans-serif" font-weight="700">
+            <text x="0" y="149" font-size="169" textLength="96" lengthAdjust="spacingAndGlyphs">J</text>
+            <polygon points="112,31 145,31 191,151 158,151"/>
+          </g>
+        </svg>
+      </span>
     </a>
 
     <!-- Right: actions & auth -->
     <div class="header-actions">
-      <!-- Unauthenticated guest state -->
-      <div class="header-auth-group" data-auth-guest>
-        <a href="/login" class="header-login-link">Log in</a>
-        <a href="/signup" class="btn-pill-signup btn-pill-header">Sign up</a>
-      </div>
+      <!-- Primary site actions, top-right like the reference headers. -->
+      <a class="header-cta" href="/research">Explore research
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+      </a>
+      <a class="header-cta-ghost" href="/playground">Try W-1.1
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+      </a>
 
       <!-- Authenticated user state -->
       <div class="user-menu-wrap" data-auth-user style="display: none;">
@@ -75,11 +172,30 @@ const links = [
         </div>
       </div>
 
-      <!-- Theme toggle -->
-      <button class="theme-toggle-btn" data-theme-toggle type="button" aria-label="Toggle colour theme">
-        <svg class="sun-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-        <svg class="moon-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-      </button>
+      <!-- Theme menu: Light / Dark / Absolute dark -->
+      <div class="theme-menu" data-theme-menu>
+        <button class="theme-toggle-btn" data-theme-menu-button type="button" aria-haspopup="true" aria-expanded="false" aria-label="Choose colour theme">
+          <svg class="sun-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+          <svg class="moon-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+        <div class="theme-menu-list" data-theme-list hidden role="menu" aria-label="Colour theme">
+          <button type="button" class="theme-menu-item" role="menuitemradio" aria-checked="false" data-theme-option="light">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+            <span>Light</span>
+            <svg class="theme-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>
+          </button>
+          <button type="button" class="theme-menu-item" role="menuitemradio" aria-checked="false" data-theme-option="dark">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            <span>Dark</span>
+            <svg class="theme-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>
+          </button>
+          <button type="button" class="theme-menu-item" role="menuitemradio" aria-checked="false" data-theme-option="absolute-dark">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg>
+            <span>Absolute dark</span>
+            <svg class="theme-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>
+          </button>
+        </div>
+      </div>
 
       <!-- Mobile menu trigger -->
       <button class="menu-button" data-menu-button aria-label="Toggle menu" aria-expanded="false">
@@ -112,6 +228,16 @@ const links = [
           <button type="button" class="dropdown-btn-logout" data-logout-button style="justify-content: center; color: #f87171;">
             Sign out
           </button>
+        </div>
+
+        <!-- Colour theme lives here on phones so the bar has room for search. -->
+        <div class="panel-theme-row">
+          <span class="panel-theme-label">Theme</span>
+          <div class="panel-theme-options" role="radiogroup" aria-label="Colour theme">
+            <button type="button" class="panel-theme-option" aria-checked="false" data-theme-option="light">Light</button>
+            <button type="button" class="panel-theme-option" aria-checked="false" data-theme-option="dark">Dark</button>
+            <button type="button" class="panel-theme-option" aria-checked="false" data-theme-option="absolute-dark">Absolute dark</button>
+          </div>
         </div>
       </div>
     </div>
@@ -172,4 +298,19 @@ const links = [
       window.location.reload()
     })
   })
+
+  // Collapse the centred wordmark into the "J\" monogram once the page moves.
+  // The threshold is a couple of pixels past the top so a stray rubber-band
+  // scroll on mobile does not flip the state back and forth. Toggling the
+  // class directly (rather than inside requestAnimationFrame) keeps the header
+  // correct even when the tab is backgrounded and frames are throttled.
+  const siteHeader = document.querySelector('.site-header')
+  if (siteHeader) {
+    const syncHeader = () => {
+      siteHeader.classList.toggle('is-scrolled', window.scrollY > 32)
+    }
+    syncHeader()
+    window.addEventListener('scroll', syncHeader, { passive: true })
+    window.addEventListener('pageshow', syncHeader)
+  }
 </script>

@@ -35,7 +35,7 @@ import Page from '../components/Page.astro'
       <ul>
         <li><strong>AI Model Development</strong> — Designing, training, and improving language models and other AI systems.</li>
         <li><strong>Machine Learning Research</strong> — Exploring model architectures, training methodologies, optimization techniques, and approaches to improving model performance.</li>
-        <li><strong>AI Safety and Reliability</strong> — Investigating model limitations, evaluation methods, robustness, and responsible approaches to AI development.</li>
+        <li id="safety"><strong>AI Safety and Reliability</strong> — Investigating model limitations, evaluation methods, robustness, and responsible approaches to AI development.</li>
         <li><strong>Research and Experimentation</strong> — Conducting technical experiments, documenting results, and developing research papers that communicate our methods and findings.</li>
         <li><strong>Open Research</strong> — Sharing research, technical documentation, and model resources where appropriate to support transparency, learning, and collaboration.</li>
       </ul>
@@ -74,7 +74,7 @@ import Page from '../components/Page.astro'
       </div>
 
       <!-- Approach -->
-      <h2>Our Approach</h2>
+      <h2 id="approach">Our Approach</h2>
       <p>
         We approach AI development through a combination of scientific curiosity,
         engineering discipline, iterative experimentation, and technical documentation.
@@ -88,13 +88,22 @@ import Page from '../components/Page.astro'
       </p>
 
       <!-- Mission -->
-      <h2>Our Mission</h2>
+      <h2 id="mission">Our Mission</h2>
       <p>
         Our mission is to advance artificial intelligence through independent research,
         original model development, and responsible engineering. We aspire to contribute
         useful knowledge, build capable AI systems, and make meaningful progress in
         machine learning through continuous experimentation and open scientific inquiry.
       </p>
+
+      <!-- Leadership -->
+      <h2 id="leadership">Leadership</h2>
+      <div class="ab-leadership">
+        <div class="ab-leader">
+          <p class="ab-leader-role">Founder &amp; Head</p>
+          <p class="ab-leader-name">Wasif Ali Ganaie</p>
+        </div>
+      </div>
 
       <!-- Looking Ahead -->
       <h2>Looking Ahead</h2>
@@ -243,6 +252,32 @@ import Page from '../components/Page.astro'
 .ab-card a {
   font-size: .82rem;
   font-weight: 600;
+}
+
+/* Leadership block */
+.ab-leadership {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 20px 0 32px;
+}
+.ab-leader {
+  padding: 20px 24px;
+  border: 1px solid color-mix(in srgb, var(--text) 14%, transparent);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--text) 4%, transparent);
+}
+.ab-leader-role {
+  margin: 0 0 4px;
+  font-size: .82rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  opacity: .6;
+}
+.ab-leader-name {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
 }
 
 /* CTA button */

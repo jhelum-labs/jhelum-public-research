@@ -1,0 +1,267 @@
+---
+// Full-screen research search, in the shape of the search on openai.com:
+// one big query line with a submit button, then a "Sources" stack of result
+// rows (kicker · serif title · excerpt · cover tile).
+//
+// Everything is plain client-side work over /research/index.json — the same
+// published record every other part of the site renders from. No model, no
+// invented answers: a query matches titles, excerpts, categories and slugs,
+// and each row links to the paper's own page.
+---
+<div class="search-overlay" data-search-overlay hidden>
+  <div class="search-shell" role="dialog" aria-modal="true" aria-label="Search the research record">
+    <div class="search-top">
+      <button class="search-close-btn" data-search-close type="button" aria-label="Close search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <form class="search-input-row" data-search-form>
+      <input
+        class="search-input"
+        data-search-input
+        type="search"
+        placeholder="Search research"
+        aria-label="Search research"
+        autocomplete="off"
+        autocorrect="off"
+        spellcheck="false"
+      />
+      <button class="search-go" type="submit" aria-label="Run search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+      </button>
+    </form>
+
+    <p class="search-label" data-search-label hidden></p>
+    <div class="search-results" data-search-results></div>
+    <div class="search-foot" data-search-foot hidden>
+      <a href="/research">View all research <span aria-hidden="true">→</span></a>
+    </div>
+  </div>
+</div>
+
+<script>
+  const overlay = document.querySelector('[data-search-overlay]') as HTMLElement | null
+  const input = document.querySelector('[data-search-input]') as HTMLInputElement | null
+  const results = document.querySelector('[data-search-results]') as HTMLElement | null
+  const label = document.querySelector('[data-search-label]') as HTMLElement | null
+  const foot = document.querySelector('[data-search-foot]') as HTMLElement | null
+  const form = document.querySelector('[data-search-form]') as HTMLFormElement | null
+
+  interface Paper {
+    slug: string
+    title: string
+    category: string
+    date: string
+    readingTime: string
+    excerpt: string
+    authors?: string[]
+  }
+
+  let index: Paper[] | null = null
+  let hits: { pub: Paper; href: string }[] = []
+  let selected = -1
+  let openedFrom: HTMLElement | null = null
+  let isOpen = false
+  let closeTimer: ReturnType<typeof setTimeout> | undefined = undefined
+
+  // Every publication carries its own cover where the site has one; papers
+  // published without a cover tile get the blue house mark instead.
+  const covers: Record<string, string> = {
+    'w-1.1-final-architecture': '/covers/cover-architecture.png',
+    'w-1.1-project-instruct': '/covers/cover-alignment.png',
+    'w-1.2-architecture': '/covers/cover-roadmap.png',
+    'w-1.1-final': '/covers/cover-safety.png',
+    'vitasta-architecture': '/research-covers/architecture.svg',
+    'verified-reasoning': '/research-covers/instruct.svg',
+    'w-1.1-project-spectrum': '/research-covers/final-report.svg',
+  }
+
+  async function loadIndex(): Promise<Paper[]> {
+    if (index) return index
+    try {
+      const response = await fetch('/research/index.json')
+      const data = await response.json()
+      index = Array.isArray(data) ? data : data.publications
+    } catch {
+      index = []
+    }
+    return index
+  }
+
+  const monthYear = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+  const formatDate = (date: string) => {
+    try {
+      return monthYear.format(new Date(`${date}T00:00:00`))
+    } catch {
+      return date
+    }
+  }
+
+  const tokenize = (query: string) =>
+    query.toLowerCase().split(/[^a-z0-9]+/).filter(Boolean)
+
+  // A paper is a hit when every token appears somewhere in it; closer matches
+  // rank first, and ties settle by publication date.
+  function rank(papers: Paper[], rawQuery: string) {
+    const tokens = tokenize(rawQuery)
+    if (!tokens.length) return papers.map((pub) => ({ pub, href: `/research/${pub.slug}`, score: 0 }))
+
+    const scored: { pub: Paper; href: string; score: number }[] = []
+    for (const pub of papers) {
+      const fields: [string, number][] = [
+        [pub.title.toLowerCase(), 12],
+        [(pub.excerpt || '').toLowerCase(), 3],
+        [(pub.category || '').toLowerCase(), 5],
+        [pub.slug.toLowerCase(), 5],
+        [(pub.authors || []).join(' ').toLowerCase(), 2],
+      ]
+      let total = 0
+      let matched = true
+      for (const token of tokens) {
+        let best = 0
+        for (const [text, weight] of fields) {
+          if (text.includes(token)) best = Math.max(best, weight + (text.includes(` ${token} `) || text.startsWith(`${token} `) ? 2 : 0))
+        }
+        if (!best) { matched = false; break }
+        total += best
+      }
+      if (matched) scored.push({ pub, href: `/research/${pub.slug}`, score: total })
+    }
+    scored.sort((a, b) => b.score - a.score || new Date(b.pub.date).getTime() - new Date(a.pub.date).getTime())
+    return scored
+  }
+
+  function render() {
+    if (!results || !label || !foot || !input) return
+    const papers = index || []
+    const ranked = rank(papers, input.value)
+    hits = ranked
+    selected = -1
+
+    label.hidden = false
+    label.textContent = input.value.trim() ? 'Sources' : 'All publications'
+    foot!.hidden = false
+
+    results.innerHTML = ''
+    if (!hits.length) {
+      const none = document.createElement('p')
+      none.className = 'search-none'
+      const shown = document.createElement('strong')
+      shown.textContent = input.value.trim() || 'that query'
+      const text = document.createTextNode('Nothing published matches ')
+      const rest = document.createTextNode(`. Try "architecture", "spectrum" or "w-1.1".`)
+      none.append(text, shown, rest)
+      results.appendChild(none)
+      label.hidden = true
+      return
+    }
+
+    for (const hit of ranked.slice(0, 8)) {
+      const row = document.createElement('a')
+      row.className = 'search-hit'
+      row.href = hit.href
+      row.dataset.searchHit = ''
+
+      const body = document.createElement('span')
+      body.className = 'search-hit-body'
+
+      const kicker = document.createElement('span')
+      kicker.className = 'search-hit-kicker'
+      const parts = [hit.pub.category, formatDate(hit.pub.date), hit.pub.readingTime].filter(Boolean)
+      kicker.textContent = parts.join('  ·  ')
+
+      const title = document.createElement('span')
+      title.className = 'search-hit-title'
+      title.textContent = hit.pub.title
+
+      const excerpt = document.createElement('span')
+      excerpt.className = 'search-hit-excerpt'
+      excerpt.textContent = hit.pub.excerpt || ''
+
+      body.append(kicker, title, excerpt)
+
+      const tile = document.createElement('span')
+      tile.className = 'search-hit-img'
+      const img = document.createElement('img')
+      img.src = covers[hit.pub.slug] || '/jhelum-labs-mark.svg'
+      img.alt = ''
+      img.loading = 'lazy'
+      img.decoding = 'async'
+      tile.appendChild(img)
+
+      row.append(body, tile)
+      results.appendChild(row)
+    }
+  }
+
+  function syncSelection(offset: number) {
+    if (!results) return
+    const rows = results.querySelectorAll('[data-search-hit]') as NodeListOf<HTMLElement>
+    if (!rows.length) return
+    const next = Math.max(0, Math.min(selected + offset, rows.length - 1))
+    if (next === selected) return
+    rows.forEach((row, i) => row.classList.toggle('is-selected', i === next))
+    rows[next].scrollIntoView({ block: 'nearest' })
+    selected = next
+  }
+
+  function openSearch() {
+    if (!overlay || !input || isOpen) return
+    window.clearTimeout(closeTimer)
+    isOpen = true
+    openedFrom = document.activeElement as HTMLElement | null
+    overlay.hidden = false
+    overlay.scrollTop = 0
+    requestAnimationFrame(() => overlay.classList.add('is-open'))
+    document.documentElement.classList.add('search-open')
+    input.value = ''
+    loadIndex().then(render)
+    input.focus()
+  }
+
+  function closeSearch() {
+    if (!overlay || !isOpen) return
+    isOpen = false
+    overlay.classList.remove('is-open')
+    document.documentElement.classList.remove('search-open')
+    closeTimer = setTimeout(() => { overlay!.hidden = true; if (results) results.innerHTML = '' }, 200)
+    openedFrom?.focus()
+    openedFrom = null
+  }
+
+  function pick() {
+    const target = hits[selected >= 0 ? selected : 0]
+    if (target) window.location.assign(target.href)
+  }
+
+  document.querySelectorAll('[data-search-open]').forEach((button) =>
+    button.addEventListener('click', openSearch)
+  )
+  document.querySelector('[data-search-close]')?.addEventListener('click', closeSearch)
+  overlay?.addEventListener('click', (event) => { if (event.target === overlay) closeSearch() })
+
+  form?.addEventListener('submit', (event) => {
+    event.preventDefault()
+    if (input!.value.trim()) pick()
+    else render()
+  })
+
+  input?.addEventListener('input', render)
+
+  input?.addEventListener('keydown', (event) => {
+    if (event.key === 'ArrowDown') { event.preventDefault(); syncSelection(+1) }
+    else if (event.key === 'ArrowUp') { event.preventDefault(); syncSelection(-1) }
+    else if (event.key === 'Escape') closeSearch()
+  })
+
+  document.addEventListener('keydown', (event) => {
+    if ((event.key === 'k' || event.key === 'K') && (event.metaKey || event.ctrlKey)) {
+      event.preventDefault()
+      isOpen ? closeSearch() : openSearch()
+    } else if (event.key === '/' && !isOpen) {
+      const tag = (event.target as HTMLElement)?.tagName
+      if (tag !== 'INPUT' && tag !== 'TEXTAREA') { event.preventDefault(); openSearch() }
+    }
+  })
+</script>

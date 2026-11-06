@@ -1,9 +1,10 @@
 ---
 interface Logo {
   name: string
-  slug: string      // simple-icons slug
-  lightColor: string
-  darkColor: string
+  imgLight: string      // mark shown on light backgrounds
+  imgDark?: string      // mark shown on dark backgrounds (falls back to imgLight)
+  styleLight?: string   // optional per-theme tweak (e.g. invert mono glyphs)
+  styleDark?: string
 }
 
 interface Props {
@@ -20,7 +21,6 @@ const {
 
 const copies = Array.from({ length: 8 })
 ---
-
 <section class="sv" aria-label="scrolling marquee" data-mode={mode}>
 
   {mode === 'logos' ? (
@@ -32,7 +32,8 @@ const copies = Array.from({ length: 8 })
             <span class="sv-logo-item">
               <img
                 class="sv-logo-img sv-logo-light"
-                src={`https://cdn.simpleicons.org/${logo.slug}/${logo.lightColor}`}
+                src={logo.imgLight}
+                style={logo.styleLight}
                 alt={logo.name}
                 width="48"
                 height="48"
@@ -40,8 +41,9 @@ const copies = Array.from({ length: 8 })
               />
               <img
                 class="sv-logo-img sv-logo-dark"
-                src={`https://cdn.simpleicons.org/${logo.slug}/${logo.darkColor}`}
-                alt={logo.name}
+                src={logo.imgDark ?? logo.imgLight}
+                style={logo.styleDark}
+                alt=""
                 width="48"
                 height="48"
                 loading="lazy"
@@ -57,16 +59,18 @@ const copies = Array.from({ length: 8 })
             <span class="sv-logo-item">
               <img
                 class="sv-logo-img sv-logo-light"
-                src={`https://cdn.simpleicons.org/${logo.slug}/${logo.lightColor}`}
-                alt={logo.name}
+                src={logo.imgLight}
+                style={logo.styleLight}
+                alt=""
                 width="48"
                 height="48"
                 loading="lazy"
               />
               <img
                 class="sv-logo-img sv-logo-dark"
-                src={`https://cdn.simpleicons.org/${logo.slug}/${logo.darkColor}`}
-                alt={logo.name}
+                src={logo.imgDark ?? logo.imgLight}
+                style={logo.styleDark}
+                alt=""
                 width="48"
                 height="48"
                 loading="lazy"
@@ -99,10 +103,11 @@ const copies = Array.from({ length: 8 })
 .sv {
   overflow: hidden;
   padding: 22px 0;
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
   background: color-mix(in srgb, var(--surface) 55%, transparent);
   user-select: none;
+  /* Soft fade at both edges so the marquee doesn't hard-clip. */
+  -webkit-mask-image: linear-gradient(to right, transparent 0, black 6%, black 94%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, black 6%, black 94%, transparent 100%);
 }
 
 .sv-line {
@@ -143,7 +148,9 @@ const copies = Array.from({ length: 8 })
   height: 48px;
   object-fit: contain;
   flex-shrink: 0;
-  opacity: 1;
+  /* Monochrome "funded by" strip: every mark renders in soft gray. */
+  filter: grayscale(1) contrast(.92);
+  opacity: .55;
 }
 
 /* Show correct logo per theme */
@@ -158,7 +165,8 @@ const copies = Array.from({ length: 8 })
   font-size: 1rem;
   font-weight: 700;
   letter-spacing: -0.01em;
-  color: var(--text);
+  /* Muted gray, matching the gray marks (funded-by strip look). */
+  color: color-mix(in srgb, var(--text) 46%, transparent);
   white-space: nowrap;
 }
 
@@ -172,12 +180,17 @@ const copies = Array.from({ length: 8 })
 .sv-logo-item:last-child::after { display: none; }
 
 @media (prefers-reduced-motion: reduce) {
+  .sv {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
   .sv-line:nth-child(2) { display: none; }
 }
 </style>
 
 <script>
   document.querySelectorAll<HTMLElement>('.sv').forEach((section) => {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const tracks = section.querySelectorAll<HTMLElement>('.sv-track')
 
     tracks.forEach((track) => {
@@ -186,7 +199,12 @@ const copies = Array.from({ length: 8 })
       let lastScroll = window.scrollY
       let velocity = 0
       let lastTime = performance.now()
+      let paused = false
       let raf: number
+
+      // Cursor over the strip parks the marquee; leaving lets it drift again.
+      section.addEventListener('mouseenter', () => { paused = true }, { passive: true })
+      section.addEventListener('mouseleave', () => { paused = false }, { passive: true })
 
       const onScroll = () => {
         velocity = window.scrollY - lastScroll
@@ -194,11 +212,19 @@ const copies = Array.from({ length: 8 })
       }
       window.addEventListener('scroll', onScroll, { passive: true })
 
+      // Under reduced motion, leave the strip static (no rAF loop).
+      if (reduceMotion) {
+        track.style.transform = 'translate3d(0, 0, 0)'
+        return
+      }
+
       const animate = (time: number) => {
         const delta = Math.min((time - lastTime) / 1000, 0.05)
         lastTime = time
         velocity *= 0.9
-        pos += dir * (72 + Math.abs(velocity) * 12) * delta
+        if (!paused) {
+          pos += dir * (118 + Math.abs(velocity) * 12) * delta
+        }
 
         const halfWidth = track.scrollWidth / 2
         if (pos > halfWidth)  pos -= halfWidth

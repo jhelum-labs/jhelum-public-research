@@ -14,7 +14,15 @@ export function ThemeProvider({ children }) {
   })
 
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme)
+    // Absolute-dark rides on top of the dark theme (data-theme='dark'
+    // plus .theme-absolute for the pure-black token overrides).
+    if (theme === 'absolute-dark') {
+      document.documentElement.dataset.theme = 'dark'
+      document.documentElement.classList.add('theme-absolute')
+    } else {
+      document.documentElement.dataset.theme = theme
+      document.documentElement.classList.remove('theme-absolute')
+    }
     window.localStorage.setItem('jl-theme', theme)
   }, [theme])
 

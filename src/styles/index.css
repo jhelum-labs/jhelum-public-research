@@ -56,6 +56,14 @@
   --shadow-card-hover: 0 4px 10px rgba(0, 0, 0, 0.6), 0 20px 50px rgba(0, 0, 0, 0.55);
 }
 
+/* Absolute dark: pure black over the dark base (data-theme stays 'dark'). */
+html.theme-absolute {
+  --color-bg: #000000;
+  --color-bg-alt: #060607;
+  --color-surface: #0a0a0b;
+  --color-border: #1a1a1c;
+}
+
 *,
 *::before,
 *::after {

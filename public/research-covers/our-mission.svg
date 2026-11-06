@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="900" viewBox="0 0 1500 900">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f9c76b"/>
+      <stop offset=".45" stop-color="#f59e42"/>
+      <stop offset=".8" stop-color="#e98a3c"/>
+      <stop offset="1" stop-color="#d97335"/>
+    </linearGradient>
+    <linearGradient id="water" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#c97a45"/>
+      <stop offset=".25" stop-color="#a06548"/>
+      <stop offset="1" stop-color="#6e4b42"/>
+    </linearGradient>
+    <radialGradient id="glow" cx=".5" cy=".9" r=".75">
+      <stop offset="0" stop-color="#ffe9b0" stop-opacity=".85"/>
+      <stop offset=".55" stop-color="#ffcf7d" stop-opacity=".35"/>
+      <stop offset="1" stop-color="#ffcf7d" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="post" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#9a9a9a"/>
+      <stop offset=".5" stop-color="#e8e8e8"/>
+      <stop offset="1" stop-color="#8f8f8f"/>
+    </linearGradient>
+    <linearGradient id="green" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#37933b"/>
+      <stop offset="1" stop-color="#277529"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Sunset sky over the Jhelum -->
+  <rect width="1500" height="520" fill="url(#sky)"/>
+  <ellipse cx="750" cy="520" rx="900" ry="420" fill="url(#glow)"/>
+
+  <!-- Distant hills -->
+  <path d="M0 505 L120 470 L260 498 L420 462 L580 495 L760 452 L920 490 L1100 462 L1260 496 L1400 466 L1500 490 L1500 520 L0 520 Z"
+        fill="#4a3230" opacity=".85"/>
+
+  <!-- Water -->
+  <rect y="520" width="1500" height="380" fill="url(#water)"/>
+  <g fill="#f6c983" opacity=".38">
+    <rect x="620" y="560" width="260" height="7" rx="3.5"/>
+    <rect x="560" y="590" width="380" height="6" rx="3"/>
+    <rect x="660" y="622" width="200" height="6" rx="3"/>
+    <rect x="520" y="660" width="460" height="7" rx="3.5"/>
+    <rect x="640" y="704" width="240" height="6" rx="3"/>
+    <rect x="470" y="760" width="560" height="8" rx="4"/>
+  </g>
+
+  <!-- Signpost -->
+  <rect x="716" y="386" width="68" height="470" fill="url(#post)"/>
+  <rect x="708" y="848" width="84" height="14" rx="7" fill="#5f5752"/>
+
+  <!-- Board -->
+  <rect x="330" y="150" width="840" height="380" rx="42" fill="#f4f4f2"/>
+  <rect x="352" y="172" width="796" height="336" rx="26" fill="url(#green)"/>
+  <rect x="382" y="202" width="736" height="276" rx="14" fill="none" stroke="#ffffff" stroke-width="10"/>
+
+  <!-- Type -->
+  <text x="750" y="371"
+        font-family="Arial, Helvetica, sans-serif" font-weight="700"
+        font-size="132" letter-spacing="6" text-anchor="middle"
+        fill="#ffffff">OUR MISSION</text>
+</svg>
